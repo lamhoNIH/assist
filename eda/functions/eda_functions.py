@@ -5,10 +5,13 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 from sklearn.cluster import KMeans
+from sklearn.metrics import normalized_mutual_info_score as nmi
 from sklearn.decomposition import PCA
 from matplotlib import gridspec
 from scipy.stats import f_oneway
 from sknetwork.clustering import Louvain
+from statsmodels.stats.multitest import multipletests
+from scipy.stats import pearsonr
 
 
 
@@ -169,8 +172,11 @@ def cluster_phenotype_corr(expression_meta_df, cluster_df, cluster_column, netwo
         cluster_expression = expression_meta_df[cluster_genes].apply(pd.to_numeric)
         pca = PCA(n_components=1)
         pca_cluster_expression = pca.fit_transform(cluster_expression)
+        # originally I used pd.corr() to get pairwise correlation matrix but since I need a separate calculation for correlation p value
+        # I just used pearsonr and collected the results in lists. Making a df here isn't necessary anymore. 
         eigen_n_features = pd.DataFrame({'eigen': pca_cluster_expression.reshape(len(pca_cluster_expression), ),
-                                         'BMI': expression_meta_df['BMI'], 'RIN': expression_meta_df['RIN'],
+                                         'BMI': expression_meta_df['BMI'], 
+#                                          'RIN': expression_meta_df['RIN'],
                                          'Age': expression_meta_df['Age'], 'PM!': expression_meta_df['PM!'],
                                          'Brain_pH': expression_meta_df['Brain_pH'],
                                          'Pack_yrs_1_pktperday_1_yr': expression_meta_df['Pack_yrs_1_pktperday_1_yr)'],
@@ -179,20 +185,51 @@ def cluster_phenotype_corr(expression_meta_df, cluster_df, cluster_column, netwo
                                          'Total_drinking_yrs': expression_meta_df['Total_drinking_yrs'],
                                          'SR': expression_meta_df['SR']})
 
+        corr_list = []
+        p_list = []
+        corrected_p_list = []
+        labels = []
+        for col in eigen_n_features.columns[1:]:
+            sub = eigen_n_features[['eigen', col]]
+            sub = sub.dropna()
+            corr_list.append(pearsonr(sub['eigen'], sub[col])[0])
+            p_list.append(pearsonr(sub['eigen'], sub[col])[1])
+        corrected_p_list = multipletests(p_list, method ='fdr_bh')[1] # correct for multiple tests
         if i == 1:
-            clusters_corr = pd.DataFrame({cluster: eigen_n_features.corr()['eigen'][1:]})
+            clusters_corr = pd.DataFrame({cluster: corr_list})
+            clusters_pvalue = pd.DataFrame({cluster: corrected_p_list})
             i += 1
-        else:
-            clusters_corr[cluster] = eigen_n_features.corr()['eigen'][1:]
-    clusters_corr = clusters_corr.T
 
-    sns.heatmap(clusters_corr.sort_index(), cmap='RdBu',
-                vmin=-1, vmax=1)
+        else:
+            clusters_corr[cluster] = corr_list
+            clusters_pvalue[cluster] = corrected_p_list
+
+    clusters_corr = clusters_corr.T.sort_index(ascending = False)
+    clusters_pvalue = np.round(clusters_pvalue, 2)
+    clusters_pvalue = clusters_pvalue.T.sort_index(ascending = False)
+
+    fig = plt.figure(figsize=(17, 8))
+    gs = gridspec.GridSpec(1, 2, width_ratios=[2, 1])  # set the subplot width ratio
+    # first subplot to show the correlation heatmap
+    ax0 = plt.subplot(gs[0])
+    sns.heatmap(clusters_corr, cmap='RdBu_r', annot = clusters_pvalue,
+                annot_kws = {'fontsize':12}, vmin=-1, vmax=1, xticklabels = eigen_n_features.columns[1:]) 
+    plt.xticks(rotation = 45, ha = 'right')
     plt.ylabel('cluster id')
-    plt.title(f'Trait cluster correlation for {network_name}')
+    plt.title('Trait cluster correlation')
+    # second subplot to show count of significant traits in each cluster. "Significant" here means adj p value < 0.2
+    ax1 = plt.subplot(gs[1])
+    sig_count = (clusters_pvalue < 0.2).sum(axis = 1).values # count num of traits with p-adj < 0.2 in each cluster
+    plt.barh(clusters_pvalue.index, sig_count) # horizontal bar plot
+    plt.yticks(clusters_pvalue.index, clusters_pvalue.index)
+    plt.xticks(np.arange(0, max(sig_count)+1, 1))
+    plt.ylabel('cluster id')
+    plt.xlabel('Trait count')
+    plt.title('Number of significant traits each cluster')
+    plt.suptitle(f'Trait cluster correlation for {network_name}', fontsize = 16)
     
 def cluster_nmi(cluster_df1, cluster_df2, cluster_column):
-    '''NMI to compare communities from the whole netowrk and the subnetwork'''
+    '''NMI to compare communities from the whole netowrk and the subnetwork or clusters from different network embeddings'''
     assert len(cluster_df1) >= len(cluster_df2), 'cluster_df1 must be greater than cluster_df2'
     num_cut_nodes = len(set(cluster_df1.id) - set(cluster_df2.id)) # number of nodes cut out in the subset
     sub1_plus_sub2 = pd.merge(cluster_df1, cluster_df2, left_on = 'id', right_on = 'id', how = 'left')
@@ -208,4 +245,5 @@ def plot_cluster_nmi_comparison(cluster1, cluster_list, cluster_column, comparis
     plt.bar(comparison_names, nmi_scores)
     plt.xlabel('Edges')
     plt.ylabel('NMI')
-    plt.title('NMI for cluster comparison')
+    cluster_type = ['community' if cluster_column == 'louvain_label' else 'cluster']
+    plt.title(f'NMI for {cluster_type[0]} comparison')
