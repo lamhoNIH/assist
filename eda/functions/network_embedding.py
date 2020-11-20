@@ -15,3 +15,4 @@ def network_embedding(graph, walk_length, num_walks, window, output_dir = None, 
         emb_df.to_csv(f'{output_dir}/embedded_len{walk_length}_walk{num_walks}_{name_spec}.csv')
         print('embedding data saved')
     return emb_df
+
