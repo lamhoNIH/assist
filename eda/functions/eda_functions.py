@@ -8,6 +8,8 @@ from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 from matplotlib import gridspec
 from scipy.stats import f_oneway
+from sknetwork.clustering import Louvain
+
 
 
 def plot_graph_distance(networks, network_names):
@@ -44,24 +46,43 @@ def run_kmeans(embedding_df, n_clusters):
     k_mean_df = pd.DataFrame({'id':embedding_df.index, 'kmean_label':kmeans})
     return k_mean_df
 
+def run_louvain(adjacency_df):
+    # louvain communities
+    louvain = Louvain(modularity = 'Newman')
+    labels = louvain.fit_transform(adjacency_df.values) # using networkx community requires converting the df to G first and the original network takes very long but this method can work on df 
+    louvain_df = pd.DataFrame({'id':adjacency_df.index, 'louvain_label':labels})
+    return louvain_df
+
 def jaccard_similarity(list1, list2):
     intersection = len(set(list1).intersection(list2))
     union = len(set(list1)) + len(set(list2)) - intersection
     return intersection / union
 
+def add_cutout_node_cluster(cluster_df1, cluster_df2, cluster_column):
+    cluster_df2[cluster_column] = cluster_df2[cluster_column].apply(lambda x:(x+1)) # add 1 to each of the cluster id 
+    diff_nodes = set(cluster_df1.id.unique()) - set(cluster_df2.id.unique())
+    cutout_node_cluster = pd.DataFrame({'id':list(diff_nodes), cluster_column:0}) # assign the nodes that were cut out in cluster 0 
+    cluster_df2 = pd.concat([cutout_node_cluster, cluster_df2])
+    return cluster_df2
 
-def cluster_jaccard(cluster_df1, cluster_df2, cluster_column, comparison_names, top=None):
+def cluster_jaccard(cluster_df1, cluster_df2, cluster_column, comparison_names, 
+                    cutout_nodes = False, top=None, y_max = 1):
     '''
     plot jaccard pairwise comparison on the communities in 2 networks or the kmeans clusters in 2 network embeddings
     title: main title for the two subplots
     cluster_column: the column name of the cluster labels
     comparison_names: names of the groups in comparison
+    cutout_nodes: if True, the nodes cut out in the smaller network/embedding is not included. If False, the cutout nodes will be in its own cluster for comparison
     top: top n comparison to show in the boxplot since it could be misleadingly small if we include all jaccard scores
+    y_max to adjust y label
     # we're only interested in the modules that have majority of the matching nodes between 2 networks
     '''
     c1_list = []
     c2_list = []
     j_list = []
+    if cutout_nodes == False:
+        cluster_df2 = add_cutout_node_cluster(cluster_df1, cluster_df2, cluster_column)
+        
     for c1 in cluster_df1[cluster_column].unique():
         for c2 in cluster_df2[cluster_column].unique():
             sub1 = cluster_df1[cluster_df1[cluster_column] == c1].index
@@ -75,7 +96,9 @@ def cluster_jaccard(cluster_df1, cluster_df2, cluster_column, comparison_names, 
     sns.set(font_scale=1.2)
     sns.set_style('white')
 
-    fig = plt.figure(figsize=(8, 5))
+    w = len(cluster_df2[cluster_column].unique())/1.5
+    h = len(cluster_df1[cluster_column].unique())/2
+    fig = plt.figure(figsize=(w, h))
     gs = gridspec.GridSpec(1, 2, width_ratios=[3, 1])  # set the subplot width ratio
     ax0 = plt.subplot(gs[0])
     # plot heatmap for pairwise jaccard comparison
@@ -89,10 +112,12 @@ def cluster_jaccard(cluster_df1, cluster_df2, cluster_column, comparison_names, 
     all_jac_values = jac_df.values.flatten()
     if top != None:
         sorted_jac_values = sorted(all_jac_values, reverse=True)
-        sns.boxplot(x=None, y=sorted_jac_values[:top])
+        g = sns.boxplot(x=None, y=sorted_jac_values[:top])
+        g.set(ylim=(0, y_max))
+
     else:
         sns.boxplot(x=None, y=all_jac_values)
-    plt.ylim(0, 1)
+    plt.ylim(0, y_max)
     plt.title('Jaccard distribution')
     plt.suptitle(f'{comparison_names[0]} vs {comparison_names[1]}')
 
@@ -165,3 +190,22 @@ def cluster_phenotype_corr(expression_meta_df, cluster_df, cluster_column, netwo
                 vmin=-1, vmax=1)
     plt.ylabel('cluster id')
     plt.title(f'Trait cluster correlation for {network_name}')
+    
+def cluster_nmi(cluster_df1, cluster_df2, cluster_column):
+    '''NMI to compare communities from the whole netowrk and the subnetwork'''
+    assert len(cluster_df1) >= len(cluster_df2), 'cluster_df1 must be greater than cluster_df2'
+    num_cut_nodes = len(set(cluster_df1.id) - set(cluster_df2.id)) # number of nodes cut out in the subset
+    sub1_plus_sub2 = pd.merge(cluster_df1, cluster_df2, left_on = 'id', right_on = 'id', how = 'left')
+    num_cluster = cluster_df2[cluster_column].max() # determine how many clusters are present in the smaller network
+    sub1_plus_sub2[f'{cluster_column}_y'] = sub1_plus_sub2[f'{cluster_column}_y'].fillna(num_cluster+1) # for the nodes that were cut out, give them a new community number
+    return nmi(sub1_plus_sub2[f'{cluster_column}_x'], sub1_plus_sub2[f'{cluster_column}_y'])
+
+def plot_cluster_nmi_comparison(cluster1, cluster_list, cluster_column, comparison_names):
+    plt.figure(figsize = (5,4))
+    nmi_scores = []
+    for cluster in cluster_list:
+        nmi_scores.append(cluster_nmi(cluster1, cluster, cluster_column))
+    plt.bar(comparison_names, nmi_scores)
+    plt.xlabel('Edges')
+    plt.ylabel('NMI')
+    plt.title('NMI for cluster comparison')
