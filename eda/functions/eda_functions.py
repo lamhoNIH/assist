@@ -11,10 +11,45 @@ from matplotlib import gridspec
 from scipy.stats import f_oneway
 from sknetwork.clustering import Louvain
 from statsmodels.stats.multitest import multipletests
+from functions.process_phenotype import *
 from scipy.stats import pearsonr
+from sys import platform
+import math
 
+prefix = 'G:' if platform == 'win32' else '/Volumes/GoogleDrive'
+expression_meta = pd.read_csv(prefix + '/Shared drives/NIAAA_ASSIST/Data/expression_meta.csv',
+                              low_memory = False)
 
-
+def scale_free_validate(network_df, network_name):
+    network_degree = network_df.sum()
+    log_network_degree = np.log(network_degree)
+    sorted_network_freq = round(log_network_degree,1).value_counts().reset_index()
+    sorted_network_freq[0] = np.log(sorted_network_freq[0])
+    plt.scatter(sorted_network_freq.index, sorted_network_freq[0])
+    plt.xlabel('log(k)')
+    plt.ylabel('log(pk)')
+    plt.title(f'Scale-free check for {network_name}')
+    plt.show()
+    plt.close();
+    
+def plot_gene_cnt_each_cluster(cluster_dfs, cluster_column, network_names):
+    '''
+    bar graphs to show # genes in each cluster
+    cluster_dfs: a list of cluster dfs with id and cluster assignment
+    cluster_column: cluster type, louvain or k means
+    network_names: names to show in the subplot titles
+    '''
+    h = math.ceil(len(cluster_dfs)/3)
+    plt.figure(figsize = (16,h*4))
+    for i, cluster_df in enumerate(cluster_dfs):       
+        plt.subplot(h, 3, i+1)
+        plt.bar(cluster_df[cluster_column].value_counts().index, cluster_df[cluster_column].value_counts().values)
+        plt.ylabel('# genes')
+        plt.xlabel('Cluster id')
+        plt.title(f'# genes in each community for {network_names[i]}')
+        plt.subplots_adjust(wspace = 0.3)
+        
+        
 def plot_graph_distance(networks, network_names):
     dc_distance_list = []
     ged_distance_list = []
@@ -49,9 +84,9 @@ def run_kmeans(embedding_df, n_clusters):
     k_mean_df = pd.DataFrame({'id':embedding_df.index, 'kmean_label':kmeans})
     return k_mean_df
 
-def run_louvain(adjacency_df):
+def run_louvain(adjacency_df, resolution = 1, n_aggregations = -1):
     # louvain communities
-    louvain = Louvain(modularity = 'Newman')
+    louvain = Louvain(modularity = 'Newman', resolution = resolution, n_aggregations  = n_aggregations)
     labels = louvain.fit_transform(adjacency_df.values) # using networkx community requires converting the df to G first and the original network takes very long but this method can work on df 
     louvain_df = pd.DataFrame({'id':adjacency_df.index, 'louvain_label':labels})
     return louvain_df
@@ -125,14 +160,14 @@ def cluster_jaccard(cluster_df1, cluster_df2, cluster_column, comparison_names,
     plt.suptitle(f'{comparison_names[0]} vs {comparison_names[1]}')
 
 
-def get_module_sig_gene_perc(expression_meta_df_df, cluster_df, cluster_column, cluster, trait):
+def get_module_sig_gene_perc(expression_meta_df, cluster_df, cluster_column, cluster, trait):
     '''
     A function to get the percentage of genes in a module that are significantly variable by trait
     '''
     module_genes = cluster_df[cluster_df[cluster_column] == cluster]['id'].tolist()
-    module_expression = expression_meta_df_df[module_genes].apply(pd.to_numeric)
+    module_expression = expression_meta_df[module_genes].apply(pd.to_numeric)
 
-    module_expression = module_expression.assign(trait=expression_meta_df_df[f'{trait}'])
+    module_expression = module_expression.assign(trait=expression_meta_df[f'{trait}'])
 
     # collect genes from the module with p < 0.05 based on 1-way ANOVA
     anova_sig_genes = []
@@ -142,26 +177,51 @@ def get_module_sig_gene_perc(expression_meta_df_df, cluster_df, cluster_column, 
             anova_sig_genes.append(gene)
     return round(100 * len(anova_sig_genes) / len(module_genes), 2)  # return the % of genes found significant by ANOVA
 
-def plot_sig_perc(expression_meta_df_df, cluster_df, cluster_column, trait, network_name):
-    sig_gene_perc = []
-    clusters = cluster_df[cluster_column].unique()
-    for cluster in clusters:
-        sig_gene_perc.append(get_module_sig_gene_perc(expression_meta_df_df, cluster_df, cluster_column, cluster, trait))
-
-    fig = plt.figure(figsize=(10, 5))
-    gs = gridspec.GridSpec(1, 2, width_ratios=[3, 1])  # set the subplot width ratio
+def plot_sig_perc(cluster_df, cluster_column, network_name):
+    '''
+    A function to iterate through the clusters to get % significant genes in each clusters for each trait and show the results in a heatmap and barplot
+    '''
+    audit_subset = get_expression_by_audit()
+    liver_class_subset = get_liver_class()
+    alc_perday_subset = get_expression_by_alcohol_perday()
+    drinking_yr_subset = get_expression_by_drinking_yrs()
+    smoke_freq_subset = get_smoke_freq()
+    traits = ['audit_category', 'Liver_class', 'alcohol_intake_category', 'drinking_yrs_category', 'Smoking_frequency']
+    for i, subset in enumerate([audit_subset, liver_class_subset, alc_perday_subset, 
+                                drinking_yr_subset, smoke_freq_subset]):
+        sig_gene_perc = []
+        clusters = cluster_df[cluster_column].unique()
+        for cluster in clusters:
+            sig_gene_perc.append(get_module_sig_gene_perc(subset, cluster_df, cluster_column, cluster, traits[i]))
+        if i == 0:
+            cluster_sig_perc = pd.DataFrame({traits[i]: sig_gene_perc})
+        else:
+            cluster_sig_perc[traits[i]] = sig_gene_perc
+        
+    cluster_sig_perc = cluster_sig_perc.sort_index(ascending = False)
+    fig = plt.figure(figsize=(17, 8))
+    gs = gridspec.GridSpec(1, 2, width_ratios=[2, 1])  # set the subplot width ratio
+    # first subplot to show the correlation heatmap
     ax0 = plt.subplot(gs[0])
-    plt.scatter(clusters, sig_gene_perc)
-    plt.xlabel('cluster label')
-    plt.ylabel('% significant genes')
+    sns.heatmap(cluster_sig_perc, cmap='Reds',
+                vmin=0, vmax=100) 
+    plt.xticks(rotation = 45, ha = 'right')
+    plt.ylabel('cluster id')
     plt.title('% significant genes by cluster')
+    # second subplot to show count of significant traits in each cluster. "Significant" here means adj p value < 0.2
     ax1 = plt.subplot(gs[1])
-    sns.boxplot(x = None, y = sig_gene_perc)
-    plt.ylabel('% significant genes')
-    plt.suptitle(f'% significant genes in {trait} by cluster from {network_name}')
+    sig_count = cluster_sig_perc[cluster_sig_perc > 5].count(axis = 1).values # count num of traits with significant gene % > 5 in each cluster
+    plt.barh(cluster_sig_perc.index, sig_count) # horizontal bar plot
+    plt.yticks(cluster_sig_perc.index, cluster_sig_perc.index)
+    plt.xticks(np.arange(0, max(sig_count)+1, 1))
+    plt.ylabel('cluster id')
+    plt.xlabel('# Trait with >5% significant genes')
+    plt.title('Number of significant traits each cluster')
+    plt.suptitle(f'% significant genes for each trait for {network_name}', fontsize = 16)
+    
+    
 
-
-def cluster_phenotype_corr(expression_meta_df, cluster_df, cluster_column, network_name):
+def cluster_phenotype_corr(cluster_df, cluster_column, network_name, expression_meta_df = expression_meta):
     '''
     Plot correlation heatmap between modules/clusters and alcohol phenotypes
     '''
