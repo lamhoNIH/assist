@@ -19,7 +19,7 @@ import math
 prefix = 'G:' if platform == 'win32' else '/Volumes/GoogleDrive'
 expression_meta = pd.read_csv(prefix + '/Shared drives/NIAAA_ASSIST/Data/expression_meta.csv',
                               low_memory = False)
-
+    
 def scale_free_validate(network_df, network_name):
     network_degree = network_df.sum()
     log_network_degree = np.log(network_degree)
@@ -39,6 +39,7 @@ def plot_gene_cnt_each_cluster(cluster_dfs, cluster_column, network_names):
     cluster_column: cluster type, louvain or k means
     network_names: names to show in the subplot titles
     '''
+    plt.rcParams.update({'font.size': 18})
     h = math.ceil(len(cluster_dfs)/3)
     plt.figure(figsize = (16,h*4))
     for i, cluster_df in enumerate(cluster_dfs):       
@@ -46,11 +47,12 @@ def plot_gene_cnt_each_cluster(cluster_dfs, cluster_column, network_names):
         plt.bar(cluster_df[cluster_column].value_counts().index, cluster_df[cluster_column].value_counts().values)
         plt.ylabel('# genes')
         plt.xlabel('Cluster id')
-        plt.title(f'# genes in each community for {network_names[i]}')
+        plt.title(network_names[i])
         plt.subplots_adjust(wspace = 0.3)
         
         
 def plot_graph_distance(networks, network_names):
+
     dc_distance_list = []
     ged_distance_list = []
     names = []
@@ -131,7 +133,7 @@ def cluster_jaccard(cluster_df1, cluster_df2, cluster_column, comparison_names,
 
     jac_df = pd.DataFrame({'cluster1': c1_list, 'cluster2': c2_list, 'jaccard': j_list})
     jac_df = jac_df.pivot(index='cluster1', columns='cluster2', values='jaccard')
-    sns.set(font_scale=1.2)
+    sns.set(font_scale=1.5)
     sns.set_style('white')
 
     w = len(cluster_df2[cluster_column].unique())/1.5
@@ -200,6 +202,7 @@ def plot_sig_perc(cluster_df, cluster_column, network_name):
         
     cluster_sig_perc = cluster_sig_perc.sort_index(ascending = False)
     fig = plt.figure(figsize=(17, 8))
+    plt.rcParams.update({'font.size': 18})
     gs = gridspec.GridSpec(1, 2, width_ratios=[2, 1])  # set the subplot width ratio
     # first subplot to show the correlation heatmap
     ax0 = plt.subplot(gs[0])
@@ -212,12 +215,13 @@ def plot_sig_perc(cluster_df, cluster_column, network_name):
     ax1 = plt.subplot(gs[1])
     sig_count = cluster_sig_perc[cluster_sig_perc > 5].count(axis = 1).values # count num of traits with significant gene % > 5 in each cluster
     plt.barh(cluster_sig_perc.index, sig_count) # horizontal bar plot
+    plt.xlim(0,5) # there are 5 traits here so set the scale to between 0 and 5. change it if the # traits change
     plt.yticks(cluster_sig_perc.index, cluster_sig_perc.index)
-    plt.xticks(np.arange(0, max(sig_count)+1, 1))
+
     plt.ylabel('cluster id')
     plt.xlabel('# Trait with >5% significant genes')
     plt.title('Number of significant traits each cluster')
-    plt.suptitle(f'% significant genes for each trait for {network_name}', fontsize = 16)
+    plt.suptitle(f'% significant genes for each trait for {network_name}', fontsize = 22)
     
     
 
@@ -265,28 +269,31 @@ def cluster_phenotype_corr(cluster_df, cluster_column, network_name, expression_
             clusters_pvalue[cluster] = corrected_p_list
 
     clusters_corr = clusters_corr.T.sort_index(ascending = False)
-    clusters_pvalue = np.round(clusters_pvalue, 2)
+    clusters_corr = np.round(clusters_corr, 2)
     clusters_pvalue = clusters_pvalue.T.sort_index(ascending = False)
 
     fig = plt.figure(figsize=(17, 8))
+    plt.rcParams.update({'font.size': 18})
+
     gs = gridspec.GridSpec(1, 2, width_ratios=[2, 1])  # set the subplot width ratio
     # first subplot to show the correlation heatmap
     ax0 = plt.subplot(gs[0])
-    sns.heatmap(clusters_corr, cmap='RdBu_r', annot = clusters_pvalue,
+    sns.heatmap(clusters_corr, cmap='RdBu_r', annot = True,
                 annot_kws = {'fontsize':12}, vmin=-1, vmax=1, xticklabels = eigen_n_features.columns[1:]) 
     plt.xticks(rotation = 45, ha = 'right')
     plt.ylabel('cluster id')
     plt.title('Trait cluster correlation')
     # second subplot to show count of significant traits in each cluster. "Significant" here means adj p value < 0.2
     ax1 = plt.subplot(gs[1])
-    sig_count = (clusters_pvalue < 0.2).sum(axis = 1).values # count num of traits with p-adj < 0.2 in each cluster
-    plt.barh(clusters_pvalue.index, sig_count) # horizontal bar plot
+    sig_count = (clusters_pvalue < 0.2).sum(axis = 1) # count num of traits with p-adj < 0.2 in each cluster
+    plt.barh(sig_count.index, sig_count.values) # horizontal bar plot
+    plt.xlim(0,9) # there are 9 traits here so set the scale to between 0 and 9. change it if the # traits change
     plt.yticks(clusters_pvalue.index, clusters_pvalue.index)
-    plt.xticks(np.arange(0, max(sig_count)+1, 1))
     plt.ylabel('cluster id')
     plt.xlabel('Trait count')
     plt.title('Number of significant traits each cluster')
-    plt.suptitle(f'Trait cluster correlation for {network_name}', fontsize = 16)
+    plt.suptitle(f'Trait cluster correlation for {network_name}', fontsize = 22)
+    
     
 def cluster_nmi(cluster_df1, cluster_df2, cluster_column):
     '''NMI to compare communities from the whole netowrk and the subnetwork or clusters from different network embeddings'''
@@ -307,3 +314,41 @@ def plot_cluster_nmi_comparison(cluster1, cluster_list, cluster_column, comparis
     plt.ylabel('NMI')
     cluster_type = ['community' if cluster_column == 'louvain_label' else 'cluster']
     plt.title(f'NMI for {cluster_type[0]} comparison')
+    
+    
+def cluster_DE_perc(cluster_df, cluster_column, network_name):
+    '''
+    A function to plot 2 heatmaps to show % of differential genes in each cluster
+    Differential genes is defined as log2FC > 0.15 or log2FC < -0.15
+    '''
+    deseq = pd.read_excel(prefix + '/Shared drives/NIAAA_ASSIST/Data/deseq.alc.vs.control.age.rin.batch.gender.PMI.corrected.w.prot.coding.gene.name.xlsx')
+    num_up_impact = (deseq.log2FoldChange > 0.15).sum()
+    num_down_impact = (deseq.log2FoldChange < -0.15).sum()
+    clusters = []
+    up_impact_perc = []
+    down_impact_perc = []
+    for cluster in cluster_df[cluster_column].unique():
+        cluster_genes = cluster_df[cluster_df[cluster_column] == cluster].id
+        num_up_in_module = (deseq[deseq.id.isin(cluster_genes)]['log2FoldChange'] > 0.15).sum()
+        num_down_in_module = (deseq[deseq.id.isin(cluster_genes)]['log2FoldChange'] < -0.15).sum()
+
+        clusters.append(cluster)
+        up_impact_perc.append(100*num_up_in_module/num_up_impact)
+        down_impact_perc.append(100*num_down_in_module/num_down_impact)
+    cluster_DE_perc = pd.DataFrame({'cluster':clusters, '% up': up_impact_perc, '% down': down_impact_perc}) 
+    cluster_DE_perc = cluster_DE_perc.sort_values('cluster', ascending = False)
+    sns.set(font_scale=1.5)
+    sns.set_style('white')
+    h = len(cluster_DE_perc)/3
+    plt.figure(figsize = (4,h))
+    plt.subplot(1,2,1)
+    sns.heatmap(np.array([cluster_DE_perc['% up']]).T, xticklabels = ['% up'], yticklabels = cluster_DE_perc['cluster'], 
+                cmap = 'Reds', vmin = 0, vmax = 100)    
+    plt.ylabel('cluster id')
+    plt.yticks(rotation=0)    
+    plt.subplot(1,2,2)
+    sns.heatmap(np.array([cluster_DE_perc['% down']]).T, xticklabels = ['% down'], yticklabels = cluster_DE_perc['cluster'], 
+                cmap = 'Blues', vmin = 0, vmax = 100) 
+    plt.yticks(rotation=0)
+    plt.subplots_adjust(wspace = 0.8)
+    plt.suptitle(f'% DE in each cluster for {network_name}', fontsize = 22)
