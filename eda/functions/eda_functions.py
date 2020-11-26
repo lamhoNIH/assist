@@ -352,3 +352,125 @@ def cluster_DE_perc(cluster_df, cluster_column, network_name):
     plt.yticks(rotation=0)
     plt.subplots_adjust(wspace = 0.8)
     plt.suptitle(f'% DE in each cluster for {network_name}', fontsize = 22)
+    
+      
+    
+def permute_cluster_label(cluster_df1, cluster_df2, cluster1, cluster2, cluster_column, shuffle = 100):
+    '''
+    Given 2 cluster dfs, generate simulated random eigen gene expression for a cluster and get p values & correlation scores
+    cluster1 and cluster2 need to match like in 2 community detections, only cluster 1 in network1 is compared with cluster 1 in network2 bc they're most correlated between the 2 networks
+    '''
+    p_w_random = []
+    corr_w_random = []
+    eigen1 = get_eigen_expression(cluster_df1, cluster1, cluster_column)
+    for i in range(shuffle):
+        eigen_random = get_random_expression(cluster_df2, cluster2, cluster_column)
+        random_corr = pearsonr(eigen1.reshape(len(eigen1),), eigen_random.reshape(len(eigen_random),))
+        p_w_random.append(random_corr[1])
+        corr_w_random.append(random_corr[0])
+    return np.array(p_w_random), np.array(corr_w_random)
+
+def get_eigen_expression(cluster_df, cluster, cluster_column, expression_meta_df = expression_meta):
+    '''Get eigen expression for a specific cluster in a cluster df'''
+    cluster_genes = cluster_df[cluster_df[cluster_column] == cluster]['id'].tolist()
+    cluster_expression = expression_meta_df[cluster_genes].apply(pd.to_numeric)
+    pca = PCA(n_components=1)
+    pca_cluster_expression = pca.fit_transform(cluster_expression)
+    return pca_cluster_expression
+
+def get_random_expression(cluster_df, cluster, cluster_column, expression_meta_df = expression_meta):
+    '''Get eigen expression if the cluster membership is randomly assigned'''
+    num_nodes = len(cluster_df[cluster_df[cluster_column] == cluster]) 
+    random_genes = cluster_df.id.sample(num_nodes)
+    random_expression = expression_meta_df[random_genes].apply(pd.to_numeric)
+    pca = PCA(n_components=1)
+    pca_random_expression = pca.fit_transform(random_expression)
+    return pca_random_expression
+
+
+def network_cluster_stability(cluster_df1, cluster_df2, cluster_column):
+    '''
+    Determine network cluster stability
+    Network1 clusters (cluster_df1) is compared to network2 clusters (cluster_df2)
+    cluster_column: louvain_label or kmean_label
+    
+    '''
+    cluster_pairs = {}
+    corr_cluster_df2 = []
+    p_cluster_df2 = []
+    # pairwise comparison to determine cluster correlation in network1 and network2
+    # the clusters with the best correlation are then paired up as the ones to compare with random assignment
+    for cluster2 in cluster_df2[cluster_column].unique(): # loop through all the clusters in cluster_df2
+        p_list = []
+        corr_list = []
+        for cluster1 in cluster_df1[cluster_column].unique(): # loop through all the clusters in cluster_df1
+            eigen1 = get_eigen_expression(cluster_df1, cluster1, cluster_column) # eigengene expression for cluster 1 in cluster_df1
+            eigen2 = get_eigen_expression(cluster_df2, cluster2, cluster_column) # eigengene expression for cluster 2 in cluster_df2
+            corr = pearsonr(eigen1.reshape(len(eigen1),), eigen2.reshape(len(eigen2),)) # get pearson correlation coef
+            p_list.append(corr[1]) # add the p value only from the correlation coef
+            corr_list.append(corr[0]) # add the correlation score
+        min_p = min(p_list) # since we don't know which cluster in cluster_df1 should be compared to each cluster in cluster_df2, find the min p value
+        cluster1_id_index = p_list.index(min(p_list)) # which cluster in cluster_df1 is the most correlated to cluster2
+        p_cluster_df2.append(min_p)
+        corr_cluster_df2.append(corr_list[cluster1_id_index]) # add the correlation from the one with the smallest p value
+        
+        # add cluster2 as the key and cluster1 as a value to a dictionary as the most correlated clusters
+        cluster_pairs[cluster2] = cluster_df1[cluster_column].unique()[cluster1_id_index] 
+    # determine correlation with random shuffle
+    p_random_mean = []
+    p_random_sigma = []
+    corr_random_mean = []
+    corr_random_sigma = []
+    for cluster2 in cluster_df2[cluster_column].unique():
+        # generate random permutation to assign membership to nodes in cluster df2 and obtain p values and correlation scores
+        p_random, corr_random = permute_cluster_label(cluster_df1, cluster_df2, cluster_pairs[cluster2], cluster2, cluster_column)
+
+        p_random_mean.append(p_random.mean())
+        corr_random_mean.append(corr_random.mean())
+        p_random_sigma.append(p_random.std())
+        corr_random_sigma.append(corr_random.std())
+
+    z_p_value = get_z_score(p_cluster_df2, p_random_mean, p_random_sigma)
+    z_corr = get_z_score(corr_cluster_df2, corr_random_mean, corr_random_sigma)
+    z_score_df = pd.DataFrame({cluster_column:cluster_df2[cluster_column].unique(), 'Z_p_value': z_p_value, 'Z_corr': z_corr})
+    return cluster_pairs, z_score_df.sort_values(cluster_column).reset_index(drop = True)
+
+
+def get_z_score(value, mu, sigma):
+    '''calculate z scores with mu: mean and sigma: standard deviation provided'''
+    if type(value) == list:
+        value = np.array(value)
+    if type(mu) == list:
+        mu = np.array(mu)
+    if type(sigma) == list:
+        sigma = np.array(sigma)
+    return (value - mu)/sigma
+
+def plot_random_vs_actual_z(cluster_df1, cluster_df2, cluster1, cluster2, cluster_column, network_cluster_stability_df, network_comparison_name):
+    '''
+    After getting network_cluster_stability df from the network_cluster_stability() function, this function plots z score distribution if z score is obtained from random cluster assignment. Red line will show the actual z score from the actual cluster assignment 
+    Very small z scores for p values are signs of strong correlation between clusters from 2 networks
+    Very small/large z scores for correlation coefficient are signs of strong negative/positive correlation between clusters from 2 networks
+    
+    '''
+    
+    p_random, corr_random = permute_cluster_label(cluster_df1, cluster_df2, cluster1, cluster2, cluster_column) # generate random p and corr values 100 times
+    z_p_value = []
+    z_corr = []
+    for i in range(100): # take 1 from the 100 shuffles each time and use it as an example to calculate what z score would be if the cluster membership is assigned randomly
+        p_pick1 = p_random[i] # take 1 p-value
+        corr_pick1 = corr_random[i] # take 1 correlation value
+        p_random_rest = np.delete(p_random, i) # the rest of the p-values
+        corr_random_rest = np.delete(corr_random, i) # the rest of the correlation value
+        z_p_value.append(get_z_score(p_pick1, p_random_rest.mean(), p_random_rest.std())) # calculate z score for p-value
+        z_corr.append(get_z_score(corr_pick1, corr_random_rest.mean(), corr_random_rest.std())) # calculate z score for correlation value
+    plt.figure(figsize = (13, 5))
+    plt.subplot(1,2,1)
+    plt.hist(z_p_value, bins = 25)
+    plt.vlines(network_cluster_stability_df[network_cluster_stability_df[cluster_column] == cluster2]['Z_p_value'], 0, 110, color = 'r') # the actual 
+    plt.title('Distribution Z_p-value')
+    plt.subplot(1,2,2)
+    plt.hist(z_corr, bins = 25)
+    plt.vlines(network_cluster_stability_df[network_cluster_stability_df[cluster_column] == cluster2]['Z_corr'], 0, 110, color = 'r')
+    plt.title('Distribution Z_corr')
+    plt.suptitle(f'Distribution of Z scores if the cluster membership is randomly assigned for {network_comparison_name}: cluster {cluster2}')
