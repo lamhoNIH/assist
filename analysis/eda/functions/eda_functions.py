@@ -74,10 +74,13 @@ def plot_graph_distance(networks, network_names):
     plt.bar(names, dc_distance_list)
     plt.title('Deltacon distance')
     plt.xlabel('Number of edges')
+    plt.xticks(rotation = 45, ha = 'right')
+
     plt.subplot(1, 2, 2)
     plt.bar(names, ged_distance_list)
     plt.title('GEM distance')
     plt.xlabel('Number of edges')
+    plt.xticks(rotation = 45, ha = 'right')
     plt.subplots_adjust(wspace=0.5)
 
 def run_kmeans(embedding_df, n_clusters):
@@ -339,7 +342,10 @@ def cluster_DE_perc(cluster_df, cluster_column, network_name):
     cluster_DE_perc = cluster_DE_perc.sort_values('cluster', ascending = False)
     sns.set(font_scale=1.5)
     sns.set_style('white')
-    h = len(cluster_DE_perc)/3
+    if len(cluster_DE_perc) < 3:
+        h = len(cluster_DE_perc)/1.5
+    else:
+        h = len(cluster_DE_perc)/3
     plt.figure(figsize = (4,h))
     plt.subplot(1,2,1)
     sns.heatmap(np.array([cluster_DE_perc['% up']]).T, xticklabels = ['% up'], yticklabels = cluster_DE_perc['cluster'], 
@@ -350,7 +356,13 @@ def cluster_DE_perc(cluster_df, cluster_column, network_name):
     sns.heatmap(np.array([cluster_DE_perc['% down']]).T, xticklabels = ['% down'], yticklabels = cluster_DE_perc['cluster'], 
                 cmap = 'Blues', vmin = 0, vmax = 100) 
     plt.yticks(rotation=0)
-    plt.subplots_adjust(wspace = 0.8)
+    # no one-size fits all so adjust the title location by # of clusters
+    if len(cluster_DE_perc) < 6:
+        top = 0.5 + (len(cluster_DE_perc) - 2)/10
+
+    else:
+        top = 0.85
+    plt.subplots_adjust(wspace = 0.8, top = top)
     plt.suptitle(f'% DE in each cluster for {network_name}', fontsize = 22)
     
       
