@@ -2,7 +2,7 @@ import pandas as pd
 from sys import platform
 
 prefix = 'G:' if platform == 'win32' else '/Volumes/GoogleDrive'
-expression_meta = pd.read_csv(prefix + '/Shared drives/NIAAA_ASSIST/Data/expression_meta.csv',
+expression_meta = pd.read_csv(prefix + '/Shared drives/NIAAA_ASSIST/Data/eda_derived/expression_meta.csv',
                               low_memory = False)
 
 def get_expression_by_audit(expression_meta = expression_meta):
