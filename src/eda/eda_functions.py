@@ -11,7 +11,7 @@ from matplotlib import gridspec
 from scipy.stats import f_oneway
 from sknetwork.clustering import Louvain
 from statsmodels.stats.multitest import multipletests
-from functions.process_phenotype import *
+from .process_phenotype import *
 from scipy.stats import pearsonr
 from sys import platform
 import math
