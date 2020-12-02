@@ -17,7 +17,7 @@ from sys import platform
 import math
 
 prefix = 'G:' if platform == 'win32' else '/Volumes/GoogleDrive'
-expression_meta = pd.read_csv(prefix + '/Shared drives/NIAAA_ASSIST/Data/expression_meta.csv',
+expression_meta = pd.read_csv(prefix + '/Shared drives/NIAAA_ASSIST/Data/eda_derived/expression_meta.csv',
                               low_memory = False)
     
 def scale_free_validate(network_df, network_name):
