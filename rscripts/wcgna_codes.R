@@ -6,7 +6,7 @@ library(WGCNA)
 
 ## automatic block-wise network
 # load expression data
-expression = read.csv('G:/Shared drives/NIAAA_ASSIST/Data/network_only_expression.csv', 
+expression = read.csv('G:/Shared drives/NIAAA_ASSIST/Data/eda_derived/network_only_expression.csv', 
                       header = T, row.names = 1)
 # transpose the dataframe
 expression_t = t(expression)
@@ -23,4 +23,4 @@ net = blockwiseModules(expression_t, power = 14,
 # summary of the network modules (colors represent module assignment)
 table(net$colors)
 # output the module assignment
-write.csv(net$colors, 'G:/Shared drives/NIAAA_ASSIST/Data/wcgna_modules.csv')
+write.csv(net$colors, 'G:/Shared drives/NIAAA_ASSIST/Data/eda_derived/wcgna_modules.csv')
