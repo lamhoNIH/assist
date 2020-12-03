@@ -6,7 +6,7 @@ library(WGCNA)
 
 ## automatic block-wise network
 # load expression data
-expression = read.csv('G:/Shared drives/NIAAA_ASSIST/Data/network_only_expression.csv', 
+expression = read.csv('G:/Shared drives/NIAAA_ASSIST/Data/eda_derived/network_only_expression.csv', 
                       header = T, row.names = 1)
 # transpose the dataframe
 expression_t = t(expression)
