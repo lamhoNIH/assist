@@ -1,9 +1,11 @@
 import netcomp
 import pandas as pd
-from itertools import combinations
+import math
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
+
+from itertools import combinations
 from sklearn.cluster import KMeans
 from sklearn.metrics import normalized_mutual_info_score as nmi
 from sklearn.decomposition import PCA
@@ -11,14 +13,12 @@ from matplotlib import gridspec
 from scipy.stats import f_oneway
 from sknetwork.clustering import Louvain
 from statsmodels.stats.multitest import multipletests
-from .process_phenotype import *
 from scipy.stats import pearsonr
 from sys import platform
-import math
+from .process_phenotype import *
+from ..preproc.expression_data import expression_meta
 
 prefix = 'G:' if platform == 'win32' else '/Volumes/GoogleDrive'
-expression_meta = pd.read_csv(prefix + '/Shared drives/NIAAA_ASSIST/Data/eda_derived/expression_meta.csv',
-                              low_memory = False)
     
 def scale_free_validate(network_df, network_name):
     network_degree = network_df.sum()
@@ -225,8 +225,6 @@ def plot_sig_perc(cluster_df, cluster_column, network_name):
     plt.xlabel('# Trait with >5% significant genes')
     plt.title('Number of significant traits each cluster')
     plt.suptitle(f'% significant genes for each trait for {network_name}', fontsize = 22)
-    
-    
 
 def cluster_phenotype_corr(cluster_df, cluster_column, network_name, expression_meta_df = expression_meta):
     '''
@@ -398,7 +396,6 @@ def get_random_expression(cluster_df, cluster, cluster_column, expression_meta_d
     pca = PCA(n_components=1)
     pca_random_expression = pca.fit_transform(random_expression)
     return pca_random_expression
-
 
 def network_cluster_stability(cluster_df1, cluster_df2, cluster_column):
     '''
