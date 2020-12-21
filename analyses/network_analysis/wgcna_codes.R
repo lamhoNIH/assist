@@ -21,7 +21,11 @@ net = blockwiseModules(expression_t, power = 14,
                        verbose = 3, deepSplit = T)
 
 # summary of the network modules (colors represent module assignment)
-table(net$colors)
-# output the module assignment
-colnames(net$colors) = c('id', 'louvain_label')
-write.csv(net$colors, './Data/eda_derived/wcgna_modules_new.csv')
+# table(net$colors)
+
+net_df = data.frame(net$colors) # convert to a df
+net_df = cbind(id = rownames(net_df), net_df) # change the index (node names) to a column
+rownames(net_df) = 1:nrow(net_df)
+colnames(net_df)[2] = 'louvain_label' # change column name
+
+write.csv(net_df, './Data/eda_derived/wgcna_modules_test.csv', row.names = F)
