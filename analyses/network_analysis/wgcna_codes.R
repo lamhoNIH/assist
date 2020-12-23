@@ -1,7 +1,5 @@
 # Script to generate WCGNA network
-# Set up the environment
-install.packages("BiocManager")
-BiocManager::install("WGCNA")
+
 library(WGCNA)
 
 ## automatic block-wise network
@@ -28,4 +26,5 @@ net_df = cbind(id = rownames(net_df), net_df) # change the index (node names) to
 rownames(net_df) = 1:nrow(net_df)
 colnames(net_df)[2] = 'louvain_label' # change column name
 
+# change the file name below to wgcna_modules.csv during test
 write.csv(net_df, './Data/eda_derived/wgcna_modules_test.csv', row.names = F)

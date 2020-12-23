@@ -1,0 +1,1 @@
+docker run --rm -v "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data":/assist/Data assist/module_extraction:0.1.0
