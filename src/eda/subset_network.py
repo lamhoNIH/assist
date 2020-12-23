@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import os
 from sys import platform
-from ..preproc.community_data import comm_df
-from ..preproc.deseq_data import deseq
+from ..preproc.community_data import CommunityData
+from ..preproc.deseq_data import DESeqData
 from functools import reduce
 import numpy as np
 
@@ -43,7 +43,7 @@ def get_module_df(network_df, community_df, cluster):
     cluster_tom = cluster_tom[cluster_tom.index.isin(cluster_genes)]
     return cluster_tom
 
-def plot_module_hist(adjacency_df, title, output_dir = None, comm_df = comm_df):
+def plot_module_hist(adjacency_df, title, output_dir = None, comm_df = CommunityData.get_comm_df()):
     plt.hist(comm_df[comm_df.id.isin(adjacency_df.columns)].louvain_label) # show the distributions of the nodes after subsetting
     plt.title(title)
     plt.xlabel('module id')
@@ -59,7 +59,7 @@ def plot_module_hist(adjacency_df, title, output_dir = None, comm_df = comm_df):
     plt.close()
 
 
-def get_subnetwork1(module, num_genes, min_weight, network_df, comm_df = comm_df, deseq = deseq, plot_hist = True, output_dir = None):
+def get_subnetwork1(module, num_genes, min_weight, network_df, comm_df = CommunityData.get_comm_df(), deseq = DESeqData.get_deseq(), plot_hist = True, output_dir = None):
     '''This function subset the whole network by taking the top num_genes of DE genes(nodes) from module 4 and same number of genes(nodes) from 1 of the non-DE module in the original network
     module: the non-DE module to choose from
     num_genes: number of genes to subset from the two modules
@@ -98,7 +98,7 @@ def get_subnetwork1(module, num_genes, min_weight, network_df, comm_df = comm_df
         plot_module_hist(joined_df, f'num_genes={num_genes},min_weight={min_weight}', output_dir)
     return G_joined, joined_df
 
-def get_subnetwork2(num_genes, min_weight, network_df, comm_df = comm_df, deseq = deseq, output_dir = None, plot_hist = True):
+def get_subnetwork2(num_genes, min_weight, network_df, comm_df = CommunityData.get_comm_df(), deseq = DESeqData.get_deseq(), output_dir = None, plot_hist = True):
     '''This function subset the whole network by taking the top num_genes DE from module 4 
     network_df: whole network tom file
     comm_df: louvain community label file

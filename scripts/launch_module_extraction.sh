@@ -1,1 +1,1 @@
-docker run --rm -v "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data":/assist/Data assist/module_extraction:0.1.0
+docker run -m 16g --rm -v "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data":/assist/Data assist/module_extraction:0.1.0

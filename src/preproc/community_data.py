@@ -1,10 +1,15 @@
+import os
 import pandas as pd
-from os import path
-from sys import platform
+from .input import Input
 
-def load():
-    prefix = 'G:' if platform == 'win32' else '/Volumes/GoogleDrive'
-    comm_df = pd.read_csv(prefix + '/Shared drives/NIAAA_ASSIST/Data/eda_derived/network_louvain_default.csv')
-    return comm_df
+class CommunityData:
+    __comm_df = None
 
-comm_df = load()
+    def get_comm_df():
+        if CommunityData.__comm_df is None:
+            CommunityData()
+        return CommunityData.__comm_df
+        
+    def __init__(self):
+        root_dir = Input.getPath()
+        CommunityData.__comm_df = pd.read_csv(os.path.join(root_dir, 'eda_derived/network_louvain_default.csv'))

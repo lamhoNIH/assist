@@ -1,10 +1,20 @@
 FROM rocker/r-ver:4.0.3
 
-COPY install_packages.R /install_packages.R
-COPY wgcna_codes.R /wgcna_codes.R
-COPY version.txt /version.txt
-WORKDIR /
+RUN apt-get update && apt-get install -y --no-install-recommends build-essential libpq-dev python3.8 python3-pip python3-setuptools python3-dev
+RUN pip3 install --upgrade pip
 
-RUN Rscript install_packages.R
+RUN mkdir /assist
 
-CMD Rscript wgcna_codes.R
+COPY requirements.txt /assist
+COPY requirements.r /assist
+COPY prepare_network_ids.py /assist
+COPY wgcna_codes.R /assist
+COPY version.txt /assist
+COPY run.sh /assist
+RUN chmod +x /assist/run.sh
+WORKDIR /assist
+
+RUN pip3 install -r /assist/requirements.txt
+RUN Rscript /assist/requirements.r
+
+CMD ["./run.sh"]
