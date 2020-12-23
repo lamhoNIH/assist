@@ -3,7 +3,6 @@
 install.packages("BiocManager")
 BiocManager::install("WGCNA")
 library(WGCNA)
-
 #Load expression df with normalized count and the network ID file
 expression = read.table('./Data/kapoor2019_batch.age.rin.sex.pm.alc.corrected.coga.inia.expression.txt',
                         header = TRUE)
@@ -16,10 +15,13 @@ write.csv(network_only_expression,
           './Data/eda_derived/network_only_expression.csv',
           row.names = F)
 
+# Convert the id column to index and delete id column
+rownames(network_only_expression) = network_only_expression$id
+network_only_expression$id = NULL
+
 ## automatic block-wise network
 # transpose the dataframe
 network_only_expression_t = t(network_only_expression)
-
 # blockwiseModules() will generate Tom network along with the module detection by WCGNA
 net = blockwiseModules(network_only_expression_t, power = 14,
                        TOMType = "unsigned", minModuleSize = 100,
