@@ -534,3 +534,74 @@ def gene_phenotype_corr(critical_genes, expression_meta_df = expression_meta):
     plt.xlabel('Trait count')
     plt.title('Number of significant traits for each gene')
     plt.subplots_adjust(wspace = 1)
+    
+    
+def gene_set_phenotype_corr(gene_sets, expression_meta_df = expression_meta):
+    '''
+    Plot correlation heatmap between critical gene sets and alcohol phenotypes
+    (similar to cluster_phenotype_corr, cluster is replaced with a set of critical genes)
+    '''
+    i = 1
+    for genes in gene_sets:
+        geneset_expression = expression_meta_df[genes].apply(pd.to_numeric)
+        pca = PCA(n_components=1)
+        pca_geneset_expression = pca.fit_transform(geneset_expression)
+        # originally I used pd.corr() to get pairwise correlation matrix but since I need a separate calculation for correlation p value
+        # I just used pearsonr and collected the results in lists. Making a df here isn't necessary anymore. 
+        eigen_n_features = pd.DataFrame({'eigen': pca_geneset_expression.reshape(len(pca_geneset_expression), ),
+                                         'BMI': expression_meta_df['BMI'], 
+#                                          'RIN': expression_meta_df['RIN'],
+                                         'Age': expression_meta_df['Age'], 'PM!': expression_meta_df['PM!'],
+                                         'Brain_pH': expression_meta_df['Brain_pH'],
+                                         'Pack_yrs_1_pktperday_1_yr': expression_meta_df['Pack_yrs_1_pktperday_1_yr)'],
+                                         'AUDIT': expression_meta_df['AUDIT'],
+                                         'alcohol_intake_gmsperday': expression_meta_df['alcohol_intake_gmsperday'],
+                                         'Total_drinking_yrs': expression_meta_df['Total_drinking_yrs'],
+                                         'SR': expression_meta_df['SR']})
+
+        corr_list = []
+        p_list = []
+        corrected_p_list = []
+        labels = []
+        for col in eigen_n_features.columns[1:]:
+            sub = eigen_n_features[['eigen', col]]
+            sub = sub.dropna()
+            corr_list.append(pearsonr(sub['eigen'], sub[col])[0])
+            p_list.append(pearsonr(sub['eigen'], sub[col])[1])
+        corrected_p_list = multipletests(p_list, method ='fdr_bh')[1] # correct for multiple tests
+        if i == 1:
+            clusters_corr = pd.DataFrame({i: corr_list})
+            clusters_pvalue = pd.DataFrame({i: corrected_p_list})
+            i += 1
+
+        else:
+            clusters_corr[i] = corr_list
+            clusters_pvalue[i] = corrected_p_list
+            i+= 1
+
+    clusters_corr = clusters_corr.T.sort_index(ascending = False)
+    clusters_corr = np.round(clusters_corr, 2)
+    clusters_pvalue = clusters_pvalue.T.sort_index(ascending = False)
+
+    fig = plt.figure(figsize=(17, 8))
+    plt.rcParams.update({'font.size': 18})
+
+    gs = gridspec.GridSpec(1, 2, width_ratios=[2, 1])  # set the subplot width ratio
+    # first subplot to show the correlation heatmap
+    ax0 = plt.subplot(gs[0])
+    sns.heatmap(clusters_corr, cmap='RdBu_r', annot = True,
+                annot_kws = {'fontsize':12}, vmin=-1, vmax=1, xticklabels = eigen_n_features.columns[1:]) 
+    plt.xticks(rotation = 45, ha = 'right')
+    plt.ylabel('gene set id')
+    plt.title('Trait-critical gene set correlation')
+    # second subplot to show count of significant traits in each cluster. "Significant" here means adj p value < 0.2
+    ax1 = plt.subplot(gs[1])
+    sig_count = (clusters_pvalue < 0.2).sum(axis = 1) # count num of traits with p-adj < 0.2 in each cluster
+    plt.barh(sig_count.index, sig_count.values) # horizontal bar plot
+    plt.xlim(0,9) # there are 9 traits here so set the scale to between 0 and 9. change it if the # traits change
+    plt.yticks(clusters_pvalue.index, clusters_pvalue.index)
+    plt.ylabel('gene set id')
+    plt.xlabel('Trait count')
+    plt.title('Number of significant traits each gene set')
+    plt.suptitle(f'Trait-gene set correlation', fontsize = 22)
+    
