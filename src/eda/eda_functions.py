@@ -16,7 +16,7 @@ from statsmodels.stats.multitest import multipletests
 from scipy.stats import pearsonr
 from sys import platform
 from .process_phenotype import *
-from ..preproc.expression_data import expression_meta
+from ..preproc.expression_data import ExpressionData
 
 prefix = 'G:' if platform == 'win32' else '/Volumes/GoogleDrive'
     
@@ -226,7 +226,7 @@ def plot_sig_perc(cluster_df, cluster_column, network_name):
     plt.title('Number of significant traits each cluster')
     plt.suptitle(f'% significant genes for each trait for {network_name}', fontsize = 22)
 
-def cluster_phenotype_corr(cluster_df, cluster_column, network_name, expression_meta_df = expression_meta):
+def cluster_phenotype_corr(cluster_df, cluster_column, network_name, expression_meta_df = ExpressionData.get_expression_meta()):
     '''
     Plot correlation heatmap between modules/clusters and alcohol phenotypes
     '''
@@ -380,7 +380,7 @@ def permute_cluster_label(cluster_df1, cluster_df2, cluster1, cluster2, cluster_
         corr_w_random.append(random_corr[0])
     return np.array(p_w_random), np.array(corr_w_random)
 
-def get_eigen_expression(cluster_df, cluster, cluster_column, expression_meta_df = expression_meta):
+def get_eigen_expression(cluster_df, cluster, cluster_column, expression_meta_df = ExpressionData.get_expression_meta()):
     '''Get eigen expression for a specific cluster in a cluster df'''
     cluster_genes = cluster_df[cluster_df[cluster_column] == cluster]['id'].tolist()
     cluster_expression = expression_meta_df[cluster_genes].apply(pd.to_numeric)
@@ -388,7 +388,7 @@ def get_eigen_expression(cluster_df, cluster, cluster_column, expression_meta_df
     pca_cluster_expression = pca.fit_transform(cluster_expression)
     return pca_cluster_expression
 
-def get_random_expression(cluster_df, cluster, cluster_column, expression_meta_df = expression_meta):
+def get_random_expression(cluster_df, cluster, cluster_column, expression_meta_df = ExpressionData.get_expression_meta()):
     '''Get eigen expression if the cluster membership is randomly assigned'''
     num_nodes = len(cluster_df[cluster_df[cluster_column] == cluster]) 
     random_genes = cluster_df.id.sample(num_nodes)
@@ -485,7 +485,7 @@ def plot_random_vs_actual_z(cluster_df1, cluster_df2, cluster1, cluster2, cluste
     plt.suptitle(f'Distribution of Z scores if the cluster membership is randomly assigned for {network_comparison_name}: cluster {cluster2}')
     
     
-def gene_phenotype_corr(critical_genes, expression_meta_df = expression_meta):
+def gene_phenotype_corr(critical_genes, expression_meta_df = ExpressionData.get_expression_meta()):
     '''
     Plot correlation heatmap between critical genes and alcohol phenotypes
     '''

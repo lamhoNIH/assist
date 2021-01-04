@@ -1,18 +1,17 @@
 # Script to generate WCGNA network
-# Set up the environment
-install.packages("BiocManager")
-BiocManager::install("WGCNA")
+
 library(WGCNA)
+
 #Load expression df with normalized count and the network ID file
 expression = read.table('./Data/kapoor2019_batch.age.rin.sex.pm.alc.corrected.coga.inia.expression.txt',
                         header = TRUE)
-network_IDs = read.csv('./Data/eda_derived/network_IDs.csv',
-                       row.names = 1)
+network_IDs = read.csv('./Data/network_analysis/network_IDs.csv', row.names = 1)
+
 ## Filter expression for network only expression
 network_only_expression = expression[expression$id %in% network_IDs$X0,]
 rownames(network_only_expression) = NULL
 write.csv(network_only_expression, 
-          './Data/eda_derived/network_only_expression.csv',
+          './Data/network_analysis/network_only_expression.csv',
           row.names = F)
 
 # Convert the id column to index and delete id column
@@ -22,6 +21,7 @@ network_only_expression$id = NULL
 ## automatic block-wise network
 # transpose the dataframe
 network_only_expression_t = t(network_only_expression)
+
 # blockwiseModules() will generate Tom network along with the module detection by WCGNA
 net = blockwiseModules(network_only_expression_t, power = 14,
                        TOMType = "unsigned", minModuleSize = 100,
@@ -37,4 +37,5 @@ net_df = cbind(id = rownames(net_df), net_df) # change the index (node names) to
 rownames(net_df) = 1:nrow(net_df)
 colnames(net_df)[2] = 'louvain_label' # change column name
 
-write.csv(net_df, './Data/eda_derived/wgcna_modules.csv', row.names = F)
+# change the file name below to wgcna_modules.csv during test
+write.csv(net_df, './Data/network_analysis/wgcna_modules.csv', row.names = F)
