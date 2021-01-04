@@ -536,7 +536,7 @@ def gene_phenotype_corr(critical_genes, expression_meta_df = ExpressionData.get_
     plt.subplots_adjust(wspace = 1)
     
     
-def gene_set_phenotype_corr(gene_sets, expression_meta_df = expression_meta):
+def gene_set_phenotype_corr(gene_sets, expression_meta_df = ExpressionData.get_expression_meta()):
     '''
     Plot correlation heatmap between critical gene sets and alcohol phenotypes
     (similar to cluster_phenotype_corr, cluster is replaced with a set of critical genes)
