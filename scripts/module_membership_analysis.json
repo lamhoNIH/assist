@@ -1,0 +1,7 @@
+{
+	"provided_networks": "Kapoor_TOM.csv",
+	"computed_networks": "network_analysis/wgcna_modules.csv",
+	"de_genes": "deseq.alc.vs.control.age.rin.batch.gender.PMI.corrected.w.prot.coding.gene.name.xlsx",
+	"network_louvain_default": "module_extraction/run1/network_louvain_default.csv",
+	"network_louvain_agg1": "module_extraction/run1/network_louvain_agg1.csv"
+}
