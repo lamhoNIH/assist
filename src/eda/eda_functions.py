@@ -1,3 +1,4 @@
+import os
 import netcomp
 import pandas as pd
 import math
@@ -17,6 +18,7 @@ from scipy.stats import pearsonr
 from sys import platform
 from .process_phenotype import *
 from ..preproc.expression_data import ExpressionData
+from ..preproc.result import Result
 
 prefix = 'G:' if platform == 'win32' else '/Volumes/GoogleDrive'
     
@@ -49,7 +51,7 @@ def plot_gene_cnt_each_cluster(cluster_dfs, cluster_column, network_names):
         plt.xlabel('Cluster id')
         plt.title(network_names[i])
         plt.subplots_adjust(wspace = 0.3)
-        
+    plt.savefig(os.path.join(Result.getPath(), "plot_gene_cnt_each_cluster.png"))
         
 def plot_graph_distance(networks, network_names):
 
@@ -317,12 +319,11 @@ def plot_cluster_nmi_comparison(cluster1, cluster_list, cluster_column, comparis
     plt.title(f'NMI for {cluster_type[0]} comparison')
     
     
-def cluster_DE_perc(cluster_df, cluster_column, network_name):
+def cluster_DE_perc(deseq, cluster_df, cluster_column, network_name):
     '''
     A function to plot 2 heatmaps to show % of differential genes in each cluster
     Differential genes is defined as log2FC > 0.15 or log2FC < -0.15
     '''
-    deseq = pd.read_excel(prefix + '/Shared drives/NIAAA_ASSIST/Data/deseq.alc.vs.control.age.rin.batch.gender.PMI.corrected.w.prot.coding.gene.name.xlsx')
     num_up_impact = (deseq.log2FoldChange > 0.15).sum()
     num_down_impact = (deseq.log2FoldChange < -0.15).sum()
     clusters = []
@@ -362,7 +363,7 @@ def cluster_DE_perc(cluster_df, cluster_column, network_name):
         top = 0.85
     plt.subplots_adjust(wspace = 0.8, top = top)
     plt.suptitle(f'% DE in each cluster for {network_name}', fontsize = 22)
-    
+    plt.savefig(os.path.join(Result.getPath(), "cluster_DE_perc_" + network_name + ".png"))
       
     
 def permute_cluster_label(cluster_df1, cluster_df2, cluster1, cluster2, cluster_column, shuffle = 100):
@@ -483,7 +484,7 @@ def plot_random_vs_actual_z(cluster_df1, cluster_df2, cluster1, cluster2, cluste
     plt.vlines(network_cluster_stability_df[network_cluster_stability_df[cluster_column] == cluster2]['Z_corr'], 0, 110, color = 'r')
     plt.title('Distribution Z_corr')
     plt.suptitle(f'Distribution of Z scores if the cluster membership is randomly assigned for {network_comparison_name}: cluster {cluster2}')
-    
+    plt.savefig(os.path.join(Result.getPath(), "plot_random_vs_actual_z_" + str(cluster2) + ".png"))
     
 def gene_phenotype_corr(critical_genes, expression_meta_df = ExpressionData.get_expression_meta()):
     '''
@@ -536,7 +537,7 @@ def gene_phenotype_corr(critical_genes, expression_meta_df = ExpressionData.get_
     plt.subplots_adjust(wspace = 1)
     
     
-def gene_set_phenotype_corr(gene_sets, expression_meta_df = expression_meta):
+def gene_set_phenotype_corr(gene_sets, expression_meta_df = ExpressionData.get_expression_meta()):
     '''
     Plot correlation heatmap between critical gene sets and alcohol phenotypes
     (similar to cluster_phenotype_corr, cluster is replaced with a set of critical genes)
