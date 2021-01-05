@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from ..preproc.deseq_data import deseq
+from ..preproc.deseq_data import DESeqData
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestClassifier
@@ -12,7 +12,7 @@ import pickle
 import os
 import seaborn as sns
 
-def process_emb_for_ML(embedding_df, deseq = deseq):
+def process_emb_for_ML(embedding_df, deseq = DESeqData.get_deseq()):
     embedding_labeled_df = pd.merge(embedding_df, deseq, left_index = True, right_on = 'id')
     embedding_labeled_df['impact'] = 1
     embedding_labeled_df.loc[embedding_labeled_df['log2FoldChange'].between(-0.1, 0.1), 'impact'] = 0
