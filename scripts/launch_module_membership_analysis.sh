@@ -15,5 +15,5 @@ cp "${SCRIPT_DIR}/${MODULE}".json "${DATA}/${MODULE}"/config.json
 
 # Takes about 13 minutes to run
 date
-docker run -m16g --rm -e config_file="${MODULE}/config.json" -e archive_path="${MODULE}/run1" -v "${DATA}":/assist/Data assist/${MODULE}:0.1.0
+docker run -m16g --rm -e config_file="${MODULE}/config.json" -e archive_path="${MODULE}/run2" -v "${DATA}":/assist/Data assist/${MODULE}:0.1.0
 date
