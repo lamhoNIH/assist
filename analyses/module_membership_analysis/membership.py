@@ -1,6 +1,7 @@
 import argparse
 import json
 import os
+import shutil
 import pandas as pd
 
 from src.preproc.input import Input
@@ -16,6 +17,7 @@ def analyze_membership(config_file, archive_path):
     Result(os.path.join(data_folder, archive_path))
     config_path = os.path.join(data_folder, config_file)
     print("config_path: {}".format(config_path))
+    shutil.copy(config_path, Result.getPath())
 
     with open(config_path) as json_data:
         config_json = json.load(json_data)
@@ -32,10 +34,6 @@ def analyze_membership(config_file, archive_path):
     cluster_pair_wgcna_n_com1, network_cluster_stability1 = network_cluster_stability(computed_networks_df, comm_df1, 'louvain_label')
     for cluster in comm_df1.louvain_label.unique():
         plot_random_vs_actual_z(computed_networks_df, comm_df1, cluster_pair_wgcna_n_com1[cluster], cluster, 'louvain_label', network_cluster_stability1, 'wgcna vs louvain 1')
-
-    deseq = pd.read_excel(os.path.join(data_folder, config_json["de_genes"]))
-    for i, cluster_df in enumerate(comm_dfs):
-        cluster_DE_perc(deseq, cluster_df, 'louvain_label', comm_names[i])
     
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
