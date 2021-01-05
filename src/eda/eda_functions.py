@@ -20,8 +20,6 @@ from .process_phenotype import *
 from ..preproc.expression_data import ExpressionData
 from ..preproc.result import Result
 
-prefix = 'G:' if platform == 'win32' else '/Volumes/GoogleDrive'
-    
 def scale_free_validate(network_df, network_name):
     network_degree = network_df.sum()
     log_network_degree = np.log(network_degree)
