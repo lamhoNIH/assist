@@ -1,6 +1,7 @@
 import argparse
 import json
 import os
+import shutil
 import pandas as pd
 
 from src.preproc.input import Input
@@ -14,6 +15,7 @@ def extract_modules(config_file, archive_path):
     print("config_file: {} data_folder: {} archive_path: {}".format(config_file, data_folder, archive_path))
     Result(os.path.join(data_folder, archive_path))
     config_path = os.path.join(data_folder, config_file)
+    shutil.copy(config_path, Result.getPath())
 
     with open(config_path) as json_data:
         config_json = json.load(json_data)
