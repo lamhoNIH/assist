@@ -1,0 +1,10 @@
+NetComp==0.2.3
+matplotlib==3.1.2
+numpy==1.19.4
+pandas==1.0.5
+scikit-network==0.20.0
+scipy==1.4.1
+seaborn==0.10.1
+sklearn==0.0
+statsmodels==0.9.0
+xlrd==1.2.0
