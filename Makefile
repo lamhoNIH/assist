@@ -11,6 +11,8 @@ export NETWORK_ANALYSIS_DIR := analyses/network_analysis
 export NETWORK_ANALYSIS_TAG := assist/network_analysis:0.1.0
 export MODULE_EXTRACTION_DIR := analyses/module_extraction
 export MODULE_EXTRACTION_TAG := assist/module_extraction:0.1.0
+export MEMBERSHIP_ANALYSIS_DIR := analyses/module_membership_analysis
+export MEMBERSHIP_ANALYSIS_TAG := assist/module_membership_analysis:0.1.0
 
 all: network-analysis-image module-extraction-image
 
@@ -31,6 +33,18 @@ module-extraction-image:
 	cd $(MODULE_EXTRACTION_DIR); \
 	find . -name '*.pyc' -delete; \
 	docker build -t ${MODULE_EXTRACTION_TAG} .; \
+	rm version.txt; \
+	rm -r src
+	
+membership-analysis-image:
+	python record_version_info.py > version.txt; \
+	cp version.txt $(MEMBERSHIP_ANALYSIS_DIR); \
+	mkdir $(MEMBERSHIP_ANALYSIS_DIR)/src; \
+	cp -r src/eda $(MEMBERSHIP_ANALYSIS_DIR)/src; \
+	cp -r src/preproc $(MEMBERSHIP_ANALYSIS_DIR)/src; \
+	cd $(MEMBERSHIP_ANALYSIS_DIR); \
+	find . -name '*.pyc' -delete; \
+	docker build -t ${MEMBERSHIP_ANALYSIS_TAG} .; \
 	rm version.txt; \
 	rm -r src
 

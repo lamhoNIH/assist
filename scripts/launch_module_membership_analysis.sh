@@ -4,7 +4,7 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 echo ${SCRIPT_DIR}
 
 DATA="/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data"
-MODULE="module_extraction"
+MODULE="module_membership_analysis"
 
 if [ ! -d "${DATA}/${MODULE}" ] 
 then
@@ -13,8 +13,7 @@ fi
 
 cp "${SCRIPT_DIR}/${MODULE}".json "${DATA}/${MODULE}"/config.json
 
-# Takes about 8 minutes to run
+# Takes about 13 minutes to run
 date
-# tried 20G and the process got killed
-docker run -m32g --rm -e config_file="${MODULE}/config.json" -e archive_path="${MODULE}/run2" -v "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data":/assist/Data assist/${MODULE}:0.1.0
+docker run -m16g --rm -e config_file="${MODULE}/config.json" -e archive_path="${MODULE}/run1" -v "${DATA}":/assist/Data assist/${MODULE}:0.1.0
 date
