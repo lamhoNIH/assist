@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 from sys import platform
-from ..preproc.deseq_data import deseq
 from itertools import combinations
 import os
 import pickle
@@ -27,7 +26,7 @@ def get_important_features(model):
         coef = model.feature_importances_
     return coef
 
-def plot_feature_importances(model_path, print_num_dim = True, plot_heatmap = False, return_top_dim = False):
+def plot_feature_importances(model_path, top_n_coef = 0.2, print_num_dim = True, plot_heatmap = False, return_top_dim = False):
     '''
     A function to show feature importances in each model
     and can return feature importance and the top dim from each model
@@ -50,14 +49,15 @@ def plot_feature_importances(model_path, print_num_dim = True, plot_heatmap = Fa
             i += 1
     if print_num_dim == True and return_top_dim == True:
         top_dim_list = list(map(get_top_dim, models_feature_importances, model_files, [True]*len(models_feature_importances),
-                                [0.2]*len(models_feature_importances), [True]*len(models_feature_importances)))
+                                [top_n_coef]*len(models_feature_importances), [True]*len(models_feature_importances)))
         return models_feature_importances, top_dim_list
     elif print_num_dim == False and return_top_dim == True:
         top_dim_list = list(map(get_top_dim, models_feature_importances, model_files, [False]*len(models_feature_importances),
-                                [0.2]*len(models_feature_importances), [True]*len(models_feature_importances)))
+                                [top_n_coef]*len(models_feature_importances), [True]*len(models_feature_importances)))
         return models_feature_importances, top_dim_list
-    else:
-        top_dim_list = list(map(get_top_dim, models_feature_importances, model_files))
+    elif print_num_dim == True and return_top_dim == False:
+        top_dim_list = list(map(get_top_dim, models_feature_importances, model_files, [True]*len(models_feature_importances),
+                                [top_n_coef]*len(models_feature_importances), [False]*len(models_feature_importances)))
         return models_feature_importances
     
 def get_top_dim(coef, model_name, print_num_dim = True, top_n_coef = 0.2, return_top_dim = False):
@@ -76,7 +76,12 @@ def get_top_dim(coef, model_name, print_num_dim = True, top_n_coef = 0.2, return
     if return_top_dim == True:
         top_dim += ['id', 'abs_log2FC']
         return top_dim
-    
+
+def jaccard_similarity(list1, list2):
+    intersection = len(set(list1).intersection(list2))
+    union = len(set(list1)) + len(set(list2)) - intersection
+    return intersection / union
+
 def jaccard_average(top_dim_list, title):
     new_top_dim_list = [dim_list[:-2] for dim_list in top_dim_list]
     jac_average = []
@@ -124,7 +129,7 @@ def get_pairwise_distances(processed_emb_df):
     pairwise_distances.sort_values('abs_log2FC', ascending = False, inplace=True)
     return pairwise_distances
 
-def get_critical_genes(pairwise_distance_df):
+def get_critical_genes(pairwise_distance_df, max_dist = 0.55):
     '''
     Find critical genes that are close to impact genes
     critical_gene_dict: # impact genes a critical gene is close to
@@ -138,10 +143,10 @@ def get_critical_genes(pairwise_distance_df):
     size = len(pairwise_distance_df[pairwise_distance_df.abs_log2FC > 0.2]) # cutoff of abs_log2FC > 0.2 as impact gene
     for i in range(size):
         subset_distance = pairwise_distance_df.iloc[i,:-2].sort_values()
-        key = subset_distance[subset_distance.between(0.01,0.55)].reset_index().columns[1] # Euclidean distance < 0.5 as "close", key is an impact gene
-        values = subset_distance[subset_distance.between(0.01,0.55)].reset_index()['id'].tolist() # values are the list of close genes, aka potential critical genes
+        key = subset_distance[subset_distance.between(0.01,max_dist)].reset_index().columns[1] # Euclidean distance < 0.55 as "close", key is an impact gene when 20% important features were used. Increase the size when more features are used 
+        values = subset_distance[subset_distance.between(0.01,max_dist)].reset_index()['id'].tolist() # values are the list of close genes, aka potential critical genes
         gene_pair_dict[key] = values
-        critical_gene_list += list(subset_distance[subset_distance.between(0.01,0.55)].index)
+        critical_gene_list += list(subset_distance[subset_distance.between(0.01,max_dist)].index)
     critical_gene_dict = Counter(critical_gene_list)
     critical_gene_dict = sorted(critical_gene_dict.items(), key=lambda x: x[1], reverse=True)
     return critical_gene_dict, gene_pair_dict
@@ -149,15 +154,27 @@ def get_critical_genes(pairwise_distance_df):
 def top_critical_genes(critical_gene_list, min_gene):
     return [i[0] for i in critical_gene_list[0] if i[1] >= min_gene]
 
-def get_critical_gene_sets(processed_emb_df, top_dim_list):
+def calculate_distance_stats(distance_df_list):
+    '''
+    A function to determine smallest distance mean and largest distance mean for each gene identified in the importance dimensions
+    This function will provide a sense of what the distance cutoff should be for a gene to be considered as "close" to an impact gene
+    '''
+    distance_df_joined = pd.concat(distance_df_list)
+    max_mean = np.max(distance_df_joined.mean())
+    min_mean = np.min(distance_df_joined.mean())
+    print('Max mean:', max_mean, 'Min mean:', min_mean)
+    
+def get_critical_gene_sets(processed_emb_df, top_dim_list, max_dist = 0.55):
     '''
     Input: processed embedding df used for ML and top_dim_list (set of 9 for 3 models x 3 repeats)
     Output: 9 sets of critical genes for 3 models x 3 repeats
     '''
     process_emb_df_subset = [processed_emb_df[top_dim_list[i]] for i in range(9)]
     distance_dfs = list(map(get_pairwise_distances, process_emb_df_subset))
-    critical_gene_sets = list(map(get_critical_genes, distance_dfs))
+    calculate_distance_stats(distance_dfs)
+    critical_gene_sets = list(map(get_critical_genes, distance_dfs, [max_dist]*len(distance_dfs)))
     return critical_gene_sets
+
 
 def get_critical_gene_df(critical_gene_set):
     '''
