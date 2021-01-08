@@ -19,10 +19,14 @@ all: network-analysis-image module-extraction-image
 network-analysis-image:
 	python record_version_info.py > version.txt; \
 	cp version.txt $(NETWORK_ANALYSIS_DIR); \
+	mkdir $(NETWORK_ANALYSIS_DIR)/src; \
+	cp -r src/eda $(NETWORK_ANALYSIS_DIR)/src; \
+	cp -r src/preproc $(NETWORK_ANALYSIS_DIR)/src; \
 	cd $(NETWORK_ANALYSIS_DIR); \
 	find . -name '*.pyc' -delete; \
 	docker build -t ${NETWORK_ANALYSIS_TAG} .; \
-	rm version.txt
+	rm version.txt; \
+	rm -r src
 	
 module-extraction-image:
 	python record_version_info.py > version.txt; \
