@@ -22,13 +22,13 @@ class ExpressionData:
                 network_only_expression = pd.read_csv(network_only_expression_path, low_memory = False)
             else:
                 expression = pd.read_csv(path.join(data_folder, 'kapoor2019_batch.age.rin.sex.pm.alc.corrected.coga.inia.expression.txt'), sep = '\t')
-                network_ids_path = path.join(derived_data_folder, 'eda_derived/network_IDs.csv')
-                if path.exists(network_ids_path):
-                    network_IDs = pd.read_csv(path.join(derived_data_folder, 'eda_derived/network_IDs.csv'), index_col = 0)
-                else:
+                network_ids_path = path.join(derived_data_folder, 'network_IDs.csv')
+                if path.exists(network_ids_path) == False:
                     adj_df = pd.read_csv(path.join(data_folder, 'Kapoor_adjacency.csv'), index_col = 0)
                     network_IDs = pd.Series(adj_df.columns)
                     network_IDs.to_csv(network_ids_path)
+                # Import the network_IDs so it has the column '0' in it
+                network_IDs = pd.read_csv(network_ids_path, index_col = 0)
                 network_only_expression = expression[expression.id.isin(network_IDs['0'])]
                 network_only_expression.to_csv(network_only_expression_path, index = 0)
             network_only_expression_t = network_only_expression.T

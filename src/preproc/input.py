@@ -18,6 +18,6 @@ class Input:
             else:
                 Input.__path = path
         else:
-            prefix = 'G:' if platform == 'win32' else '/Volumes/GoogleDrive'
+            prefix = 'G:/' if platform == 'win32' else '/Volumes/GoogleDrive'
             Input.__path = os.path.join(prefix, 'Shared drives/NIAAA_ASSIST/Data')
             
