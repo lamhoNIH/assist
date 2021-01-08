@@ -5,6 +5,7 @@ import shutil
 import pandas as pd
 
 from src.preproc.input import Input
+from src.preproc.result import Result
 
 Input('./Data')
 
