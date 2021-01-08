@@ -19,9 +19,12 @@ def preproc(config_file, archive_path):
     
     network_IDs = pd.Series(adj_df.columns)
     network_IDs.to_csv(os.path.join(result_path, config_json["network_ids"]))
+    
+    # Import the network_IDs so it has the column '0' in it
+    network_IDs = pd.read_csv(os.path.join(result_path, config_json["network_ids"]), index_col = 0)
 
     expression = pd.read_csv(os.path.join(data_folder, config_json["normalized_counts"]), sep = '\t')
-    network_only_expression = expression[expression.id.isin(network_IDs)]
+    network_only_expression = expression[expression.id.isin(network_IDs['0'])]
     network_only_expression.to_csv(os.path.join(result_path, config_json["network_only_expression"]), index = 0)
     network_only_expression_t = network_only_expression.T
     network_only_expression_t.drop('id', inplace=True)
