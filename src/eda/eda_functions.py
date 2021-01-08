@@ -225,6 +225,7 @@ def plot_sig_perc(cluster_df, cluster_column, network_name):
     plt.xlabel('# Trait with >5% significant genes')
     plt.title('Number of significant traits each cluster')
     plt.suptitle(f'% significant genes for each trait for {network_name}', fontsize = 22)
+    plt.savefig(os.path.join(Result.getPath(), "plot_sig_perc_" + network_name + ".png"))
 
 def cluster_phenotype_corr(cluster_df, cluster_column, network_name, expression_meta_df = ExpressionData.get_expression_meta()):
     '''
@@ -294,6 +295,7 @@ def cluster_phenotype_corr(cluster_df, cluster_column, network_name, expression_
     plt.xlabel('Trait count')
     plt.title('Number of significant traits each cluster')
     plt.suptitle(f'Trait cluster correlation for {network_name}', fontsize = 22)
+    plt.savefig(os.path.join(Result.getPath(), "cluster_phenotype_corr_" + network_name + ".png"))
     
     
 def cluster_nmi(cluster_df1, cluster_df2, cluster_column):
