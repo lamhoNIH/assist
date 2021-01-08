@@ -1,18 +1,15 @@
 # Script to generate WCGNA network
 
 library(WGCNA)
+library("rjson")
 
+json_data <- fromJSON(file='./Data/network_analysis/config.json')
 #Load expression df with normalized count and the network ID file
-expression = read.table('./Data/kapoor2019_batch.age.rin.sex.pm.alc.corrected.coga.inia.expression.txt',
-                        header = TRUE)
+expression = read.table(file.path('./Data', json_data['normalized_counts']), header = TRUE)
 network_IDs = read.csv('./Data/network_analysis/network_IDs.csv', row.names = 1)
 
 ## Filter expression for network only expression
 network_only_expression = expression[expression$id %in% network_IDs$X0,]
-rownames(network_only_expression) = NULL
-write.csv(network_only_expression, 
-          './Data/network_analysis/network_only_expression.csv',
-          row.names = F)
 
 # Convert the id column to index and delete id column
 rownames(network_only_expression) = network_only_expression$id

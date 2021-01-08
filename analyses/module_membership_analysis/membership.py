@@ -22,7 +22,6 @@ def analyze_membership(config_file, archive_path):
     with open(config_path) as json_data:
         config_json = json.load(json_data)
 
-    provided_networks_df = pd.read_csv(os.path.join(data_folder, config_json["provided_networks"]), index_col = 0)
     computed_networks_df = pd.read_csv(os.path.join(data_folder, config_json["computed_networks"]))
     comm_df1 = pd.read_csv(os.path.join(data_folder, config_json["network_louvain_default"]))
     comm_df2 = pd.read_csv(os.path.join(data_folder, config_json["network_louvain_agg1"]))

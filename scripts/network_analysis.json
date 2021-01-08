@@ -1,0 +1,9 @@
+{
+	"provided_network_adjacency": "Kapoor_adjacency.csv",
+	"diagnostics": "Kapoor2019_coga.inia.detailed.pheno.04.12.17.csv",
+	"normalized_counts": "Kapoor2019_batch.age.rin.sex.pm.alc.corrected.coga.inia.expression.txt",
+	"network_ids": "network_IDs.csv",
+	"network_only_expression": "network_only_expression.csv",
+	"networks_of_coregulated_genes": "wgcna_modules.csv",
+	"expression_with_metadata": "expression_meta.csv"
+}
