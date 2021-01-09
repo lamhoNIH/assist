@@ -25,14 +25,15 @@ def analyze_membership(config_file, archive_path):
     computed_networks_df = pd.read_csv(os.path.join(data_folder, config_json["computed_networks"]))
     comm_df1 = pd.read_csv(os.path.join(data_folder, config_json["network_louvain_default"]))
     comm_df2 = pd.read_csv(os.path.join(data_folder, config_json["network_louvain_agg1"]))
+    expression_meta_df = pd.read_csv(os.path.join(data_folder, config_json["expression_with_metadata"]), low_memory = False)
 
     comm_dfs = [computed_networks_df, comm_df1, comm_df2]
     comm_names = ['wgcna', 'louvain 1', 'louvain 2']
     plot_gene_cnt_each_cluster(comm_dfs, 'louvain_label', comm_names)
     
-    cluster_pair_wgcna_n_com1, network_cluster_stability1 = network_cluster_stability(computed_networks_df, comm_df1, 'louvain_label')
+    cluster_pair_wgcna_n_com1, network_cluster_stability1 = network_cluster_stability(computed_networks_df, comm_df1, 'louvain_label', expression_meta_df)
     for cluster in comm_df1.louvain_label.unique():
-        plot_random_vs_actual_z(computed_networks_df, comm_df1, cluster_pair_wgcna_n_com1[cluster], cluster, 'louvain_label', network_cluster_stability1, 'wgcna vs louvain 1')
+        plot_random_vs_actual_z(computed_networks_df, comm_df1, cluster_pair_wgcna_n_com1[cluster], cluster, 'louvain_label', network_cluster_stability1, 'wgcna vs louvain 1', expression_meta_df)
     
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
