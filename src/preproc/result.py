@@ -9,13 +9,15 @@ class Result:
             Result()
         return Result.__path
             
-    def __init__(self, path="output"):
+    def __init__(self, path="output", overwrite=True):
         try:
             if os.path.isdir(path):
-                print("Removing existing folder: {}".format(path))
-                shutil.rmtree(path)
-
-            os.makedirs(path, exist_ok=True)
+                if overwrite:
+                    print("Removing existing folder: {}".format(path))
+                    shutil.rmtree(path)
+                    os.makedirs(path)
+            else:
+                os.makedirs(path)
             Result.__path = path
         except:
             print("Creation of folder {} failed".format(path))

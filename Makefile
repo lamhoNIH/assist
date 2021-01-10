@@ -13,6 +13,8 @@ export MODULE_EXTRACTION_DIR := analyses/module_extraction
 export MODULE_EXTRACTION_TAG := assist/module_extraction:0.1.0
 export MEMBERSHIP_ANALYSIS_DIR := analyses/module_membership_analysis
 export MEMBERSHIP_ANALYSIS_TAG := assist/module_membership_analysis:0.1.0
+export DIAGNOSTIC_CORRELATION_DIR := analyses/module_de_diagnostic_correlation
+export DIAGNOSTIC_CORRELATION_TAG := assist/module_de_diagnostic_correlation:0.1.0
 
 all: network-analysis-image module-extraction-image
 
@@ -49,6 +51,18 @@ membership-analysis-image:
 	cd $(MEMBERSHIP_ANALYSIS_DIR); \
 	find . -name '*.pyc' -delete; \
 	docker build -t ${MEMBERSHIP_ANALYSIS_TAG} .; \
+	rm version.txt; \
+	rm -r src
+	
+diagnostic-correlation-image:
+	python record_version_info.py > version.txt; \
+	cp version.txt $(DIAGNOSTIC_CORRELATION_DIR); \
+	mkdir $(DIAGNOSTIC_CORRELATION_DIR)/src; \
+	cp -r src/eda $(DIAGNOSTIC_CORRELATION_DIR)/src; \
+	cp -r src/preproc $(DIAGNOSTIC_CORRELATION_DIR)/src; \
+	cd $(DIAGNOSTIC_CORRELATION_DIR); \
+	find . -name '*.pyc' -delete; \
+	docker build -t ${DIAGNOSTIC_CORRELATION_TAG} .; \
 	rm version.txt; \
 	rm -r src
 
