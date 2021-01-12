@@ -60,7 +60,6 @@ def plot_module_hist(adjacency_df, title, output_dir = None, comm_df = Community
             os.makedirs(output_dir)
         plt.savefig(f'{output_dir}/{title}.png', bbox_inches = 'tight')
         print(f'Figure {title} has been saved.')
-    plt.close()
 
 
 def get_subnetwork1(module, num_genes, min_weight, network_df, comm_df = CommunityData.get_comm_df(), deseq = DESeqData.get_deseq(), plot_hist = True, hist_dir = None, subnetwork_dir = None):
@@ -96,10 +95,12 @@ def get_subnetwork1(module, num_genes, min_weight, network_df, comm_df = Communi
     
     G_joined = reduce(lambda x,y:nx.compose(x, y), G_sub_list)
     joined_df = nx.convert_matrix.to_pandas_adjacency(G_joined)
+
     if (plot_hist == True) & (hist_dir == None):
-        print('Must have an output dir to save the histogram')
-    if plot_hist == True:
-        plot_module_hist(joined_df, f'num_genes={num_genes},min_weight={min_weight}', output_dir)
+        plot_module_hist(joined_df, f'abs_log2FC_{abs_log2FC},pvalue_{pvalue},min_weight_{min_weight}')
+        print('The histogram has not been saved')
+    if (plot_hist == True) & (hist_dir != None):
+        plot_module_hist(joined_df, f'num_genes={num_genes},min_weight={min_weight}', hist_dir)
     if subnetwork_dir != None:
         joined_df.to_csv(subnetwork_dir)
     return G_joined, joined_df
@@ -127,9 +128,10 @@ def get_subnetwork2(num_genes, min_weight, network_df, comm_df = CommunityData.g
     G_joined = reduce(lambda x,y:nx.compose(x, y), G_sub_list)
     joined_df = nx.convert_matrix.to_pandas_adjacency(G_joined)
     if (plot_hist == True) & (hist_dir == None):
-        print('Must have an output dir to save the histogram')
-    if plot_hist == True:
-        plot_module_hist(joined_df, f'num_genes={num_genes},min_weight={min_weight}', output_dir)
+        plot_module_hist(joined_df, f'abs_log2FC_{abs_log2FC},pvalue_{pvalue},min_weight_{min_weight}')
+        print('The histogram has not been saved')
+    if (plot_hist == True) & (hist_dir != None):
+        plot_module_hist(joined_df, f'num_genes={num_genes},min_weight={min_weight}', hist_dir)
     if subnetwork_dir != None:
         joined_df.to_csv(subnetwork_dir)
     return G_joined, joined_df
