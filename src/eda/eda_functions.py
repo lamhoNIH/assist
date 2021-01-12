@@ -74,7 +74,6 @@ def plot_graph_distance(networks, network_names):
     plt.title('Deltacon distance')
     plt.xlabel('Number of edges')
     plt.xticks(rotation = 45, ha = 'right')
-    plt.savefig(os.path.join(Result.getPath(), f'plot_gene_cnt_each_cluster_Deltacon.png'))
 
     plt.subplot(1, 2, 2)
     plt.bar(names, ged_distance_list)
@@ -82,7 +81,7 @@ def plot_graph_distance(networks, network_names):
     plt.xlabel('Number of edges')
     plt.xticks(rotation = 45, ha = 'right')
     plt.subplots_adjust(wspace=0.5)
-    plt.savefig(os.path.join(Result.getPath(), f'plot_gene_cnt_each_cluster_GEM.png'))
+    plt.savefig(os.path.join(Result.getPath(), "plot_graph_distance.png"))
 
 def run_kmeans(embedding_df, n_clusters):
     '''Run k means on embedding df'''
