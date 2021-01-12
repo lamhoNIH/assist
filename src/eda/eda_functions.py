@@ -31,6 +31,8 @@ def scale_free_validate(network_df, network_name):
     plt.title(f'Scale-free check for {network_name}')
     plot_name = f'scale_free_validate_{network_name.replace(" ", "_")}.png'
     plt.savefig(os.path.join(Result.getPath(), plot_name))
+    plt.show() # This function needs plt.show() and plt.close() because other methods loop through the figures as subplots so they don't overlap. Each figure here is a whole plot
+    plt.close()
     
 def plot_gene_cnt_each_cluster(cluster_dfs, cluster_column, network_names):
     '''
