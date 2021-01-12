@@ -18,6 +18,7 @@ from scipy.stats import pearsonr
 from sys import platform
 from .process_phenotype import *
 from ..preproc.result import Result
+from ..preproc.deseq_data import DESeqData
 
 def scale_free_validate(network_df, network_name):
     network_degree = network_df.sum()
@@ -30,6 +31,8 @@ def scale_free_validate(network_df, network_name):
     plt.title(f'Scale-free check for {network_name}')
     plot_name = f'scale_free_validate_{network_name.replace(" ", "_")}.png'
     plt.savefig(os.path.join(Result.getPath(), plot_name))
+    plt.show() # This function needs plt.show() and plt.close() because other methods loop through the figures as subplots so they don't overlap. Each figure here is a whole plot
+    plt.close()
     
 def plot_gene_cnt_each_cluster(cluster_dfs, cluster_column, network_names):
     '''
@@ -318,10 +321,10 @@ def plot_cluster_nmi_comparison(cluster1_name, cluster1, cluster_list, cluster_c
     plt.ylabel('NMI')
     cluster_type = ['community' if cluster_column == 'louvain_label' else 'cluster']
     plt.title(f'NMI for {cluster_type[0]} comparison')
+    plt.xticks(rotation = 45, ha = 'right')
     plt.savefig(os.path.join(Result.getPath(), f'plot_cluster_nmi_comparison_{cluster1_name}.png'))
-    
-    
-def cluster_DE_perc(deseq, cluster_df, cluster_column, network_name):
+
+def cluster_DE_perc(cluster_df, cluster_column, network_name, deseq = DESeqData.get_deseq()):
     '''
     A function to plot 2 heatmaps to show % of differential genes in each cluster
     Differential genes is defined as log2FC > 0.15 or log2FC < -0.15
