@@ -59,7 +59,7 @@ def plot_module_hist(adjacency_df, title, output_dir = None, comm_df = Community
     plt.close()
 
 
-def get_subnetwork1(module, num_genes, min_weight, network_df, comm_df = CommunityData.get_comm_df(), deseq = DESeqData.get_deseq(), plot_hist = True, output_dir = None):
+def get_subnetwork1(module, num_genes, min_weight, network_df, comm_df = CommunityData.get_comm_df(), deseq = DESeqData.get_deseq(), plot_hist = True, hist_dir = None, subnetwork_dir = None):
     '''This function subset the whole network by taking the top num_genes of DE genes(nodes) from module 4 and same number of genes(nodes) from 1 of the non-DE module in the original network
     module: the non-DE module to choose from
     num_genes: number of genes to subset from the two modules
@@ -92,13 +92,15 @@ def get_subnetwork1(module, num_genes, min_weight, network_df, comm_df = Communi
     
     G_joined = reduce(lambda x,y:nx.compose(x, y), G_sub_list)
     joined_df = nx.convert_matrix.to_pandas_adjacency(G_joined)
-    if (plot_hist == True) & (output_dir == None):
+    if (plot_hist == True) & (hist_dir == None):
         print('Must have an output dir to save the histogram')
     if plot_hist == True:
         plot_module_hist(joined_df, f'num_genes={num_genes},min_weight={min_weight}', output_dir)
+    if subnetwork_dir != None:
+        joined_df.to_csv(subnetwork_dir)
     return G_joined, joined_df
 
-def get_subnetwork2(num_genes, min_weight, network_df, comm_df = CommunityData.get_comm_df(), deseq = DESeqData.get_deseq(), output_dir = None, plot_hist = True):
+def get_subnetwork2(num_genes, min_weight, network_df, comm_df = CommunityData.get_comm_df(), deseq = DESeqData.get_deseq(), plot_hist = True, hist_dir = None, subnetwork_dir = None):
     '''This function subset the whole network by taking the top num_genes DE from module 4 
     network_df: whole network tom file
     comm_df: louvain community label file
@@ -120,8 +122,19 @@ def get_subnetwork2(num_genes, min_weight, network_df, comm_df = CommunityData.g
     print('Number of edges:',edges)
     G_joined = reduce(lambda x,y:nx.compose(x, y), G_sub_list)
     joined_df = nx.convert_matrix.to_pandas_adjacency(G_joined)
-    if (plot_hist == True) & (output_dir == None):
+    if (plot_hist == True) & (hist_dir == None):
         print('Must have an output dir to save the histogram')
     if plot_hist == True:
         plot_module_hist(joined_df, f'num_genes={num_genes},min_weight={min_weight}', output_dir)
+    if subnetwork_dir != None:
+        joined_df.to_csv(subnetwork_dir)
     return G_joined, joined_df
+
+def add_missing_genes(whole_network, subnetwork_df):
+    '''A function to add back the genes that got cut out of the df when network was subselected'''
+    subnetwork_df_copy = subnetwork_df.copy()
+    id_diff = list(set(whole_network.columns) - set(subnetwork_df.columns))
+    subnetwork_df_copy[id_diff] = 0
+    rows_to_append = pd.DataFrame(0, columns = subnetwork_df_copy.columns, index = id_diff)
+    subnetwork_complete = pd.concat([subnetwork_df_copy, rows_to_append])
+    return subnetwork_complete

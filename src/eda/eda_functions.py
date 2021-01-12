@@ -18,6 +18,7 @@ from scipy.stats import pearsonr
 from sys import platform
 from .process_phenotype import *
 from ..preproc.result import Result
+from ..preproc.deseq_data import DESeqData
 
 def scale_free_validate(network_df, network_name):
     network_degree = network_df.sum()
@@ -316,9 +317,9 @@ def plot_cluster_nmi_comparison(cluster1, cluster_list, cluster_column, comparis
     plt.ylabel('NMI')
     cluster_type = ['community' if cluster_column == 'louvain_label' else 'cluster']
     plt.title(f'NMI for {cluster_type[0]} comparison')
+    plt.xticks(rotation = 45, ha = 'right')
     
-    
-def cluster_DE_perc(deseq, cluster_df, cluster_column, network_name):
+def cluster_DE_perc(cluster_df, cluster_column, network_name, deseq = DESeqData.get_deseq()):
     '''
     A function to plot 2 heatmaps to show % of differential genes in each cluster
     Differential genes is defined as log2FC > 0.15 or log2FC < -0.15
