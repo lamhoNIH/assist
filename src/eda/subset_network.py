@@ -41,8 +41,8 @@ def subset_network(network_df, weight_min, weight_max, num_edges = None, subnetw
                 subset.to_csv(subnetwork_dir)
         return new_subset_adj, G
     
-def get_module_df(network_df, community_df, cluster):
-    cluster_genes = community_df[community_df.louvain_label == cluster].id
+def get_module_df(network_df, cluster, comm_df =  CommunityData.get_comm_df()):
+    cluster_genes = comm_df[comm_df.louvain_label == cluster].id
     cluster_tom = network_df[cluster_genes]
     cluster_tom = cluster_tom[cluster_tom.index.isin(cluster_genes)]
     return cluster_tom
@@ -65,7 +65,7 @@ def plot_module_hist(adjacency_df, title, output_dir = None, comm_df = Community
     plt.close()
 
 def get_subnetwork_by_DE(network_df, abs_log2FC, pvalue = 0.05, min_weight = 0.012, deseq = DESeqData.get_deseq(), 
-                         plot_hist = True, hist_dir = None, subnetwork_dir = None):
+                         plot_hist = True, hist_dir = None, subnetwork_file = None):
     '''
     A method get subnetwork based on DE status. This method will take the DE with highest absoluate log2FC and then pull nodes with strong connection with the DE nodes
     '''
@@ -87,16 +87,17 @@ def get_subnetwork_by_DE(network_df, abs_log2FC, pvalue = 0.05, min_weight = 0.0
         print('The histogram was not saved')
     if (plot_hist == True) & (hist_dir != None):
         plot_module_hist(joined_df, f'abs_log2FC_{abs_log2FC},pvalue_{pvalue},min_weight_{min_weight}', hist_dir)
-    if subnetwork_dir != None:
-        joined_df.to_csv(subnetwork_dir + f'subnetwork_{abs_log2FC}_{pvalue}_{min_weight}.csv')
+    if subnetwork_file != None:
+        joined_df.to_csv(subnetwork_file + f'subnetwork_{abs_log2FC}_{pvalue}_{min_weight}.csv')
     return G_joined, joined_df
 
 
 
-def get_subnetwork1(module, num_genes, min_weight, network_df, comm_df = CommunityData.get_comm_df(), deseq = DESeqData.get_deseq(), plot_hist = True, hist_dir = None, subnetwork_dir = None):
+def get_subnetwork1(module, num_genes, min_weight, network_df, comm_df = CommunityData.get_comm_df(), deseq = DESeqData.get_deseq(), plot_hist = True, hist_dir = None, subnetwork_file = None):
     '''This function subset the whole network by taking the top num_genes of DE genes(nodes) from module 4 and same number of genes(nodes) from 1 of the non-DE module in the original network
     module: the non-DE module to choose from
     num_genes: number of genes to subset from the two modules
+    min_weight: weight cutoff
     network_df: whole network tom file
     comm_df: louvain community label file
     deseq: DE file
@@ -132,11 +133,11 @@ def get_subnetwork1(module, num_genes, min_weight, network_df, comm_df = Communi
         print('The histogram was not saved')
     if (plot_hist == True) & (hist_dir != None):
         plot_module_hist(joined_df, f'num_genes={num_genes},min_weight={min_weight}', hist_dir)
-    if subnetwork_dir != None:
-        joined_df.to_csv(subnetwork_dir)
+    if subnetwork_file != None:
+        joined_df.to_csv(subnetwork_file)
     return G_joined, joined_df
 
-def get_subnetwork2(num_genes, min_weight, network_df, comm_df = CommunityData.get_comm_df(), deseq = DESeqData.get_deseq(), plot_hist = True, hist_dir = None, subnetwork_dir = None):
+def get_subnetwork2(num_genes, min_weight, network_df, comm_df = CommunityData.get_comm_df(), deseq = DESeqData.get_deseq(), plot_hist = True, hist_dir = None, subnetwork_file = None):
     '''This function subset the whole network by taking the top num_genes DE from module 4 
     network_df: whole network tom file
     comm_df: louvain community label file
@@ -163,8 +164,8 @@ def get_subnetwork2(num_genes, min_weight, network_df, comm_df = CommunityData.g
         print('The histogram was not saved')
     if (plot_hist == True) & (hist_dir != None):
         plot_module_hist(joined_df, f'num_genes={num_genes},min_weight={min_weight}', hist_dir)
-    if subnetwork_dir != None:
-        joined_df.to_csv(subnetwork_dir)
+    if subnetwork_file != None:
+        joined_df.to_csv(subnetwork_file)
     return G_joined, joined_df
 
 def add_missing_genes(whole_network, subnetwork_df):
