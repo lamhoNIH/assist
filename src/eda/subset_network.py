@@ -48,7 +48,8 @@ def get_module_df(network_df, community_df, cluster):
     return cluster_tom
 
 def plot_module_hist(adjacency_df, title, output_dir = None, comm_df = CommunityData.get_comm_df()):
-    plt.hist(comm_df[comm_df.id.isin(adjacency_df.columns)].louvain_label) # show the distributions of the nodes after subsetting
+    module_num = len(comm_df.louvain_label.unique())
+    plt.hist(comm_df[comm_df.id.isin(adjacency_df.columns)].louvain_label, bins = range(module_num)) # show the distributions of the nodes after subsetting
     plt.title(title)
     plt.xlabel('module id')
     plt.ylabel('number of genes')
@@ -60,6 +61,36 @@ def plot_module_hist(adjacency_df, title, output_dir = None, comm_df = Community
             os.makedirs(output_dir)
         plt.savefig(f'{output_dir}/{title}.png', bbox_inches = 'tight')
         print(f'Figure {title} has been saved.')
+    plt.show()
+    plt.close()
+
+def get_subnetwork_by_DE(network_df, abs_log2FC, pvalue = 0.05, min_weight = 0.012, deseq = DESeqData.get_deseq(), 
+                         plot_hist = True, hist_dir = None, subnetwork_dir = None):
+    '''
+    A method get subnetwork based on DE status. This method will take the DE with highest absoluate log2FC and then pull nodes with strong connection with the DE nodes
+    '''
+    genes_to_keep = deseq[(deseq.abs_log2FC > abs_log2FC) & (deseq.pvalue < pvalue)]['id']
+    print('# DE:', len(genes_to_keep))
+    G_sub_list = []
+    edges = 0
+    for gene in genes_to_keep: # iterate through the nodes
+        gene_subnet = network_df[gene][network_df[gene] > min_weight] # set weight to choose neighbors from the whole network to could get nodes from other modules as well
+        gene_edgelist = pd.DataFrame({'source':gene, 'target':gene_subnet.index, 'weight':gene_subnet.values})
+        edges += len(gene_subnet)
+        G_sub = nx.convert_matrix.from_pandas_edgelist(gene_edgelist, 'source', 'target', 'weight') # convert from edgelist to graph
+        G_sub_list.append(G_sub)
+    print('Number of edges:',edges)
+    G_joined = reduce(lambda x,y:nx.compose(x, y), G_sub_list)
+    joined_df = nx.convert_matrix.to_pandas_adjacency(G_joined)
+    if (plot_hist == True) & (hist_dir == None):
+        plot_module_hist(joined_df, f'abs_log2FC_{abs_log2FC},pvalue_{pvalue},min_weight_{min_weight}')
+        print('The histogram was not saved')
+    if (plot_hist == True) & (hist_dir != None):
+        plot_module_hist(joined_df, f'abs_log2FC_{abs_log2FC},pvalue_{pvalue},min_weight_{min_weight}', hist_dir)
+    if subnetwork_dir != None:
+        joined_df.to_csv(subnetwork_dir + f'subnetwork_{abs_log2FC}_{pvalue}_{min_weight}.csv')
+    return G_joined, joined_df
+
 
 
 def get_subnetwork1(module, num_genes, min_weight, network_df, comm_df = CommunityData.get_comm_df(), deseq = DESeqData.get_deseq(), plot_hist = True, hist_dir = None, subnetwork_dir = None):
@@ -98,7 +129,7 @@ def get_subnetwork1(module, num_genes, min_weight, network_df, comm_df = Communi
 
     if (plot_hist == True) & (hist_dir == None):
         plot_module_hist(joined_df, f'abs_log2FC_{abs_log2FC},pvalue_{pvalue},min_weight_{min_weight}')
-        print('The histogram has not been saved')
+        print('The histogram was not saved')
     if (plot_hist == True) & (hist_dir != None):
         plot_module_hist(joined_df, f'num_genes={num_genes},min_weight={min_weight}', hist_dir)
     if subnetwork_dir != None:
@@ -129,7 +160,7 @@ def get_subnetwork2(num_genes, min_weight, network_df, comm_df = CommunityData.g
     joined_df = nx.convert_matrix.to_pandas_adjacency(G_joined)
     if (plot_hist == True) & (hist_dir == None):
         plot_module_hist(joined_df, f'abs_log2FC_{abs_log2FC},pvalue_{pvalue},min_weight_{min_weight}')
-        print('The histogram has not been saved')
+        print('The histogram was not saved')
     if (plot_hist == True) & (hist_dir != None):
         plot_module_hist(joined_df, f'num_genes={num_genes},min_weight={min_weight}', hist_dir)
     if subnetwork_dir != None:
