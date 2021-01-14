@@ -15,8 +15,8 @@ export MEMBERSHIP_ANALYSIS_DIR := analyses/module_membership_analysis
 export MEMBERSHIP_ANALYSIS_TAG := assist/module_membership_analysis:0.1.0
 export DIAGNOSTIC_CORRELATION_DIR := analyses/module_de_diagnostic_correlation
 export DIAGNOSTIC_CORRELATION_TAG := assist/module_de_diagnostic_correlation:0.1.0
-export MODULE_SUBSELECTION_DIR := analyses/module_subselection
-export MODULE_SUBSELECTION_TAG := assist/module_subselection:0.1.0
+export MODULE_SUBSELECTION_EMBEDDING_DIR := analyses/module_subselection_embedding
+export MODULE_SUBSELECTION_EMBEDDING_TAG := assist/module_subselection_embedding:0.1.0
 
 all: network-analysis-image module-extraction-image
 
@@ -68,15 +68,15 @@ diagnostic-correlation-image:
 	rm version.txt; \
 	rm -r src
 	
-module-subselection-image:
+module-subselection-embedding-image:
 	python record_version_info.py > version.txt; \
-	cp version.txt $(MODULE_SUBSELECTION_DIR); \
-	mkdir $(MODULE_SUBSELECTION_DIR)/src; \
-	cp -r src/eda $(MODULE_SUBSELECTION_DIR)/src; \
-	cp -r src/preproc $(MODULE_SUBSELECTION_DIR)/src; \
-	cd $(MODULE_SUBSELECTION_DIR); \
+	cp version.txt $(MODULE_SUBSELECTION_EMBEDDING_DIR); \
+	mkdir $(MODULE_SUBSELECTION_EMBEDDING_DIR)/src; \
+	cp -r src/eda $(MODULE_SUBSELECTION_EMBEDDING_DIR)/src; \
+	cp -r src/preproc $(MODULE_SUBSELECTION_EMBEDDING_DIR)/src; \
+	cd $(MODULE_SUBSELECTION_EMBEDDING_DIR); \
 	find . -name '*.pyc' -delete; \
-	docker build -t ${MODULE_SUBSELECTION_TAG} .; \
+	docker build -t ${MODULE_SUBSELECTION_EMBEDDING_TAG} .; \
 	rm version.txt; \
 	rm -r src
 
