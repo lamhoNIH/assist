@@ -40,15 +40,16 @@ def subset_network(network_df, weight_min, weight_max, num_edges = None, subnetw
                 subset.to_csv(subnetwork_dir)
         return new_subset_adj, G
     
-def get_module_df(network_df, cluster, comm_df):
-    cluster_genes = comm_df[comm_df.louvain_label == cluster].id
-    cluster_tom = network_df[cluster_genes]
-    cluster_tom = cluster_tom[cluster_tom.index.isin(cluster_genes)]
-    return cluster_tom
+def get_module_df(network_df, clusters, comm_df):
+    clusters_genes = comm_df[comm_df.louvain_label.isin(clusters)].id
+    clusters_tom = network_df[clusters_genes]
+    clusters_tom = clusters_tom[clusters_tom.index.isin(clusters_genes)]
+    return clusters_tom
 
 def plot_module_hist(adjacency_df, title, comm_df, output_dir = None):
     module_num = len(comm_df.louvain_label.unique())
-    plt.hist(comm_df[comm_df.id.isin(adjacency_df.columns)].louvain_label, bins = range(module_num)) # show the distributions of the nodes after subsetting
+    plt.hist(comm_df[comm_df.id.isin(adjacency_df.columns)].louvain_label)
+#              , bins = range(module_num)) # show the distributions of the nodes after subsetting
     plt.title(title)
     plt.xlabel('module id')
     plt.ylabel('number of genes')
@@ -92,77 +93,54 @@ def get_subnetwork_by_DE(network_df, comm_df, abs_log2FC, pvalue = 0.05, min_wei
 
 
 
-def get_subnetwork1(module, num_genes, min_weight, network_df, comm_df, module4_tom, deseq = DESeqData.get_deseq(), plot_hist = True, hist_dir = None, subnetwork_file = None):
+def get_subnetwork(deg_modules, num_genes, min_weight, network_df, comm_df, non_deg_modules= [], deseq = DESeqData.get_deseq(), plot_hist = True, hist_dir = None, subnetwork_dir = None):
     '''This function subset the whole network by taking the top num_genes of DE genes(nodes) from module 4 and same number of genes(nodes) from 1 of the non-DE module in the original network
-    module: the non-DE module to choose from
+    deg_modules: a list of DEG modules to use
     num_genes: number of genes to subset from the two modules
     min_weight: weight cutoff
     network_df: whole network tom file
     comm_df: louvain community label file
+    non_deg_modules: a list of non-DEG modules to use. If it's an empty list, then the function will only take nodes from DEG modules
     deseq: DE file
     return subnetwork with edges joined together as an adjacency df
     '''
-    other_module_tom = get_module_df(network_df, module, comm_df)
-    m4_top100_nodes = deseq[deseq.id.isin(module4_tom.columns)][['id', 'abs_log2FC']].sort_values('abs_log2FC', ascending = False).reset_index(drop = True)[:num_genes]['id']
-    random.seed(1)
-    other_module_nodes = random.sample(other_module_tom.columns.tolist(), num_genes) # has randomness so I set a seed in the line above to remove the randomness
+    deg_module_tom = get_module_df(network_df, deg_modules, comm_df)
+    deg_module_nodes = deseq[deseq.id.isin(deg_module_tom.columns)][['id', 'abs_log2FC']].sort_values('abs_log2FC', ascending = False).reset_index(drop = True)[:num_genes]['id']
+    
     G_sub_list = []
     edges = 0
-    for gene in m4_top100_nodes: # iterate through the nodes
-        gene_subnet = network_df[gene][network_df[gene] > min_weight] # set weight to choose neighbors from the whole network to could get nodes from other modules as well
-        gene_edgelist = pd.DataFrame({'source':gene, 'target':gene_subnet.index, 'weight':gene_subnet.values})
-        edges += len(gene_subnet)
-        G_sub = nx.convert_matrix.from_pandas_edgelist(gene_edgelist, 'source', 'target', 'weight') # convert from edgelist to graph
-        G_sub_list.append(G_sub)
 
-    for gene in other_module_nodes:
+    for gene in deg_module_nodes:
         gene_subnet = network_df[gene][network_df[gene] > min_weight]
         gene_edgelist = pd.DataFrame({'source':gene, 'target':gene_subnet.index, 'weight':gene_subnet.values})
         edges += len(gene_subnet)
         G_sub = nx.convert_matrix.from_pandas_edgelist(gene_edgelist, 'source', 'target', 'weight')
         G_sub_list.append(G_sub)
+        
+        
+    if non_deg_modules != []: # if this list isn't empty, then find nodes in non_deg_modules and subselect them
+        random.seed(1)
+        non_deg_module_tom = get_module_df(network_df, non_deg_modules, comm_df)
+        non_deg_module_nodes = random.sample(non_deg_module_tom.columns.tolist(), num_genes) # has randomness so I set a seed in the line above to remove the randomness
+        for gene in non_deg_module_nodes: # iterate through the nodes
+            gene_subnet = network_df[gene][network_df[gene] > min_weight] # set weight to choose neighbors from the whole network to could get nodes from other modules as well
+            gene_edgelist = pd.DataFrame({'source':gene, 'target':gene_subnet.index, 'weight':gene_subnet.values})
+            edges += len(gene_subnet)
+            G_sub = nx.convert_matrix.from_pandas_edgelist(gene_edgelist, 'source', 'target', 'weight') # convert from edgelist to graph
+            G_sub_list.append(G_sub)
+    
     print('Number of edges:',edges)
     
     G_joined = reduce(lambda x,y:nx.compose(x, y), G_sub_list)
     joined_df = nx.convert_matrix.to_pandas_adjacency(G_joined)
 
     if (plot_hist == True) & (hist_dir == None):
-        plot_module_hist(joined_df, f'abs_log2FC_{abs_log2FC},pvalue_{pvalue},min_weight_{min_weight}', comm_df)
+        plot_module_hist(joined_df, f'deg_mod={deg_modules},non_deg_mod={non_deg_modules},num_genes={num_genes},min_weight={min_weight}', comm_df)
         print('The histogram was not saved')
     if (plot_hist == True) & (hist_dir != None):
-        plot_module_hist(joined_df, f'num_genes={num_genes},min_weight={min_weight}', comm_df, hist_dir)
-    if subnetwork_file != None:
-        joined_df.to_csv(subnetwork_file)
-    return G_joined, joined_df
-
-def get_subnetwork2(num_genes, min_weight, network_df, comm_df, module4_tom, deseq = DESeqData.get_deseq(), plot_hist = True, hist_dir = None, subnetwork_file = None):
-    '''This function subset the whole network by taking the top num_genes DE from module 4 
-    network_df: whole network tom file
-    comm_df: louvain community label file
-    deseq: DE file
-    return subnetwork with edges joined together as an adjacency df
-    '''
-    m4_top_nodes = deseq[deseq.id.isin(module4_tom.columns)][['id', 'abs_log2FC']].sort_values('abs_log2FC', ascending = False).reset_index(drop = True)[:num_genes]['id']
-
-    G_sub_list = []
-    edges = 0
-    for gene in m4_top_nodes: # iterate through the nodes
-        gene_subnet = network_df[gene][network_df[gene] > min_weight] # set weight to choose neighbors
-        gene_edgelist = pd.DataFrame({'source':gene, 'target':gene_subnet.index, 'weight':gene_subnet.values})
-        edges += len(gene_subnet)
-        G_sub = nx.convert_matrix.from_pandas_edgelist(gene_edgelist, 'source', 'target', 'weight') # convert from edgelist to graph
-        G_sub_list.append(G_sub)
-
-    print('Number of edges:',edges)
-    G_joined = reduce(lambda x,y:nx.compose(x, y), G_sub_list)
-    joined_df = nx.convert_matrix.to_pandas_adjacency(G_joined)
-    if (plot_hist == True) & (hist_dir == None):
-        plot_module_hist(joined_df, f'abs_log2FC_{abs_log2FC},pvalue_{pvalue},min_weight_{min_weight}', comm_df)
-        print('The histogram was not saved')
-    if (plot_hist == True) & (hist_dir != None):
-        plot_module_hist(joined_df, f'num_genes={num_genes},min_weight={min_weight}', comm_df, hist_dir)
-    if subnetwork_file != None:
-        joined_df.to_csv(subnetwork_file)
+        plot_module_hist(joined_df, f'deg_mod={deg_modules},non_deg_mod={non_deg_modules},num_genes={num_genes},min_weight={min_weight}', comm_df, hist_dir)
+    if subnetwork_dir != None:
+        joined_df.to_csv(subnetwork_dir + f'deg_mod={deg_modules},non_deg_mod={non_deg_modules},num_genes={num_genes},min_weight={min_weight}.csv')
     return G_joined, joined_df
 
 def add_missing_genes(whole_network, subnetwork_df):
