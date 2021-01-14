@@ -29,7 +29,7 @@ def diagnostic_correlation(config_file, archive_path):
     deseq = pd.read_excel(os.path.join(data_folder, config_json["differentially_expressed_genes"]))
     expression_meta_df = pd.read_csv(os.path.join(data_folder, config_json["expression_with_metadata"]), low_memory = False)
     for i, cluster_df in enumerate(comm_dfs):
-        cluster_DE_perc(deseq, cluster_df, 'louvain_label', comm_names[i])
+        cluster_DE_perc(cluster_df, 'louvain_label', comm_names[i], deseq)
         plot_sig_perc(cluster_df, 'louvain_label', comm_names[i], expression_meta_df)
         cluster_phenotype_corr(cluster_df, 'louvain_label', comm_names[i], expression_meta_df)
 

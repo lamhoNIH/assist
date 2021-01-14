@@ -1,0 +1,7 @@
+{
+	"differentially_expressed_genes": "deseq.alc.vs.control.age.rin.batch.gender.PMI.corrected.w.prot.coding.gene.name.xlsx",
+	"networks_of_coregulated_genes": "network_analysis/wgcna_modules.csv",
+	"expression_with_metadata": "network_analysis/expression_meta.csv",
+	"network_louvain_default": "module_extraction/run4/network_louvain_default.csv",
+	"network_louvain_agg1": "module_extraction/run4/network_louvain_agg1.csv"
+}

@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import os
 from sys import platform
-from ..preproc.community_data import CommunityData
 from ..preproc.deseq_data import DESeqData
 from functools import reduce
 import numpy as np
@@ -41,13 +40,13 @@ def subset_network(network_df, weight_min, weight_max, num_edges = None, subnetw
                 subset.to_csv(subnetwork_dir)
         return new_subset_adj, G
     
-def get_module_df(network_df, cluster, comm_df =  CommunityData.get_comm_df()):
+def get_module_df(network_df, cluster, comm_df):
     cluster_genes = comm_df[comm_df.louvain_label == cluster].id
     cluster_tom = network_df[cluster_genes]
     cluster_tom = cluster_tom[cluster_tom.index.isin(cluster_genes)]
     return cluster_tom
 
-def plot_module_hist(adjacency_df, title, output_dir = None, comm_df = CommunityData.get_comm_df()):
+def plot_module_hist(adjacency_df, title, comm_df, output_dir = None):
     module_num = len(comm_df.louvain_label.unique())
     plt.hist(comm_df[comm_df.id.isin(adjacency_df.columns)].louvain_label, bins = range(module_num)) # show the distributions of the nodes after subsetting
     plt.title(title)
@@ -64,7 +63,7 @@ def plot_module_hist(adjacency_df, title, output_dir = None, comm_df = Community
     plt.show()
     plt.close()
 
-def get_subnetwork_by_DE(network_df, abs_log2FC, pvalue = 0.05, min_weight = 0.012, deseq = DESeqData.get_deseq(), 
+def get_subnetwork_by_DE(network_df, comm_df, abs_log2FC, pvalue = 0.05, min_weight = 0.012, deseq = DESeqData.get_deseq(), 
                          plot_hist = True, hist_dir = None, subnetwork_file = None):
     '''
     A method get subnetwork based on DE status. This method will take the DE with highest absoluate log2FC and then pull nodes with strong connection with the DE nodes
@@ -83,17 +82,17 @@ def get_subnetwork_by_DE(network_df, abs_log2FC, pvalue = 0.05, min_weight = 0.0
     G_joined = reduce(lambda x,y:nx.compose(x, y), G_sub_list)
     joined_df = nx.convert_matrix.to_pandas_adjacency(G_joined)
     if (plot_hist == True) & (hist_dir == None):
-        plot_module_hist(joined_df, f'abs_log2FC_{abs_log2FC},pvalue_{pvalue},min_weight_{min_weight}')
+        plot_module_hist(joined_df, f'abs_log2FC_{abs_log2FC},pvalue_{pvalue},min_weight_{min_weight}', comm_df)
         print('The histogram was not saved')
     if (plot_hist == True) & (hist_dir != None):
-        plot_module_hist(joined_df, f'abs_log2FC_{abs_log2FC},pvalue_{pvalue},min_weight_{min_weight}', hist_dir)
+        plot_module_hist(joined_df, f'abs_log2FC_{abs_log2FC},pvalue_{pvalue},min_weight_{min_weight}', comm_df, hist_dir)
     if subnetwork_file != None:
         joined_df.to_csv(subnetwork_file + f'subnetwork_{abs_log2FC}_{pvalue}_{min_weight}.csv')
     return G_joined, joined_df
 
 
 
-def get_subnetwork1(module, num_genes, min_weight, network_df, comm_df = CommunityData.get_comm_df(), deseq = DESeqData.get_deseq(), plot_hist = True, hist_dir = None, subnetwork_file = None):
+def get_subnetwork1(module, num_genes, min_weight, network_df, comm_df, module4_tom, deseq = DESeqData.get_deseq(), plot_hist = True, hist_dir = None, subnetwork_file = None):
     '''This function subset the whole network by taking the top num_genes of DE genes(nodes) from module 4 and same number of genes(nodes) from 1 of the non-DE module in the original network
     module: the non-DE module to choose from
     num_genes: number of genes to subset from the two modules
@@ -103,8 +102,7 @@ def get_subnetwork1(module, num_genes, min_weight, network_df, comm_df = Communi
     deseq: DE file
     return subnetwork with edges joined together as an adjacency df
     '''
-    module4_tom = pd.read_csv(prefix + '/Shared drives/NIAAA_ASSIST/Data/other data/cluster4_TOM.csv', index_col = 0)
-    other_module_tom = get_module_df(network_df, comm_df, module)
+    other_module_tom = get_module_df(network_df, module, comm_df)
     m4_top100_nodes = deseq[deseq.id.isin(module4_tom.columns)][['id', 'abs_log2FC']].sort_values('abs_log2FC', ascending = False).reset_index(drop = True)[:num_genes]['id']
     random.seed(1)
     other_module_nodes = random.sample(other_module_tom.columns.tolist(), num_genes) # has randomness so I set a seed in the line above to remove the randomness
@@ -129,22 +127,21 @@ def get_subnetwork1(module, num_genes, min_weight, network_df, comm_df = Communi
     joined_df = nx.convert_matrix.to_pandas_adjacency(G_joined)
 
     if (plot_hist == True) & (hist_dir == None):
-        plot_module_hist(joined_df, f'abs_log2FC_{abs_log2FC},pvalue_{pvalue},min_weight_{min_weight}')
+        plot_module_hist(joined_df, f'abs_log2FC_{abs_log2FC},pvalue_{pvalue},min_weight_{min_weight}', comm_df)
         print('The histogram was not saved')
     if (plot_hist == True) & (hist_dir != None):
-        plot_module_hist(joined_df, f'num_genes={num_genes},min_weight={min_weight}', hist_dir)
+        plot_module_hist(joined_df, f'num_genes={num_genes},min_weight={min_weight}', comm_df, hist_dir)
     if subnetwork_file != None:
         joined_df.to_csv(subnetwork_file)
     return G_joined, joined_df
 
-def get_subnetwork2(num_genes, min_weight, network_df, comm_df = CommunityData.get_comm_df(), deseq = DESeqData.get_deseq(), plot_hist = True, hist_dir = None, subnetwork_file = None):
+def get_subnetwork2(num_genes, min_weight, network_df, comm_df, module4_tom, deseq = DESeqData.get_deseq(), plot_hist = True, hist_dir = None, subnetwork_file = None):
     '''This function subset the whole network by taking the top num_genes DE from module 4 
     network_df: whole network tom file
     comm_df: louvain community label file
     deseq: DE file
     return subnetwork with edges joined together as an adjacency df
     '''
-    module4_tom = pd.read_csv(prefix + '/Shared drives/NIAAA_ASSIST/Data/other data/cluster4_TOM.csv', index_col = 0)
     m4_top_nodes = deseq[deseq.id.isin(module4_tom.columns)][['id', 'abs_log2FC']].sort_values('abs_log2FC', ascending = False).reset_index(drop = True)[:num_genes]['id']
 
     G_sub_list = []
@@ -160,10 +157,10 @@ def get_subnetwork2(num_genes, min_weight, network_df, comm_df = CommunityData.g
     G_joined = reduce(lambda x,y:nx.compose(x, y), G_sub_list)
     joined_df = nx.convert_matrix.to_pandas_adjacency(G_joined)
     if (plot_hist == True) & (hist_dir == None):
-        plot_module_hist(joined_df, f'abs_log2FC_{abs_log2FC},pvalue_{pvalue},min_weight_{min_weight}')
+        plot_module_hist(joined_df, f'abs_log2FC_{abs_log2FC},pvalue_{pvalue},min_weight_{min_weight}', comm_df)
         print('The histogram was not saved')
     if (plot_hist == True) & (hist_dir != None):
-        plot_module_hist(joined_df, f'num_genes={num_genes},min_weight={min_weight}', hist_dir)
+        plot_module_hist(joined_df, f'num_genes={num_genes},min_weight={min_weight}', comm_df, hist_dir)
     if subnetwork_file != None:
         joined_df.to_csv(subnetwork_file)
     return G_joined, joined_df
@@ -171,6 +168,10 @@ def get_subnetwork2(num_genes, min_weight, network_df, comm_df = CommunityData.g
 def add_missing_genes(whole_network, subnetwork_df):
     '''A function to add back the genes that got cut out of the df when network was subselected'''
     subnetwork_df_copy = subnetwork_df.copy()
+    print("whole_network")
+    print(whole_network.head(2))
+    print("subnetwork_df")
+    print(subnetwork_df.head(2))
     id_diff = list(set(whole_network.columns) - set(subnetwork_df.columns))
     subnetwork_df_copy[id_diff] = 0
     rows_to_append = pd.DataFrame(0, columns = subnetwork_df_copy.columns, index = id_diff)

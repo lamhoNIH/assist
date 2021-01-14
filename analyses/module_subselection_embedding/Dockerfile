@@ -3,7 +3,7 @@ FROM continuumio/miniconda3
 RUN mkdir /assist
 
 COPY requirements.txt /assist
-COPY module_subselection.py /assist
+COPY module_subselection_embedding.py /assist
 COPY src /assist/src
 COPY version.txt /assist
 COPY run.sh /assist
