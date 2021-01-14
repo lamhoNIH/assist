@@ -142,7 +142,7 @@ def cluster_jaccard(cluster_df1, cluster_df2, cluster_column, comparison_names,
     sns.set(font_scale=1.5)
     sns.set_style('white')
 
-    w = len(cluster_df2[cluster_column].unique())/1.5
+    w = len(cluster_df2[cluster_column].unique())/1.3
     h = len(cluster_df1[cluster_column].unique())/2
     fig = plt.figure(figsize=(w, h))
     gs = gridspec.GridSpec(1, 2, width_ratios=[3, 1])  # set the subplot width ratio
@@ -151,7 +151,7 @@ def cluster_jaccard(cluster_df1, cluster_df2, cluster_column, comparison_names,
     sns.heatmap(jac_df, cmap='Reds', xticklabels=True, yticklabels=True)
     plt.xlabel(comparison_names[1])
     plt.ylabel(comparison_names[0])
-    plt.title('Jaccard pairwise cluster comparison')
+    plt.title('Jaccard pairwise')
     plt.xticks(rotation=0)
     ax1 = plt.subplot(gs[1])
     # boxplot of jaccard distribution
@@ -165,7 +165,8 @@ def cluster_jaccard(cluster_df1, cluster_df2, cluster_column, comparison_names,
         sns.boxplot(x=None, y=all_jac_values)
     plt.ylim(0, y_max)
     plt.title('Jaccard distribution')
-    plt.suptitle(f'{comparison_names[0]} vs {comparison_names[1]}')
+#     plt.suptitle(f'{comparison_names[0]} vs {comparison_names[1]}')
+    plt.subplots_adjust(top = 0.8, wspace = 1) 
     plt.savefig(os.path.join(Result.getPath(), f'cluster_jaccard_{comparison_names[0]} vs {comparison_names[1]}_{cutout_nodes}.png'))
 
 
