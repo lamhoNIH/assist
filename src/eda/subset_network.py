@@ -141,7 +141,9 @@ def get_subnetwork(deg_modules, num_genes, min_weight, network_df, comm_df, non_
         plot_module_hist(joined_df, f'deg_mod={deg_modules},non_deg_mod={non_deg_modules},num_genes={num_genes},min_weight={min_weight}', comm_df, hist_dir)
     if subnetwork_dir != None:
         joined_df.to_csv(subnetwork_dir + f'deg_mod={deg_modules},non_deg_mod={non_deg_modules},num_genes={num_genes},min_weight={min_weight}.csv')
-    return G_joined, joined_df
+        
+    network_name = f'module{deg_modules}_n_{non_deg_modules}_df'
+    return G_joined, joined_df, network_name
 
 def add_missing_genes(whole_network, subnetwork_df):
     '''A function to add back the genes that got cut out of the df when network was subselected'''
