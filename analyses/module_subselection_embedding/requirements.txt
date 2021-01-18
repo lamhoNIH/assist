@@ -1,6 +1,7 @@
 NetComp==0.2.3
 matplotlib==3.1.2
 networkx==2.5
+node2vec==0.4.0
 numpy==1.19.4
 pandas==1.1.2
 scikit-network==0.20.0
