@@ -59,7 +59,7 @@
 		{
 			"deg_modules": [4],
 			"num_genes": 250,
-			"min_weight": 0.08,
+			"min_weight": 0.008,
 			"non_deg_modules": []
 		}
 	],
