@@ -117,7 +117,6 @@ def get_subnetwork(deg_modules, num_genes, min_weight, network_df, comm_df, non_
         G_sub = nx.convert_matrix.from_pandas_edgelist(gene_edgelist, 'source', 'target', 'weight')
         G_sub_list.append(G_sub)
         
-        
     if non_deg_modules != []: # if this list isn't empty, then find nodes in non_deg_modules and subselect them
         random.seed(1)
         non_deg_module_tom = get_module_df(network_df, non_deg_modules, comm_df)
@@ -140,7 +139,7 @@ def get_subnetwork(deg_modules, num_genes, min_weight, network_df, comm_df, non_
     if (plot_hist == True) & (hist_dir != None):
         plot_module_hist(joined_df, f'deg_mod={deg_modules},non_deg_mod={non_deg_modules},num_genes={num_genes},min_weight={min_weight}', comm_df, hist_dir)
     if subnetwork_dir != None:
-        joined_df.to_csv(subnetwork_dir + f'deg_mod={deg_modules},non_deg_mod={non_deg_modules},num_genes={num_genes},min_weight={min_weight}.csv')
+        joined_df.to_csv(os.path.join(subnetwork_dir, f'deg_mod={deg_modules},non_deg_mod={non_deg_modules},num_genes={num_genes},min_weight={min_weight}.csv'))
         
     network_name = f'module{deg_modules}_n_{non_deg_modules}_df'
     return G_joined, joined_df, network_name

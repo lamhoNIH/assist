@@ -10,6 +10,7 @@ Input('./Data')
 
 from src.eda.eda_functions import *
 from src.eda.subset_network import *
+from src.embedding.network_embedding import network_embedding
 
 def module_subselection_approach1(data_folder, archive_path, run_num, config_json, provided_networks_df, comm_df1, deseq, expression_meta_df):
     Result(os.path.join(data_folder, archive_path, "approach1", run_num))
@@ -61,27 +62,25 @@ def module_subselection_approach1(data_folder, archive_path, run_num, config_jso
         plot_sig_perc(cluster_df, 'louvain_label', subset_names[i], expression_meta_df)
         cluster_phenotype_corr(cluster_df, 'louvain_label', subset_names[i], expression_meta_df)
 
-def module_subselection_approach2(data_folder, archive_path, run_num, config_json, provided_networks_df, comm_df1, deseq, expression_meta_df):
+def module_subselection_approach2(data_folder, archive_path, run_num, config_json, provided_networks_df, comm_df, deseq, expression_meta_df):
     Result(os.path.join(data_folder, archive_path, "approach2", run_num))
-    module4_tom = get_module_df(provided_networks_df, 4, comm_df1)
 
     # Original network with no cutoff
     scale_free_validate(provided_networks_df, 'whole network')
 
-    output_path = Result.getPath()
-    G0_n_4, module0_n_4_df = get_subnetwork1(0, 100, 0.015, provided_networks_df, comm_df1, module4_tom, plot_hist = False, subnetwork_file = os.path.join(Result.getPath(), 'module0_n_4_df.csv'))
-    G1_n_4, module1_n_4_df = get_subnetwork1(1, 125, 0.01, provided_networks_df, comm_df1, module4_tom, plot_hist = False, subnetwork_file = os.path.join(Result.getPath(), 'module1_n_4_df.csv'))
-    G2_n_4, module2_n_4_df = get_subnetwork1(2, 150, 0.01, provided_networks_df, comm_df1, module4_tom, plot_hist = False, subnetwork_file = os.path.join(Result.getPath(), 'module2_n_4_df.csv'))
-    G3_n_4, module3_n_4_df = get_subnetwork1(3, 150, 0.02, provided_networks_df, comm_df1, module4_tom, plot_hist = False, subnetwork_file = os.path.join(Result.getPath(), 'module3_n_4_df.csv'))
-    G4, module4_df = get_subnetwork2(250, 0.008, provided_networks_df, comm_df1, module4_tom, plot_hist = False, subnetwork_file = os.path.join(Result.getPath(), 'module4_df.csv'))
-
+    subnetwork_path = Result.getPath()
+    subnet_params = config_json["get_subnetwork_params"]
+    n_clusters = len(subnet_params)
+    
+    subnetwork_Gs = []
     subnetwork_dfs = []
-    subnetwork_files = ['module0_n_4_df.csv','module1_n_4_df.csv', 'module2_n_4_df.csv', 'module3_n_4_df.csv', 'module4_df.csv']
-    for file in subnetwork_files:
-        df = pd.read_csv(os.path.join(Result.getPath(), file), index_col = 0)
-        subnetwork_dfs.append(df)
+    subnetwork_names = []
+    for p in subnet_params:
+        G, module_df, subnetwork_name = get_subnetwork(p["deg_modules"], p["num_genes"], p["min_weight"], provided_networks_df, comm_df, p["non_deg_modules"], plot_hist = True, hist_dir = subnetwork_path, subnetwork_dir = subnetwork_path)
+        subnetwork_Gs.append(G)
+        subnetwork_dfs.append(module_df)
+        subnetwork_names.append(subnetwork_name)
 
-    subnetwork_names = [file[:-4] for file in subnetwork_files]
     for i, subnetwork in enumerate(subnetwork_dfs):
         scale_free_validate(subnetwork, subnetwork_names[i])
 
@@ -98,17 +97,62 @@ def module_subselection_approach2(data_folder, archive_path, run_num, config_jso
         subset_communities.append(run_louvain(subset, resolution = 0, n_aggregations = 0))
 
     for i, subset_com in enumerate(subset_communities):
-        cluster_jaccard(comm_df1, subset_com, 'louvain_label', ['original', subnetwork_names[i]], cutout_nodes = True, top=3, y_max = 0.5)
+        cluster_jaccard(comm_df, subset_com, 'louvain_label', ['original', subnetwork_names[i]], cutout_nodes = True, top=3, y_max = 0.5)
 
     comparison_names = ['all vs ' + name for name in subnetwork_names]
-    plot_cluster_nmi_comparison(comm_df1, subset_communities, 'louvain_label', comparison_names)
+    plot_cluster_nmi_comparison('all', comm_df, subset_communities, 'louvain_label', comparison_names)
 
     all_network_names = ['all'] + subnetwork_names
-    all_communities = [comm_df1] + subset_communities
+    all_communities = [comm_df] + subset_communities
     for i, cluster_df in enumerate(all_communities):
         cluster_DE_perc(cluster_df, 'louvain_label', all_network_names[i], deseq)
         plot_sig_perc(cluster_df, 'louvain_label', all_network_names[i], expression_meta_df)
         cluster_phenotype_corr(cluster_df, 'louvain_label', all_network_names[i], expression_meta_df)
+        
+    emb_list = []
+    kmeans_list = []
+    ep = config_json["embedding_params"]
+    for i, G in enumerate(subnetwork_Gs):
+        emb_df = network_embedding(G, ep["walk_length"], ep["num_walks"], ep["window"], subnetwork_path, subnetwork_names[i])
+        emb_list.append(emb_df)
+        kmeans_list.append(run_kmeans(emb_df, n_clusters))
+        
+    for i in range(1, n_clusters):
+        cluster_jaccard(kmeans_list[0], kmeans_list[i], 'kmean_label', [subnetwork_names[0], subnetwork_names[i]], top = 3)
+
+    networK_comparison_names = [subnetwork_names[1] + f'vs {subnetwork_names[i]}' for i in range(n_clusters)]
+    plot_cluster_nmi_comparison(subnetwork_names[1], kmeans_list[1], kmeans_list, 'kmean_label', networK_comparison_names)
+
+    for i, kmeans in enumerate(kmeans_list):
+        cluster_DE_perc(kmeans, 'kmean_label', subnetwork_names[i], deseq)
+        plot_sig_perc(kmeans, 'kmean_label', subnetwork_names[i], expression_meta_df)
+        cluster_phenotype_corr(kmeans, 'kmean_label', subnetwork_names[i], expression_meta_df)
+
+    # 2x2 sets of parameters for embedding
+    kmeans_list2 = []
+    parameters = []
+    etp = config_json["embedding_testing_params"]
+    for length in etp["walk_length"]:
+        for num_walk in etp["num_walks"]: # only use the first embedding to test different parameters based on the EDA
+            emb_df = network_embedding(subnetwork_Gs[0], length, num_walk, etp["window"], Result.getPath(), subnetwork_names[0]) # use the network with 5k edges as a test (less computationally intensive)
+            kmeans_list2.append(run_kmeans(emb_df, n_clusters)) # run k means 
+            parameters.append(f'length={length},num_walk={num_walk}') # add the parameter name to the parameters list
+            
+    for i in range(n_clusters-1):
+        cluster_DE_perc(kmeans_list2[i], 'kmean_label', parameters[i], deseq)
+        plot_sig_perc(kmeans_list2[i], 'kmean_label', parameters[i], expression_meta_df)
+        cluster_phenotype_corr(kmeans_list2[i], 'kmean_label', parameters[i], expression_meta_df)
+
+    kmeans_test = []
+    # Should derive the next two lines
+    emb = pd.read_csv(embedding_path + 'embedded_len16_walk100_m0_4_100_0.015.csv', index_col = 0)
+    n_list = [5,10,20]
+    for n in n_list:
+        kmeans_test.append(run_kmeans(emb, n))
+        
+    for i in range(3):
+        plot_sig_perc(kmeans_test[i], 'kmean_label', f'embedding 1 with {n_list[i]} clusters', expression_meta_df)
+        cluster_phenotype_corr(kmeans_test[i], 'kmean_label', f'embedding 1 with {n_list[i]} clusters', expression_meta_df)
 
 def module_subselection(config_file, archive_path, run_num):
     data_folder = Input.getPath()
