@@ -73,6 +73,7 @@ module-subselection-embedding-image:
 	cp version.txt $(MODULE_SUBSELECTION_EMBEDDING_DIR); \
 	mkdir $(MODULE_SUBSELECTION_EMBEDDING_DIR)/src; \
 	cp -r src/eda $(MODULE_SUBSELECTION_EMBEDDING_DIR)/src; \
+	cp -r src/embedding $(MODULE_SUBSELECTION_EMBEDDING_DIR)/src; \
 	cp -r src/preproc $(MODULE_SUBSELECTION_EMBEDDING_DIR)/src; \
 	cd $(MODULE_SUBSELECTION_EMBEDDING_DIR); \
 	find . -name '*.pyc' -delete; \
