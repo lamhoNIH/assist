@@ -30,6 +30,7 @@ def scale_free_validate(network_df, network_name):
     plt.ylabel('log(pk)')
     plt.title(f'Scale-free check for {network_name}')
     plot_name = f'scale_free_validate_{network_name.replace(" ", "_")}.png'
+    plt.tight_layout()
     plt.savefig(os.path.join(Result.getPath(), plot_name))
     plt.show() # This function needs plt.show() and plt.close() because other methods loop through the figures as subplots so they don't overlap. Each figure here is a whole plot
     plt.close()
@@ -51,6 +52,7 @@ def plot_gene_cnt_each_cluster(cluster_dfs, cluster_column, network_names):
         plt.xlabel('Cluster id')
         plt.title(network_names[i])
         plt.subplots_adjust(wspace = 0.3)
+    plt.tight_layout()    
     plt.savefig(os.path.join(Result.getPath(), "plot_gene_cnt_each_cluster.png"))
         
 def plot_graph_distance(networks, network_names):
@@ -84,6 +86,7 @@ def plot_graph_distance(networks, network_names):
     plt.xlabel('Number of edges')
     plt.xticks(rotation = 45, ha = 'right')
     plt.subplots_adjust(wspace=0.5)
+    plt.tight_layout()
     plt.savefig(os.path.join(Result.getPath(), "plot_graph_distance.png"))
 
 def run_kmeans(embedding_df, n_clusters):
@@ -167,6 +170,7 @@ def cluster_jaccard(cluster_df1, cluster_df2, cluster_column, comparison_names,
     plt.title('Jaccard distribution')
 #     plt.suptitle(f'{comparison_names[0]} vs {comparison_names[1]}')
     plt.subplots_adjust(top = 0.8, wspace = 1) 
+    plt.tight_layout()
     plt.savefig(os.path.join(Result.getPath(), f'cluster_jaccard_{comparison_names[0]} vs {comparison_names[1]}_{cutout_nodes}.png'))
 
 
@@ -230,6 +234,7 @@ def plot_sig_perc(cluster_df, cluster_column, network_name, expression_meta_df):
     plt.xlabel('# Trait with >5% significant genes')
     plt.title('Number of significant traits each cluster')
     plt.suptitle(f'% significant genes for each trait for {network_name}', fontsize = 22)
+    plt.tight_layout()
     plt.savefig(os.path.join(Result.getPath(), f'plot_sig_perc_{network_name}.png'))
 
 def cluster_phenotype_corr(cluster_df, cluster_column, network_name, expression_meta_df):
@@ -300,6 +305,7 @@ def cluster_phenotype_corr(cluster_df, cluster_column, network_name, expression_
     plt.xlabel('Trait count')
     plt.title('Number of significant traits each cluster')
     plt.suptitle(f'Trait cluster correlation for {network_name}', fontsize = 22)
+    plt.tight_layout()
     plt.savefig(os.path.join(Result.getPath(), f'cluster_phenotype_corr_{network_name}.png'))
     
     
@@ -323,6 +329,7 @@ def plot_cluster_nmi_comparison(cluster1_name, cluster1, cluster_list, cluster_c
     cluster_type = ['community' if cluster_column == 'louvain_label' else 'cluster']
     plt.title(f'NMI for {cluster_type[0]} comparison')
     plt.xticks(rotation = 45, ha = 'right')
+    plt.tight_layout()
     plt.savefig(os.path.join(Result.getPath(), f'plot_cluster_nmi_comparison_{cluster1_name}.png'))
 
 def cluster_DE_perc(cluster_df, cluster_column, network_name, deseq = DESeqData.get_deseq()):
@@ -369,6 +376,7 @@ def cluster_DE_perc(cluster_df, cluster_column, network_name, deseq = DESeqData.
         top = 0.85
     plt.subplots_adjust(wspace = 0.8, top = top)
     plt.suptitle(f'% DE in each cluster for {network_name}', fontsize = 22)
+    plt.tight_layout()
     plt.savefig(os.path.join(Result.getPath(), f'cluster_DE_perc_{network_name}.png'))
       
     
@@ -490,6 +498,7 @@ def plot_random_vs_actual_z(cluster_df1, cluster_df2, cluster1, cluster2, cluste
     plt.vlines(network_cluster_stability_df[network_cluster_stability_df[cluster_column] == cluster2]['Z_corr'], 0, 110, color = 'r')
     plt.title('Distribution Z_corr')
     plt.suptitle(f'Distribution of Z scores if the cluster membership is randomly assigned for {network_comparison_name}: cluster {cluster2}')
+    plt.tight_layout()
     plt.savefig(os.path.join(Result.getPath(), f'plot_random_vs_actual_z_{str(cluster2)}.png'))
     
 def gene_phenotype_corr(critical_genes, expression_meta_df):
@@ -540,6 +549,7 @@ def gene_phenotype_corr(critical_genes, expression_meta_df):
     plt.ylabel('Gene ID')
     plt.xlabel('Trait count')
     plt.title('Number of significant traits for each gene')
+    plt.tight_layout()
     plt.subplots_adjust(wspace = 1)
     
     
@@ -610,5 +620,6 @@ def gene_set_phenotype_corr(gene_sets, expression_meta_df):
     plt.ylabel('gene set id')
     plt.xlabel('Trait count')
     plt.title('Number of significant traits each gene set')
+    plt.tight_layout()
     plt.suptitle(f'Trait-gene set correlation', fontsize = 22)
     
