@@ -38,6 +38,8 @@ def plot_feature_importances(model_path, top_n_coef = 0.2, print_num_dim = True,
             model_list.append(pickle.load(model))
     models_feature_importances = list(map(get_important_features, model_list))
     if plot_heatmap == True:
+        sns.set(font_scale=1.5)
+        sns.set_style('white')
         plt.figure(figsize = (7, 23))
         i = 0
         for coef in models_feature_importances:
@@ -90,6 +92,7 @@ def jaccard_average(top_dim_list, title):
         for dim_list1, dim_list2 in combinations(new_top_dim_list[i:i+3],2): # compare 2 out of 3 with all combinations
             jac_list.append(jaccard_similarity(dim_list1, dim_list2))
         jac_average.append(np.mean(jac_list))
+    plt.rcParams.update({'font.size': 18})
     plt.bar(['lr', 'rf', 'xgb'], jac_average)
     plt.ylim(0, 1)
     plt.ylabel('jaccard similarity')
@@ -100,6 +103,7 @@ def jaccard_average(top_dim_list, title):
 def plot_random_feature_importance(feature_importance_list, top_dim_list, subnetwork_name):
     models = ['LR', 'RF', 'XGB']
     plt.figure(figsize = (18, 3))
+    plt.rcParams.update({'font.size': 18})
     for j in range(0, 9, 3):
         l = int(j/3)
         top_dim = top_dim_list[j][:-2]
@@ -228,7 +232,7 @@ def jaccard_critical_genes(critical_gene_df, network_name):
         top10_2 = critical_gene_df.sort_values(col2, ascending = False)['gene'][:10]
         jaccard_list.append(jaccard_similarity(top10_1, top10_2))
         model_names.append(f'{col1} vs {col2}')
-        
+    plt.rcParams.update({'font.size': 18})    
     plt.bar(model_names, jaccard_list)
     plt.title(network_name)
     plt.ylabel('jaccard similarity')
