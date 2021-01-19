@@ -171,7 +171,7 @@ def get_critical_gene_sets(processed_emb_df, top_dim_list, max_dist = 0.55):
     '''
     process_emb_df_subset = [processed_emb_df[top_dim_list[i]] for i in range(9)]
     distance_dfs = list(map(get_pairwise_distances, process_emb_df_subset))
-    calculate_distance_stats(distance_dfs)
+#     calculate_distance_stats(distance_dfs)
     critical_gene_sets = list(map(get_critical_genes, distance_dfs, [max_dist]*len(distance_dfs)))
     return critical_gene_sets
 
@@ -204,6 +204,7 @@ def plot_nearby_impact_num(critical_gene_df, emb_name, top = 10):
     '''Plot count of nearby impact genes for each set of critical gene df'''
     critical_df = critical_gene_df[['gene', 'near_impact_cnt']].loc[:10,]
     critical_df.sort_values('near_impact_cnt', inplace = True)
+    plt.rcParams.update({'font.size': 18})
     plt.barh(critical_df['gene'], critical_df['near_impact_cnt'])
     plt.xlabel('Number of nearby impact genes')
     plt.ylabel('Critical gene ID')
@@ -211,3 +212,30 @@ def plot_nearby_impact_num(critical_gene_df, emb_name, top = 10):
     plt.show()
     plt.close()
     return critical_df['gene']
+
+def jaccard_critical_genes(critical_gene_df, network_name):
+    '''
+    jaccard similarity between top 10 critical genes identified by each model
+    '''
+    critical_gene_df['lr'] = critical_gene_df['LR_repeat1'] + critical_gene_df['LR_repeat2'] + critical_gene_df['LR_repeat3']
+    critical_gene_df['rf'] = critical_gene_df['RF_repeat1'] + critical_gene_df['RF_repeat2'] + critical_gene_df['RF_repeat3']
+    critical_gene_df['xgb'] = critical_gene_df['XGB_repeat1'] + critical_gene_df['XGB_repeat2'] + critical_gene_df['XGB_repeat3']
+    cols_to_permute = ['lr', 'rf', 'xgb']
+    jaccard_list = []
+    model_names = []
+    for col1, col2 in combinations(cols_to_permute, 2):
+        top10_1 = critical_gene_df.sort_values(col1, ascending = False)['gene'][:10]
+        top10_2 = critical_gene_df.sort_values(col2, ascending = False)['gene'][:10]
+        jaccard_list.append(jaccard_similarity(top10_1, top10_2))
+        model_names.append(f'{col1} vs {col2}')
+        
+    plt.bar(model_names, jaccard_list)
+    plt.title(network_name)
+    plt.ylabel('jaccard similarity')
+    plt.ylim(0, 1)
+    plt.show()
+    plt.close()
+    
+    gene_sets = [set(critical_gene_df[['gene',col]].sort_values(col, ascending = False)[:10]['gene']) for col in cols_to_permute]
+    intersect_genes = set.intersection(*gene_sets)
+    return intersect_genes
