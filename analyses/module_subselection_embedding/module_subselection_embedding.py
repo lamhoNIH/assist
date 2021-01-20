@@ -144,9 +144,8 @@ def module_subselection_approach2(data_folder, archive_path, run_num, config_jso
         cluster_phenotype_corr(kmeans_list2[i], 'kmean_label', parameters[i], expression_meta_df)
 
     kmeans_test = []
-    # Should derive the next two lines
-    emb = pd.read_csv(embedding_path + 'embedded_len16_walk100_m0_4_100_0.015.csv', index_col = 0)
-    n_list = [5,10,20]
+    emb = pd.read_csv(os.path.join(subnetwork_path, f'embedded_len{ep["walk_length"]}_walk{ep["num_walks"]}_module[{subnet_params[0]["deg_modules"][0]}]_n_[{subnet_params[0]["non_deg_modules"][0]}]_df.csv'), index_col = 0)
+    n_list = config_json["kmeans_test_n_list"]
     for n in n_list:
         kmeans_test.append(run_kmeans(emb, n))
         
