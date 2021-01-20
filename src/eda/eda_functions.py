@@ -54,6 +54,7 @@ def plot_gene_cnt_each_cluster(cluster_dfs, cluster_column, network_names):
         plt.subplots_adjust(wspace = 0.3)
     plt.tight_layout()    
     plt.savefig(os.path.join(Result.getPath(), "plot_gene_cnt_each_cluster.png"))
+    plt.close()
         
 def plot_graph_distance(networks, network_names):
 
@@ -88,6 +89,7 @@ def plot_graph_distance(networks, network_names):
     plt.subplots_adjust(wspace=0.5)
     plt.tight_layout()
     plt.savefig(os.path.join(Result.getPath(), "plot_graph_distance.png"))
+    plt.close()
 
 def run_kmeans(embedding_df, n_clusters):
     '''Run k means on embedding df'''
@@ -171,7 +173,7 @@ def cluster_jaccard(cluster_df1, cluster_df2, cluster_column, comparison_names,
 #     plt.suptitle(f'{comparison_names[0]} vs {comparison_names[1]}')
     plt.subplots_adjust(top = 0.8, wspace = 1) 
     plt.savefig(os.path.join(Result.getPath(), f'cluster_jaccard_{comparison_names[0]} vs {comparison_names[1]}_{cutout_nodes}.png'), bbox_inches = 'tight')
-
+    plt.close()
 
 def get_module_sig_gene_perc(expression_meta_df, cluster_df, cluster_column, cluster, trait):
     '''
@@ -235,6 +237,7 @@ def plot_sig_perc(cluster_df, cluster_column, network_name, expression_meta_df):
     plt.suptitle(f'% significant genes for each trait for {network_name}', fontsize = 22)
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
     plt.savefig(os.path.join(Result.getPath(), f'plot_sig_perc_{network_name}.png'))
+    plt.close()
 
 def cluster_phenotype_corr(cluster_df, cluster_column, network_name, expression_meta_df):
     '''
@@ -306,7 +309,7 @@ def cluster_phenotype_corr(cluster_df, cluster_column, network_name, expression_
     plt.suptitle(f'Trait cluster correlation for {network_name}', fontsize = 22)
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
     plt.savefig(os.path.join(Result.getPath(), f'cluster_phenotype_corr_{network_name}.png'))
-    
+    plt.close()
     
 def cluster_nmi(cluster_df1, cluster_df2, cluster_column):
     '''NMI to compare communities from the whole netowrk and the subnetwork or clusters from different network embeddings'''
@@ -327,8 +330,8 @@ def plot_cluster_nmi_comparison(cluster1_name, cluster1, cluster_list, cluster_c
     cluster_type = ['community' if cluster_column == 'louvain_label' else 'cluster']
     plt.title(f'NMI for {cluster_type[0]} comparison')
     plt.xticks(rotation = 45, ha = 'right')
-#     plt.tight_layout()
     plt.savefig(os.path.join(Result.getPath(), f'plot_cluster_nmi_comparison_{cluster1_name}.png'), bbox_inches = 'tight')
+    plt.close()
 
 def cluster_DE_perc(cluster_df, cluster_column, network_name, deseq = DESeqData.get_deseq()):
     '''
@@ -374,10 +377,9 @@ def cluster_DE_perc(cluster_df, cluster_column, network_name, deseq = DESeqData.
         top = 0.85
     plt.subplots_adjust(wspace = 0.8, top = top)
     plt.suptitle(f'% DE in each cluster for {network_name}', fontsize = 22)
-#     plt.tight_layout() 
     plt.savefig(os.path.join(Result.getPath(), f'cluster_DE_perc_{network_name}.png'), bbox_inches = 'tight')
-      
-    
+    plt.close()
+
 def permute_cluster_label(expression_meta_df, cluster_df1, cluster_df2, cluster1, cluster2, cluster_column, shuffle = 100):
     '''
     Given 2 cluster dfs, generate simulated random eigen gene expression for a cluster and get p values & correlation scores
@@ -498,6 +500,7 @@ def plot_random_vs_actual_z(cluster_df1, cluster_df2, cluster1, cluster2, cluste
     plt.suptitle(f'Distribution of Z scores if the cluster membership is randomly assigned for {network_comparison_name}: cluster {cluster2}')
     plt.tight_layout()
     plt.savefig(os.path.join(Result.getPath(), f'plot_random_vs_actual_z_{str(cluster2)}.png'))
+    plt.close()
     
 def gene_phenotype_corr(critical_genes, expression_meta_df):
     '''

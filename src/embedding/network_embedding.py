@@ -13,7 +13,7 @@ def network_embedding(graph, walk_length, num_walks, window, output_dir = None, 
     if platform == 'win32': # windows doesn't support multiple workers
         workers = 1
     else: # I don't know if this will work on MAC since I don't have one so George will test this to see if the code breaks
-        workers = 4
+        workers = 1 # tried 4 and 2 on mac and both failed
     node2vec = Node2Vec(graph, dimensions=64, walk_length=walk_length, num_walks=num_walks, workers = workers)
     model = node2vec.fit(window = window, min_count=1)
     emb_df = pd.DataFrame(np.asarray(model.wv.vectors), index = graph.nodes)
