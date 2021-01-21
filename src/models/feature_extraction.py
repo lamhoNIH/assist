@@ -4,10 +4,13 @@ from sys import platform
 from itertools import combinations
 import os
 import pickle
+import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.metrics.pairwise import euclidean_distances as ed
 from collections import Counter
 from functools import reduce
+from ..preproc.result import Result
+
 
 def get_min_max_center(coef):
     '''A function to get min, max and avg used for heatmap in plot_feature_importances()'''
@@ -16,58 +19,39 @@ def get_min_max_center(coef):
     center = np.mean([min_value, max_value])
     return min_value, max_value, center
 
-def get_important_features(model):
-    '''Get feature importances from models'''
-    if type(model).__name__ == 'LogisticRegression':
-        coef = model.coef_[0]
-        coef = np.abs(coef) # convert coef to positive values only
-        coef /= np.sum(coef) # convert coef to % importance
-    else:
-        coef = model.feature_importances_
-    return coef
-
-def plot_feature_importances(model_path, top_n_coef = 0.2, print_num_dim = True, plot_heatmap = False, return_top_dim = False):
+def plot_feature_importances(model_weights, top_n_coef = 0.2, print_num_dim = True, plot_heatmap = False, return_top_dim = False):
     '''
     A function to show feature importances in each model
     and can return feature importance and the top dim from each model
     '''
-    model_files = os.listdir(model_path)
-    model_list = []
-    for file in model_files:
-        with open(model_path + '/' + file, 'rb') as model:
-            model_list.append(pickle.load(model))
-    models_feature_importances = list(map(get_important_features, model_list))
     if plot_heatmap == True:
         sns.set(font_scale=1.5)
         sns.set_style('white')
         plt.figure(figsize = (7, 23))
         i = 0
-        for coef in models_feature_importances:
+        for coef in model_weights:
             min_v, max_v, center = get_min_max_center(coef)
             plt.subplot(3, 3,i+1)
             sns.heatmap(coef.reshape(64, 1), center = center, vmin = min_v, vmax = max_v)
-            plt.title(model_files[i])
+            plt.title(models[i])
             plt.subplots_adjust(wspace = 2)
             i += 1
+    models = ['lr']*3 + ['rf']*3 + ['xgb']*3 
     if print_num_dim == True and return_top_dim == True:
-        top_dim_list = list(map(get_top_dim, models_feature_importances, model_files, [True]*len(models_feature_importances),
-                                [top_n_coef]*len(models_feature_importances), [True]*len(models_feature_importances)))
-        return models_feature_importances, top_dim_list
+        top_dim_list = list(map(get_top_dim, model_weights, models, [True]*len(model_weights),
+                                [top_n_coef]*len(model_weights), [True]*len(model_weights)))
+        return top_dim_list
     elif print_num_dim == False and return_top_dim == True:
-        top_dim_list = list(map(get_top_dim, models_feature_importances, model_files, [False]*len(models_feature_importances),
-                                [top_n_coef]*len(models_feature_importances), [True]*len(models_feature_importances)))
-        return models_feature_importances, top_dim_list
-    elif print_num_dim == True and return_top_dim == False:
-        top_dim_list = list(map(get_top_dim, models_feature_importances, model_files, [True]*len(models_feature_importances),
-                                [top_n_coef]*len(models_feature_importances), [False]*len(models_feature_importances)))
-        return models_feature_importances
+        top_dim_list = list(map(get_top_dim, model_weights, models, [False]*len(model_weights),
+                                [top_n_coef]*len(model_weights), [True]*len(model_weights)))
+        return top_dim_list
     
-def get_top_dim(coef, model_name, print_num_dim = True, top_n_coef = 0.2, return_top_dim = False):
+def get_top_dim(coef, model_name, print_num_dim = True, top_n_coef = 0.2, return_top_dim = False, dimensions = 64):
     '''
     Get the top features used for each ML and return as a list along with id and abs_log2FC for the get_pairwise_distances()
     top_n_coef: 0.2 means extract features up to 20% importance
     '''
-    for i in range(1,64):
+    for i in range(1, dimensions):
         if np.sum(coef[coef.argsort()[-i:]]) > top_n_coef:
             num_dim = i
             break 
@@ -97,12 +81,13 @@ def jaccard_average(top_dim_list, title):
     plt.ylim(0, 1)
     plt.ylabel('jaccard similarity')
     plt.title(title)
+    plt.savefig(os.path.join(Result.getPath(), f'jaccard - {title}'))
     plt.show()
     plt.close()
     
 def plot_random_feature_importance(feature_importance_list, top_dim_list, subnetwork_name):
     models = ['LR', 'RF', 'XGB']
-    plt.figure(figsize = (18, 3))
+    plt.figure(figsize = (12, 3))
     plt.rcParams.update({'font.size': 18})
     for j in range(0, 9, 3):
         l = int(j/3)
@@ -121,8 +106,9 @@ def plot_random_feature_importance(feature_importance_list, top_dim_list, subnet
         plt.title(models[l] + ' '+ subnetwork_name)
         plt.xlabel('importance sum')
         plt.ylabel('events')
-        plt.subplots_adjust(wspace = 0.2);
-        
+        plt.subplots_adjust(wspace = 0.2)
+    plt.tight_layout()
+    plt.savefig(os.path.join(Result.getPath(), f'{models[l]} {subnetwork_name} random importance simulation'))
         
 def get_pairwise_distances(processed_emb_df):
     '''Determine pairwise euclidean distance between each data point'''
@@ -180,7 +166,7 @@ def get_critical_gene_sets(processed_emb_df, top_dim_list, max_dist = 0.55):
     return critical_gene_sets
 
 
-def get_critical_gene_df(critical_gene_set):
+def get_critical_gene_df(critical_gene_set, subnetwork_name, output_dir):
     '''
     Supply 9 sets of critical genes for 3 model x 3 repeats 
     Return a critical gene df with count in each model and each repeat 
@@ -201,6 +187,9 @@ def get_critical_gene_df(critical_gene_set):
     critical_gene_dfs_merged['near_impact_cnt'] = critical_gene_dfs_merged.sum(axis = 1)
     critical_gene_dfs_merged = critical_gene_dfs_merged.sort_values(
         'near_impact_cnt', ascending = False).reset_index(drop = True)
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+    critical_gene_dfs_merged.to_csv(output_dir + f'{subnetwork_name}_critical_gene_df.csv', index = 0)
     return critical_gene_dfs_merged
 
 
@@ -237,6 +226,7 @@ def jaccard_critical_genes(critical_gene_df, network_name):
     plt.title(network_name)
     plt.ylabel('jaccard similarity')
     plt.ylim(0, 1)
+    plt.savefig(os.path.join(Result.getPath(), f'jaccard critical genes - {network_name}'))
     plt.show()
     plt.close()
     
