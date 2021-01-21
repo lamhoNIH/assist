@@ -171,7 +171,7 @@ def cluster_jaccard(cluster_df1, cluster_df2, cluster_column, comparison_names,
     plt.ylim(0, y_max)
     plt.title('Jaccard distribution')
 #     plt.suptitle(f'{comparison_names[0]} vs {comparison_names[1]}')
-    plt.subplots_adjust(top = 0.8, wspace = 1) 
+    plt.subplots_adjust(top = 0.8, wspace = 1)
     plt.savefig(os.path.join(Result.getPath(), f'cluster_jaccard_{comparison_names[0]} vs {comparison_names[1]}_{cutout_nodes}.png'), bbox_inches = 'tight')
     plt.close()
 
@@ -554,7 +554,7 @@ def gene_phenotype_corr(critical_genes, expression_meta_df):
     plt.subplots_adjust(wspace = 1)
     
     
-def gene_set_phenotype_corr(gene_sets, network_names, expression_meta_df):
+def gene_set_phenotype_corr(gene_sets, network_names, expression_meta_df, file_name):
     '''
     Plot correlation heatmap between critical gene sets and alcohol phenotypes
     (similar to cluster_phenotype_corr, cluster is replaced with a set of critical genes)
@@ -612,7 +612,7 @@ def gene_set_phenotype_corr(gene_sets, network_names, expression_meta_df):
     clusters_corr = np.round(clusters_corr, 2)
     clusters_pvalue = clusters_pvalue.T.sort_index(ascending = False)
     
-    fig = plt.figure(figsize=(12, 8))
+    fig = plt.figure(figsize=(15, 8))
     plt.rcParams.update({'font.size': 18})
 
     gs = gridspec.GridSpec(1, 2, width_ratios=[2.5, 1])  # set the subplot width ratio
@@ -635,9 +635,9 @@ def gene_set_phenotype_corr(gene_sets, network_names, expression_meta_df):
     plt.xlabel('Trait count')
     plt.yticks(np.arange(len(yticklabels)) +1, labels=yticklabels, 
                rotation = 0)
-    plt.title('Number of significant traits each gene set')
-    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+    plt.title('# significant traits')
+    plt.tight_layout(rect=[0, 0.03, 0.85, 0.95])
     plt.suptitle(f'Trait-gene set correlation', fontsize = 22)
     for index in empty_set_index:
         print(network_names[index], 'does not have critical genes in common between all 3 models')
-    
+    plt.savefig(os.path.join(Result.getPath(), f'gene_set_trait_corr_{file_name}.png'))

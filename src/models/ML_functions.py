@@ -64,7 +64,16 @@ def plot_ML_results(th_path, description_list, output_dir = None):
         plt.show()
         plt.close()
         
-        
+def get_important_features(model):
+    '''Get feature importances from models'''
+    if type(model).__name__ == 'LogisticRegression':
+        coef = model.coef_[0]
+        coef = np.abs(coef) # convert coef to positive values only
+        coef /= np.sum(coef) # convert coef to % importance
+    else:
+        coef = model.feature_importances_
+    return coef
+
 def run_ml(processed_embedding, emb_name, print_accuracy = False, output_dir = None):
     '''Run ML using sklearn with LR, RF and XGBoost'''
     lr = LogisticRegression(max_iter = 1000)
@@ -73,6 +82,7 @@ def run_ml(processed_embedding, emb_name, print_accuracy = False, output_dir = N
     lr_acc = []
     rf_acc = []
     xgb_acc = []
+    weight_list = []
     # repeat 3 times
     for i in range(3):
         num_sample = processed_embedding.impact.value_counts().min()
@@ -81,6 +91,13 @@ def run_ml(processed_embedding, emb_name, print_accuracy = False, output_dir = N
         lr.fit(X_train, y_train)
         rf.fit(X_train, y_train)
         xgb.fit(X_train, y_train)
+       
+        lr_weights = get_important_features(lr)
+        rf_weights = get_important_features(rf)
+        xgb_weights = get_important_features(xgb)
+        weight_list.append(lr_weights)
+        weight_list.append(rf_weights)
+        weight_list.append(xgb_weights)
         
         lr_acc.append(round(lr.score(X_test, y_test), 2))
         rf_acc.append(round(rf.score(X_test, y_test), 2))
@@ -101,8 +118,11 @@ def run_ml(processed_embedding, emb_name, print_accuracy = False, output_dir = N
     acc_df = pd.DataFrame({'LR':lr_acc, 'RF':rf_acc, 'XGB':xgb_acc})
     sns.boxplot(x = 'variable', y = 'value', data = pd.melt(acc_df))
     plt.ylim(0, 1)
-    plt.title(output_dir)
+    plt.title(emb_name)
     plt.ylabel('Accuracy')
     plt.xlabel('')
     plt.show()
     plt.close()
+    # reorder the weight list to match with other functions (same models go together 3 times)
+    reordered_weight_list = [weight_list[i] for j in range(3) for i in range(j, 9, 3)]
+    return reordered_weight_list
