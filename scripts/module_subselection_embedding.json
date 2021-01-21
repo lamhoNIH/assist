@@ -72,5 +72,6 @@
 		"walk_length": [16, 64],
 		"num_walks": [100, 300],
 		"window": 10
-	}
+	},
+	"kmeans_test_n_list": [5,10,20]
 }

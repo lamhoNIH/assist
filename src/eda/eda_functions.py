@@ -144,7 +144,7 @@ def cluster_jaccard(cluster_df1, cluster_df2, cluster_column, comparison_names,
 
     jac_df = pd.DataFrame({'cluster1': c1_list, 'cluster2': c2_list, 'jaccard': j_list})
     jac_df = jac_df.pivot(index='cluster1', columns='cluster2', values='jaccard')
-    sns.set(font_scale=1.5)
+    sns.set(font_scale=1.25)
     sns.set_style('white')
 
     w = len(cluster_df2[cluster_column].unique())/1.3
@@ -171,9 +171,8 @@ def cluster_jaccard(cluster_df1, cluster_df2, cluster_column, comparison_names,
     plt.ylim(0, y_max)
     plt.title('Jaccard distribution')
 #     plt.suptitle(f'{comparison_names[0]} vs {comparison_names[1]}')
-    plt.subplots_adjust(top = 0.8, wspace = 1) 
-    plt.tight_layout()
-    plt.savefig(os.path.join(Result.getPath(), f'cluster_jaccard_{comparison_names[0]} vs {comparison_names[1]}_{cutout_nodes}.png'))
+    plt.subplots_adjust(top = 0.8, wspace = 1)
+    plt.savefig(os.path.join(Result.getPath(), f'cluster_jaccard_{comparison_names[0]} vs {comparison_names[1]}_{cutout_nodes}.png'), bbox_inches = 'tight')
     plt.close()
 
 def get_module_sig_gene_perc(expression_meta_df, cluster_df, cluster_column, cluster, trait):
@@ -215,9 +214,9 @@ def plot_sig_perc(cluster_df, cluster_column, network_name, expression_meta_df):
             cluster_sig_perc[traits[i]] = sig_gene_perc
         
     cluster_sig_perc = cluster_sig_perc.sort_index(ascending = False)
-    fig = plt.figure(figsize=(17, 8))
+    fig = plt.figure(figsize=(12, 8))
     plt.rcParams.update({'font.size': 18})
-    gs = gridspec.GridSpec(1, 2, width_ratios=[2, 1])  # set the subplot width ratio
+    gs = gridspec.GridSpec(1, 2, width_ratios=[2.5, 1])  # set the subplot width ratio
     # first subplot to show the correlation heatmap
     ax0 = plt.subplot(gs[0])
     sns.heatmap(cluster_sig_perc, cmap='Reds',
@@ -236,7 +235,7 @@ def plot_sig_perc(cluster_df, cluster_column, network_name, expression_meta_df):
     plt.xlabel('# Trait with >5% significant genes')
     plt.title('Number of significant traits each cluster')
     plt.suptitle(f'% significant genes for each trait for {network_name}', fontsize = 22)
-    plt.tight_layout()
+    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
     plt.savefig(os.path.join(Result.getPath(), f'plot_sig_perc_{network_name}.png'))
     plt.close()
 
@@ -327,13 +326,11 @@ def plot_cluster_nmi_comparison(cluster1_name, cluster1, cluster_list, cluster_c
     for cluster in cluster_list:
         nmi_scores.append(cluster_nmi(cluster1, cluster, cluster_column))
     plt.bar(comparison_names, nmi_scores)
-    plt.xlabel('Edges')
     plt.ylabel('NMI')
     cluster_type = ['community' if cluster_column == 'louvain_label' else 'cluster']
     plt.title(f'NMI for {cluster_type[0]} comparison')
     plt.xticks(rotation = 45, ha = 'right')
-    plt.tight_layout()
-    plt.savefig(os.path.join(Result.getPath(), f'plot_cluster_nmi_comparison_{cluster1_name}.png'))
+    plt.savefig(os.path.join(Result.getPath(), f'plot_cluster_nmi_comparison_{cluster1_name}.png'), bbox_inches = 'tight')
     plt.close()
 
 def cluster_DE_perc(cluster_df, cluster_column, network_name, deseq = DESeqData.get_deseq()):
@@ -356,7 +353,7 @@ def cluster_DE_perc(cluster_df, cluster_column, network_name, deseq = DESeqData.
         down_impact_perc.append(100*num_down_in_module/num_down_impact)
     cluster_DE_perc = pd.DataFrame({'cluster':clusters, '% up': up_impact_perc, '% down': down_impact_perc}) 
     cluster_DE_perc = cluster_DE_perc.sort_values('cluster', ascending = False)
-    sns.set(font_scale=1.5)
+    sns.set(font_scale=1.2)
     sns.set_style('white')
     if len(cluster_DE_perc) < 3:
         h = len(cluster_DE_perc)/1.5
@@ -373,17 +370,16 @@ def cluster_DE_perc(cluster_df, cluster_column, network_name, deseq = DESeqData.
                 cmap = 'Blues', vmin = 0, vmax = 100) 
     plt.yticks(rotation=0)
     # no one-size fits all so adjust the title location by # of clusters
-    if len(cluster_DE_perc) < 6:
-        top = 0.5 + (len(cluster_DE_perc) - 2)/10
+    if len(cluster_DE_perc) < 7:
+        top = 0.5 + (len(cluster_DE_perc) - 2)/11
 
     else:
         top = 0.85
     plt.subplots_adjust(wspace = 0.8, top = top)
     plt.suptitle(f'% DE in each cluster for {network_name}', fontsize = 22)
-    plt.tight_layout()
-    plt.savefig(os.path.join(Result.getPath(), f'cluster_DE_perc_{network_name}.png'))
+    plt.savefig(os.path.join(Result.getPath(), f'cluster_DE_perc_{network_name}.png'), bbox_inches = 'tight')
     plt.close()
-    
+
 def permute_cluster_label(expression_meta_df, cluster_df1, cluster_df2, cluster1, cluster2, cluster_column, shuffle = 100):
     '''
     Given 2 cluster dfs, generate simulated random eigen gene expression for a cluster and get p values & correlation scores
