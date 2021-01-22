@@ -22,10 +22,10 @@ import time
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 
-def ml_models(config_file, archive_path):
+def ml_models(config_file, archive_path, run_num):
     data_folder = Input.getPath()
-    print("config_file: {} data_folder: {} archive_path: {}".format(config_file, data_folder, archive_path))
-    Result(os.path.join(data_folder, archive_path), overwrite=False)
+    print("config_file: {} data_folder: {} archive_path: {} run_num: {}".format(config_file, data_folder, archive_path, run_num))
+    Result(os.path.join(data_folder, archive_path, run_num))
     config_path = os.path.join(data_folder, config_file)
     print("config_path: {}".format(config_path))
 
@@ -90,5 +90,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--config_file", help="path to configuration file")
     parser.add_argument("--archive_path", help="parent path to save results")
+    parser.add_argument("--run_num", help="run number")
     args = parser.parse_args()
-    ml_models(args.config_file, args.archive_path)
+    ml_models(args.config_file, args.archive_path, args.run_num)
