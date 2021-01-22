@@ -17,6 +17,8 @@ export DIAGNOSTIC_CORRELATION_DIR := analyses/module_de_diagnostic_correlation
 export DIAGNOSTIC_CORRELATION_TAG := assist/module_de_diagnostic_correlation:0.1.0
 export MODULE_SUBSELECTION_EMBEDDING_DIR := analyses/module_subselection_embedding
 export MODULE_SUBSELECTION_EMBEDDING_TAG := assist/module_subselection_embedding:0.1.0
+export ML_AND_CRITICAL_GENE_IDENTIFIER_DIR := analyses/ml_and_critical_gene_identifier
+export ML_AND_CRITICAL_GENE_IDENTIFIER_TAG := assist/ml_and_critical_gene_identifier:0.1.0
 
 all: network-analysis-image module-extraction-image
 
@@ -78,6 +80,20 @@ module-subselection-embedding-image:
 	cd $(MODULE_SUBSELECTION_EMBEDDING_DIR); \
 	find . -name '*.pyc' -delete; \
 	docker build -t ${MODULE_SUBSELECTION_EMBEDDING_TAG} .; \
+	rm version.txt; \
+	rm -r src
+	
+ml-and-critical-gene-identifier-image:
+	python record_version_info.py > version.txt; \
+	cp version.txt $(ML_AND_CRITICAL_GENE_IDENTIFIER_DIR); \
+	mkdir $(ML_AND_CRITICAL_GENE_IDENTIFIER_DIR)/src; \
+	cp -r src/eda $(ML_AND_CRITICAL_GENE_IDENTIFIER_DIR)/src; \
+	cp -r src/embedding $(ML_AND_CRITICAL_GENE_IDENTIFIER_DIR)/src; \
+	cp -r src/models $(ML_AND_CRITICAL_GENE_IDENTIFIER_DIR)/src; \
+	cp -r src/preproc $(ML_AND_CRITICAL_GENE_IDENTIFIER_DIR)/src; \
+	cd $(ML_AND_CRITICAL_GENE_IDENTIFIER_DIR); \
+	find . -name '*.pyc' -delete; \
+	docker build -t ${ML_AND_CRITICAL_GENE_IDENTIFIER_TAG} .; \
 	rm version.txt; \
 	rm -r src
 
