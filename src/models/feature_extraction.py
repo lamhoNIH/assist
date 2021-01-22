@@ -109,7 +109,7 @@ def plot_random_feature_importance(feature_importance_list, top_dim_list, subnet
         plt.subplots_adjust(wspace = 0.2)
     plt.tight_layout()
     plt.savefig(os.path.join(Result.getPath(), f'{models[l]} {subnetwork_name} random importance simulation'))
-        
+
 def get_pairwise_distances(processed_emb_df):
     '''Determine pairwise euclidean distance between each data point'''
     pairwise_distances = pd.DataFrame(ed(processed_emb_df.iloc[:, :-2]))
