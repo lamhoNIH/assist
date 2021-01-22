@@ -76,7 +76,7 @@ def module_subselection_approach2(data_folder, archive_path, run_num, config_jso
     subnetwork_dfs = []
     subnetwork_names = []
     for p in subnet_params:
-        G, module_df, subnetwork_name = get_subnetwork(p["deg_modules"], p["num_genes"], p["min_weight"], provided_networks_df, comm_df, p["non_deg_modules"], plot_hist = True, hist_dir = subnetwork_path, subnetwork_dir = subnetwork_path)
+        G, module_df, subnetwork_name = get_subnetwork(p["deg_modules"], p["num_genes"], p["min_weight"], provided_networks_df, comm_df, non_deg_modules=p["non_deg_modules"], deseq=deseq, plot_hist = True, hist_dir = subnetwork_path, subnetwork_dir = subnetwork_path)
         subnetwork_Gs.append(G)
         subnetwork_dfs.append(module_df)
         subnetwork_names.append(subnetwork_name)
@@ -120,8 +120,8 @@ def module_subselection_approach2(data_folder, archive_path, run_num, config_jso
     for i in range(1, n_clusters):
         cluster_jaccard(kmeans_list[0], kmeans_list[i], 'kmean_label', [subnetwork_names[0], subnetwork_names[i]], top = 3)
 
-    networK_comparison_names = [subnetwork_names[1] + f'vs {subnetwork_names[i]}' for i in range(n_clusters)]
-    plot_cluster_nmi_comparison(subnetwork_names[1], kmeans_list[1], kmeans_list, 'kmean_label', networK_comparison_names)
+    network_comparison_names = [subnetwork_names[1] + f'vs {subnetwork_names[i]}' for i in range(n_clusters)]
+    plot_cluster_nmi_comparison(subnetwork_names[1], kmeans_list[1], kmeans_list, 'kmean_label', network_comparison_names)
 
     for i, kmeans in enumerate(kmeans_list):
         cluster_DE_perc(kmeans, 'kmean_label', subnetwork_names[i], deseq)

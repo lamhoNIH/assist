@@ -81,7 +81,7 @@ def jaccard_average(top_dim_list, title):
     plt.ylim(0, 1)
     plt.ylabel('jaccard similarity')
     plt.title(title)
-    plt.savefig(os.path.join(Result.getPath(), f'jaccard - {title}'))
+    plt.savefig(os.path.join(Result.getPath(), f'jaccard_average_{title}.png'))
     plt.show()
     plt.close()
     
@@ -107,9 +107,11 @@ def plot_random_feature_importance(feature_importance_list, top_dim_list, subnet
         plt.xlabel('importance sum')
         plt.ylabel('events')
         plt.subplots_adjust(wspace = 0.2)
-    plt.tight_layout()
-    plt.savefig(os.path.join(Result.getPath(), f'{models[l]} {subnetwork_name} random importance simulation'))
-        
+        plt.tight_layout()
+        plt.savefig(os.path.join(Result.getPath(), f'plot_random_feature_importance_{models[l]}_{subnetwork_name}.png'))
+    plt.show()
+    plt.close()
+
 def get_pairwise_distances(processed_emb_df):
     '''Determine pairwise euclidean distance between each data point'''
     pairwise_distances = pd.DataFrame(ed(processed_emb_df.iloc[:, :-2]))
@@ -202,6 +204,7 @@ def plot_nearby_impact_num(critical_gene_df, emb_name, top = 10):
     plt.xlabel('Number of nearby impact genes')
     plt.ylabel('Critical gene ID')
     plt.title(emb_name)
+    plt.savefig(os.path.join(Result.getPath(), f'plot_nearby_impact_num{emb_name}.png'))
     plt.show()
     plt.close()
     return critical_df['gene']
@@ -226,7 +229,7 @@ def jaccard_critical_genes(critical_gene_df, network_name):
     plt.title(network_name)
     plt.ylabel('jaccard similarity')
     plt.ylim(0, 1)
-    plt.savefig(os.path.join(Result.getPath(), f'jaccard critical genes - {network_name}'))
+    plt.savefig(os.path.join(Result.getPath(), f'jaccard_critical_genes_{network_name}.png'))
     plt.show()
     plt.close()
     

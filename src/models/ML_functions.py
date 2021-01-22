@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from ..preproc.deseq_data import DESeqData
+from ..preproc.result import Result
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestClassifier
@@ -61,6 +62,7 @@ def plot_ML_results(th_path, description_list, output_dir = None):
         plt.xlabel('')
         plt.axhline(50, color = 'r')
         plt.xticks(rotation = 45, ha = 'right')
+        plt.savefig(os.path.join(Result.getPath(), f"plot_ML_results_{description}.png"))
         plt.show()
         plt.close()
         
@@ -121,6 +123,7 @@ def run_ml(processed_embedding, emb_name, print_accuracy = False, output_dir = N
     plt.title(emb_name)
     plt.ylabel('Accuracy')
     plt.xlabel('')
+    plt.savefig(os.path.join(Result.getPath(), f"run_ml_{emb_name}.png"))
     plt.show()
     plt.close()
     # reorder the weight list to match with other functions (same models go together 3 times)
