@@ -46,6 +46,7 @@ def ml_models(config_file, archive_path, run_num):
     # process embedding to be ready for ML
     processed_emb_dfs = []
     deseq = pd.read_excel(os.path.join(data_folder, config_json["differentially_expressed_genes"]))
+    deseq['abs_log2FC'] = abs(deseq['log2FoldChange'])
     for emb in emb_list:
         processed_emb_dfs.append(process_emb_for_ML(emb, deseq))
 
@@ -57,7 +58,13 @@ def ml_models(config_file, archive_path, run_num):
     for model_weights in model_weight_list:
         top_dim = plot_feature_importances(model_weights, top_n_coef = 0.5, print_num_dim = False, plot_heatmap = False, return_top_dim = True)
         top_dim_list.append(top_dim)
-        
+
+    # The blue bars are the feature importance sum from random selection of the dimensions
+    # The red vertical line is the actual feature importance sum selected by ML
+    # Note each model was repeated 3 times but only 1 was shown
+    for i in range(len(model_weight_list)):
+        plot_random_feature_importance(model_weight_list[i], top_dim_list[i], embedding_names[i])
+
     for i, top_dim in enumerate(top_dim_list):
         jaccard_average(top_dim, embedding_names[i])
 
