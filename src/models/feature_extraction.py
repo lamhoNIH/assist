@@ -108,8 +108,9 @@ def plot_random_feature_importance(feature_importance_list, top_dim_list, subnet
         plt.ylabel('events')
         plt.subplots_adjust(wspace = 0.2)
     plt.tight_layout()
-    plt.savefig(os.path.join(Result.getPath(), f'{models[l]} {subnetwork_name} random importance simulation'))
-
+    plt.savefig(os.path.join(Result.getPath(), f'plot_random_feature_importance_{models[l]}_{subnetwork_name}.png'))
+    plt.show()
+    plt.close()
 
 def get_pairwise_distances(processed_emb_df):
     '''Determine pairwise euclidean distance between each data point'''
@@ -190,7 +191,7 @@ def get_critical_gene_df(critical_gene_set, subnetwork_name, output_dir):
         'near_impact_cnt', ascending = False).reset_index(drop = True)
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
-    critical_gene_dfs_merged.to_csv(output_dir + f'{subnetwork_name}_critical_gene_df.csv', index = 0)
+    critical_gene_dfs_merged.to_csv(os.path.join(output_dir, f'{subnetwork_name}_critical_gene_df.csv'), index = 0)
     return critical_gene_dfs_merged
 
 
@@ -203,7 +204,7 @@ def plot_nearby_impact_num(critical_gene_df, emb_name, top = 10):
     plt.xlabel('Number of nearby impact genes')
     plt.ylabel('Critical gene ID')
     plt.title(emb_name)
-    plt.savefig(os.path.join(Result.getPath(), f'plot_nearby_impact_num{emb_name}.png'))
+    plt.savefig(os.path.join(Result.getPath(), f'plot_nearby_impact_num_{emb_name}.png'))
     plt.show()
     plt.close()
     return critical_df['gene']
