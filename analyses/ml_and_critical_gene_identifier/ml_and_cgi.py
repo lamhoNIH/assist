@@ -22,10 +22,10 @@ import time
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 
-def ml_models(config_file, archive_path):
+def ml_models(config_file, archive_path, run_num):
     data_folder = Input.getPath()
-    print("config_file: {} data_folder: {} archive_path: {}".format(config_file, data_folder, archive_path))
-    Result(os.path.join(data_folder, archive_path), overwrite=False)
+    print("config_file: {} data_folder: {} archive_path: {} run_num: {}".format(config_file, data_folder, archive_path, run_num))
+    Result(os.path.join(data_folder, archive_path, run_num))
     config_path = os.path.join(data_folder, config_file)
     print("config_path: {}".format(config_path))
 
@@ -46,6 +46,7 @@ def ml_models(config_file, archive_path):
     # process embedding to be ready for ML
     processed_emb_dfs = []
     deseq = pd.read_excel(os.path.join(data_folder, config_json["differentially_expressed_genes"]))
+    deseq['abs_log2FC'] = abs(deseq['log2FoldChange'])
     for emb in emb_list:
         processed_emb_dfs.append(process_emb_for_ML(emb, deseq))
 
@@ -57,7 +58,13 @@ def ml_models(config_file, archive_path):
     for model_weights in model_weight_list:
         top_dim = plot_feature_importances(model_weights, top_n_coef = 0.5, print_num_dim = False, plot_heatmap = False, return_top_dim = True)
         top_dim_list.append(top_dim)
-        
+
+    # The blue bars are the feature importance sum from random selection of the dimensions
+    # The red vertical line is the actual feature importance sum selected by ML
+    # Note each model was repeated 3 times but only 1 was shown
+    for i in range(len(model_weight_list)):
+        plot_random_feature_importance(model_weight_list[i], top_dim_list[i], embedding_names[i])
+
     for i, top_dim in enumerate(top_dim_list):
         jaccard_average(top_dim, embedding_names[i])
 
@@ -90,5 +97,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--config_file", help="path to configuration file")
     parser.add_argument("--archive_path", help="parent path to save results")
+    parser.add_argument("--run_num", help="run number")
     args = parser.parse_args()
-    ml_models(args.config_file, args.archive_path)
+    ml_models(args.config_file, args.archive_path, args.run_num)
