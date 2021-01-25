@@ -640,4 +640,6 @@ def gene_set_phenotype_corr(gene_sets, network_names, expression_meta_df, file_n
     plt.suptitle(f'Trait-gene set correlation', fontsize = 22)
     for index in empty_set_index:
         print(network_names[index], 'does not have critical genes in common between all 3 models')
-    plt.savefig(os.path.join(Result.getPath(), f'gene_set_trait_corr_{file_name}.png'))
+    plt.savefig(os.path.join(Result.getPath(), f'gene_set_phenotype_corr_{file_name}.png'))
+    plt.close()
+    
