@@ -339,7 +339,29 @@ def plot_cluster_nmi_comparison(cluster1_name, cluster1, cluster_list, cluster_c
     plt.savefig(os.path.join(Result.getPath(), f'plot_cluster_nmi_comparison_{cluster1_name}.png'), bbox_inches = 'tight')
     plt.show()
     plt.close()
+    
+def cluster_nmi_v2(cluster_df1, cluster_df2, cluster_column):
+    '''NMI to compare communities from the whole netowrk and the subnetwork or clusters from different network embeddings'''
+    sub1_plus_sub2 = pd.merge(cluster_df1, cluster_df2, left_on = 'id', right_on = 'id', how = 'outer')
+    max_cluster_num = max(sub1_plus_sub2[[f'{cluster_column}_x', f'{cluster_column}_y']].max())
+    sub1_plus_sub2.fillna(max_cluster_num+1, inplace = True) # for the nodes that were cut out, give them a new community number
+    return nmi(sub1_plus_sub2[f'{cluster_column}_x'], sub1_plus_sub2[f'{cluster_column}_y'])
 
+def plot_cluster_nmi_comparison_v2(cluster1_list, cluster2_list, cluster1_names, cluster2_names, cluster_column):
+    width = len(cluster1_list)*2
+    plt.figure(figsize = (width,4))
+    nmi_scores = []
+    for i in range(len(cluster1_list)):
+        nmi_scores.append(cluster_nmi_v2(cluster1_list[i], cluster2_list[i], cluster_column))
+    plt.bar(comparison_names, nmi_scores)
+    plt.ylabel('NMI')
+    cluster_type = ['community' if cluster_column == 'louvain_label' else 'cluster']
+    plt.title(f'NMI for {cluster_type[0]} comparison')
+    plt.xticks(rotation = 45, ha = 'right')
+    plt.savefig(os.path.join(Result.getPath(), f'plot_{cluster_type}_nmi_comparison.png'), bbox_inches = 'tight')
+    plt.show()
+    plt.close()    
+    
 def cluster_DE_perc(cluster_df, cluster_column, network_name, deseq):
     '''
     A function to plot 2 heatmaps to show % of differential genes in each cluster
