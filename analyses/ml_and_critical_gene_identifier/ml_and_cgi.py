@@ -56,7 +56,7 @@ def ml_models(config_file, archive_path, run_num):
 
     top_dim_list = []
     for model_weights in model_weight_list:
-        top_dim = plot_feature_importances(model_weights, top_n_coef = 0.5, print_num_dim = False, plot_heatmap = False, return_top_dim = True)
+        top_dim = plot_feature_importances(model_weights, top_n_coef = config_json["top_n_coef"], print_num_dim = False, plot_heatmap = False, return_top_dim = True)
         top_dim_list.append(top_dim)
 
     # The blue bars are the feature importance sum from random selection of the dimensions
@@ -71,7 +71,7 @@ def ml_models(config_file, archive_path, run_num):
     critical_gene_sets = []
     critical_gene_dfs = []
     for i, processed_df in enumerate(processed_emb_dfs):
-        gene_set = get_critical_gene_sets(processed_df, top_dim_list[i], max_dist = 2)
+        gene_set = get_critical_gene_sets(processed_df, top_dim_list[i], max_dist = config_json["max_dist"])
         critical_gene_sets.append(gene_set)
         critical_gene_dfs.append(get_critical_gene_df(gene_set, embedding_names[i], Result.getPath()))
 
