@@ -121,7 +121,8 @@ def get_pairwise_distances(processed_emb_df):
     pairwise_distances.sort_values('abs_log2FC', ascending = False, inplace=True)
     return pairwise_distances
 
-def get_critical_genes(pairwise_distance_df, max_dist = 0.55):
+
+def get_critical_genes(pairwise_distance_df, cutoff, max_dist = 0.55):
     '''
     Find critical genes that are close to impact genes
     critical_gene_dict: # impact genes a critical gene is close to
@@ -132,7 +133,7 @@ def get_critical_genes(pairwise_distance_df, max_dist = 0.55):
     '''
     critical_gene_list = []
     gene_pair_dict = {}
-    size = len(pairwise_distance_df[pairwise_distance_df.abs_log2FC > 0.2]) # cutoff of abs_log2FC > 0.2 as impact gene
+    size = len(pairwise_distance_df[pairwise_distance_df.abs_log2FC > cutoff]) # cutoff of abs_log2FC > 0.2 as impact gene
     for i in range(size):
         subset_distance = pairwise_distance_df.iloc[i,:-2].sort_values()
         key = subset_distance[subset_distance.between(0.01,max_dist)].reset_index().columns[1] # Euclidean distance < 0.55 as "close", key is an impact gene when 20% important features were used. Increase the size when more features are used 
@@ -156,7 +157,7 @@ def calculate_distance_stats(distance_df_list):
     min_mean = np.min(distance_df_joined.mean())
     print('Max mean:', max_mean, 'Min mean:', min_mean)
     
-def get_critical_gene_sets(processed_emb_df, top_dim_list, max_dist = 0.55):
+def get_critical_gene_sets(processed_emb_df, top_dim_list, cutoff = 0.2, max_dist = 0.55):
     '''
     Input: processed embedding df used for ML and top_dim_list (set of 9 for 3 models x 3 repeats)
     Output: 9 sets of critical genes for 3 models x 3 repeats
@@ -164,7 +165,7 @@ def get_critical_gene_sets(processed_emb_df, top_dim_list, max_dist = 0.55):
     process_emb_df_subset = [processed_emb_df[top_dim_list[i]] for i in range(9)]
     distance_dfs = list(map(get_pairwise_distances, process_emb_df_subset))
 #     calculate_distance_stats(distance_dfs)
-    critical_gene_sets = list(map(get_critical_genes, distance_dfs, [max_dist]*len(distance_dfs)))
+    critical_gene_sets = list(map(get_critical_genes, distance_dfs, [cutoff]*len(distance_dfs), [max_dist]*len(distance_dfs)))
     return critical_gene_sets
 
 
@@ -179,8 +180,7 @@ def get_critical_gene_df(critical_gene_set, subnetwork_name, output_dir):
     for j in range(0, 9, 3):
         l = int(j/3)
         for i in range(3):
-            temp = pd.DataFrame(critical_gene_set[i+j][0])
-            temp.columns = ['gene', f'{models[l]}_repeat{i+1}']
+            temp = pd.DataFrame(critical_gene_set[i+j][0], columns = ['gene', f'{models[l]}_repeat{i+1}'])
             critical_gene_dfs.append(temp)
         critical_gene_dfs_merged = reduce(lambda left,right:pd.merge(
             left,right,on=['gene'],how='outer'), critical_gene_dfs)
@@ -193,7 +193,6 @@ def get_critical_gene_df(critical_gene_set, subnetwork_name, output_dir):
         os.makedirs(output_dir)
     critical_gene_dfs_merged.to_csv(os.path.join(output_dir, f'{subnetwork_name}_critical_gene_df.csv'), index = 0)
     return critical_gene_dfs_merged
-
 
 def plot_nearby_impact_num(critical_gene_df, emb_name, top = 10):
     '''Plot count of nearby impact genes for each set of critical gene df'''

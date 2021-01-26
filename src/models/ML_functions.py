@@ -13,10 +13,16 @@ import pickle
 import os
 import seaborn as sns
 
-def process_emb_for_ML(embedding_df, deseq = DESeqData.get_deseq()):
+def process_emb_for_ML(embedding_df, deseq):
     embedding_labeled_df = pd.merge(embedding_df, deseq, left_index = True, right_on = 'id')
     embedding_labeled_df['impact'] = 1
-    embedding_labeled_df.loc[embedding_labeled_df['log2FoldChange'].between(-0.1, 0.1), 'impact'] = 0
+    # The default setting for the human data was abs_log2FC > 0.1 as the "impact", which was ~8% of all genes in deseq
+    # use the same logic to derive the cutoff for new data
+    if 'abs_log2FC' not in deseq.columns:
+        deseq['abs_log2FC'] = abs(deseq['log2FoldChange'])
+    cutoff_index = int(len(deseq)*0.08)
+    cutoff = deseq['abs_log2FC'].sort_values(ascending = False)[cutoff_index]
+    embedding_labeled_df.loc[embedding_labeled_df['abs_log2FC'] < cutoff, 'impact'] = 0
     return embedding_labeled_df
 
 def run_test_harness_ml(embedding_data, output_dir, description,
@@ -76,9 +82,9 @@ def get_important_features(model):
         coef = model.feature_importances_
     return coef
 
-def run_ml(processed_embedding, emb_name, print_accuracy = False, output_dir = None):
+def run_ml(processed_embedding, emb_name, max_iter = 1000, print_accuracy = False, output_dir = None):
     '''Run ML using sklearn with LR, RF and XGBoost'''
-    lr = LogisticRegression(max_iter = 1000)
+    lr = LogisticRegression(max_iter = max_iter)
     rf = RandomForestClassifier()
     xgb = XGBClassifier()
     lr_acc = []
