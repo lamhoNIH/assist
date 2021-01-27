@@ -105,6 +105,8 @@ def get_subnetwork(deg_modules, num_genes, min_weight, network_df, comm_df, dese
     return subnetwork with edges joined together as an adjacency df
     '''
     deg_module_tom = get_module_df(network_df, deg_modules, comm_df)
+    if 'abs_log2FC' not in deseq:
+        deseq['abs_log2FC'] = abs(deseq['log2FoldChange'])
     deg_module_nodes = deseq[deseq.id.isin(deg_module_tom.columns)][['id', 'abs_log2FC']].sort_values('abs_log2FC', ascending = False).reset_index(drop = True)[:num_genes]['id']
     
     G_sub_list = []
