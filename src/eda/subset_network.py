@@ -93,7 +93,7 @@ def get_subnetwork_by_DE(network_df, comm_df, abs_log2FC, pvalue = 0.05, min_wei
 
 
 
-def get_subnetwork(deg_modules, num_genes, min_weight, network_df, comm_df, non_deg_modules= [], deseq = DESeqData.get_deseq(), plot_hist = True, hist_dir = None, subnetwork_dir = None):
+def get_subnetwork(deg_modules, num_genes, min_weight, network_df, comm_df, deseq, non_deg_modules= [], plot_hist = True, hist_dir = None, subnetwork_dir = None):
     '''This function subset the whole network by taking the top num_genes of DE genes(nodes) from module 4 and same number of genes(nodes) from 1 of the non-DE module in the original network
     deg_modules: a list of DEG modules to use
     num_genes: number of genes to subset from the two modules
@@ -105,6 +105,8 @@ def get_subnetwork(deg_modules, num_genes, min_weight, network_df, comm_df, non_
     return subnetwork with edges joined together as an adjacency df
     '''
     deg_module_tom = get_module_df(network_df, deg_modules, comm_df)
+    if 'abs_log2FC' not in deseq:
+        deseq['abs_log2FC'] = abs(deseq['log2FoldChange'])
     deg_module_nodes = deseq[deseq.id.isin(deg_module_tom.columns)][['id', 'abs_log2FC']].sort_values('abs_log2FC', ascending = False).reset_index(drop = True)[:num_genes]['id']
     
     G_sub_list = []
@@ -147,10 +149,6 @@ def get_subnetwork(deg_modules, num_genes, min_weight, network_df, comm_df, non_
 def add_missing_genes(whole_network, subnetwork_df):
     '''A function to add back the genes that got cut out of the df when network was subselected'''
     subnetwork_df_copy = subnetwork_df.copy()
-    print("whole_network")
-    print(whole_network.head(2))
-    print("subnetwork_df")
-    print(subnetwork_df.head(2))
     id_diff = list(set(whole_network.columns) - set(subnetwork_df.columns))
     subnetwork_df_copy[id_diff] = 0
     rows_to_append = pd.DataFrame(0, columns = subnetwork_df_copy.columns, index = id_diff)

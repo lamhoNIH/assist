@@ -23,8 +23,9 @@ from ..preproc.deseq_data import DESeqData
 def scale_free_validate(network_df, network_name):
     network_degree = network_df.sum()
     log_network_degree = np.log(network_degree)
-    sorted_network_freq = round(log_network_degree,1).value_counts().reset_index()
+    sorted_network_freq = round(log_network_degree, 2).value_counts().reset_index()
     sorted_network_freq[0] = np.log(sorted_network_freq[0])
+    plt.figure(figsize = (5,4))
     plt.scatter(sorted_network_freq.index, sorted_network_freq[0])
     plt.xlabel('log(k)')
     plt.ylabel('log(pk)')
@@ -54,6 +55,7 @@ def plot_gene_cnt_each_cluster(cluster_dfs, cluster_column, network_names):
         plt.subplots_adjust(wspace = 0.3)
     plt.tight_layout()    
     plt.savefig(os.path.join(Result.getPath(), "plot_gene_cnt_each_cluster.png"))
+    plt.show()
     plt.close()
         
 def plot_graph_distance(networks, network_names):
@@ -74,11 +76,11 @@ def plot_graph_distance(networks, network_names):
     #     dc_distance_list.append(netcomp.deltacon0(sub_network1[0].values, sub_network2[0].values))
     #     ged_distance_list.append(netcomp.edit_distance(sub_network1[0].values, sub_network2[0].values))
     #     names.append(f'{sub_network1[1]} vs {sub_network2[1]}')
-    plt.figure(figsize=(10, 5))
+    width = len(networks)*2
+    plt.figure(figsize=(width, 5))
     plt.subplot(1, 2, 1)
     plt.bar(names, dc_distance_list)
     plt.title('Deltacon distance')
-    plt.xlabel('Number of edges')
     plt.xticks(rotation = 45, ha = 'right')
 
     plt.subplot(1, 2, 2)
@@ -89,6 +91,7 @@ def plot_graph_distance(networks, network_names):
     plt.subplots_adjust(wspace=0.5)
     plt.tight_layout()
     plt.savefig(os.path.join(Result.getPath(), "plot_graph_distance.png"))
+    plt.show()
     plt.close()
 
 def run_kmeans(embedding_df, n_clusters):
@@ -173,6 +176,7 @@ def cluster_jaccard(cluster_df1, cluster_df2, cluster_column, comparison_names,
 #     plt.suptitle(f'{comparison_names[0]} vs {comparison_names[1]}')
     plt.subplots_adjust(top = 0.8, wspace = 1)
     plt.savefig(os.path.join(Result.getPath(), f'cluster_jaccard_{comparison_names[0]} vs {comparison_names[1]}_{cutout_nodes}.png'), bbox_inches = 'tight')
+    plt.show()
     plt.close()
 
 def get_module_sig_gene_perc(expression_meta_df, cluster_df, cluster_column, cluster, trait):
@@ -237,6 +241,7 @@ def plot_sig_perc(cluster_df, cluster_column, network_name, expression_meta_df):
     plt.suptitle(f'% significant genes for each trait for {network_name}', fontsize = 22)
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
     plt.savefig(os.path.join(Result.getPath(), f'plot_sig_perc_{network_name}.png'))
+    plt.show()
     plt.close()
 
 def cluster_phenotype_corr(cluster_df, cluster_column, network_name, expression_meta_df):
@@ -309,6 +314,7 @@ def cluster_phenotype_corr(cluster_df, cluster_column, network_name, expression_
     plt.suptitle(f'Trait cluster correlation for {network_name}', fontsize = 22)
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
     plt.savefig(os.path.join(Result.getPath(), f'cluster_phenotype_corr_{network_name}.png'))
+    plt.show()
     plt.close()
     
 def cluster_nmi(cluster_df1, cluster_df2, cluster_column):
@@ -331,9 +337,32 @@ def plot_cluster_nmi_comparison(cluster1_name, cluster1, cluster_list, cluster_c
     plt.title(f'NMI for {cluster_type[0]} comparison')
     plt.xticks(rotation = 45, ha = 'right')
     plt.savefig(os.path.join(Result.getPath(), f'plot_cluster_nmi_comparison_{cluster1_name}.png'), bbox_inches = 'tight')
+    plt.show()
     plt.close()
+    
+def cluster_nmi_v2(cluster_df1, cluster_df2, cluster_column):
+    '''NMI to compare communities from the whole netowrk and the subnetwork or clusters from different network embeddings'''
+    sub1_plus_sub2 = pd.merge(cluster_df1, cluster_df2, left_on = 'id', right_on = 'id', how = 'outer')
+    max_cluster_num = max(sub1_plus_sub2[[f'{cluster_column}_x', f'{cluster_column}_y']].max())
+    sub1_plus_sub2.fillna(max_cluster_num+1, inplace = True) # for the nodes that were cut out, give them a new community number
+    return nmi(sub1_plus_sub2[f'{cluster_column}_x'], sub1_plus_sub2[f'{cluster_column}_y'])
 
-def cluster_DE_perc(cluster_df, cluster_column, network_name, deseq = DESeqData.get_deseq()):
+def plot_cluster_nmi_comparison_v2(cluster1_list, cluster2_list, cluster1_names, cluster2_names, cluster_column):
+    width = len(cluster1_list)*2
+    plt.figure(figsize = (width,4))
+    nmi_scores = []
+    for i in range(len(cluster1_list)):
+        nmi_scores.append(cluster_nmi_v2(cluster1_list[i], cluster2_list[i], cluster_column))
+    plt.bar(comparison_names, nmi_scores)
+    plt.ylabel('NMI')
+    cluster_type = ['community' if cluster_column == 'louvain_label' else 'cluster']
+    plt.title(f'NMI for {cluster_type[0]} comparison')
+    plt.xticks(rotation = 45, ha = 'right')
+    plt.savefig(os.path.join(Result.getPath(), f'plot_{cluster_type}_nmi_comparison.png'), bbox_inches = 'tight')
+    plt.show()
+    plt.close()    
+    
+def cluster_DE_perc(cluster_df, cluster_column, network_name, deseq):
     '''
     A function to plot 2 heatmaps to show % of differential genes in each cluster
     Differential genes is defined as log2FC > 0.15 or log2FC < -0.15
@@ -378,6 +407,7 @@ def cluster_DE_perc(cluster_df, cluster_column, network_name, deseq = DESeqData.
     plt.subplots_adjust(wspace = 0.8, top = top)
     plt.suptitle(f'% DE in each cluster for {network_name}', fontsize = 22)
     plt.savefig(os.path.join(Result.getPath(), f'cluster_DE_perc_{network_name}.png'), bbox_inches = 'tight')
+    plt.show()
     plt.close()
 
 def permute_cluster_label(expression_meta_df, cluster_df1, cluster_df2, cluster1, cluster2, cluster_column, shuffle = 100):
@@ -500,6 +530,7 @@ def plot_random_vs_actual_z(cluster_df1, cluster_df2, cluster1, cluster2, cluste
     plt.suptitle(f'Distribution of Z scores if the cluster membership is randomly assigned for {network_comparison_name}: cluster {cluster2}')
     plt.tight_layout()
     plt.savefig(os.path.join(Result.getPath(), f'plot_random_vs_actual_z_{str(cluster2)}.png'))
+    plt.show()
     plt.close()
     
 def gene_phenotype_corr(critical_genes, expression_meta_df):
@@ -551,6 +582,7 @@ def gene_phenotype_corr(critical_genes, expression_meta_df):
     plt.xlabel('Trait count')
     plt.title('Number of significant traits for each gene')
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+    plt.show()
     plt.subplots_adjust(wspace = 1)
     
     
@@ -641,5 +673,6 @@ def gene_set_phenotype_corr(gene_sets, network_names, expression_meta_df, file_n
     for index in empty_set_index:
         print(network_names[index], 'does not have critical genes in common between all 3 models')
     plt.savefig(os.path.join(Result.getPath(), f'gene_set_phenotype_corr_{file_name}.png'))
+    plt.show()
     plt.close()
     
