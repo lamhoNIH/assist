@@ -48,14 +48,16 @@ def get_module_df(network_df, clusters, comm_df):
 
 def plot_module_hist(adjacency_df, title, comm_df, output_dir = None):
     module_num = len(comm_df.louvain_label.unique())
+    plt.rcParams.update({'font.size': 18})
     plt.hist(comm_df[comm_df.id.isin(adjacency_df.columns)].louvain_label)
 #              , bins = range(module_num)) # show the distributions of the nodes after subsetting
-    plt.title(title)
+    plt.title(title, fontsize = 16)
     plt.xlabel('module id')
     plt.ylabel('number of genes')
     x_min = comm_df.louvain_label.min()
     x_max = comm_df.louvain_label.max()
     plt.xticks(np.arange(x_min, x_max + 1, 1.0))
+    plt.subplots_adjust(top = 0.8)
     if output_dir:
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)

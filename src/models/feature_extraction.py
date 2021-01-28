@@ -24,6 +24,7 @@ def plot_feature_importances(model_weights, top_n_coef = 0.2, print_num_dim = Tr
     A function to show feature importances in each model
     and can return feature importance and the top dim from each model
     '''
+    models = ['lr']*3 + ['rf']*3 + ['xgb']*3 
     if plot_heatmap == True:
         sns.set(font_scale=1.5)
         sns.set_style('white')
@@ -32,11 +33,10 @@ def plot_feature_importances(model_weights, top_n_coef = 0.2, print_num_dim = Tr
         for coef in model_weights:
             min_v, max_v, center = get_min_max_center(coef)
             plt.subplot(3, 3,i+1)
-            sns.heatmap(coef.reshape(64, 1), center = center, vmin = min_v, vmax = max_v)
+            sns.heatmap(coef.reshape(64, 1), center = center, vmin = min_v, vmax = max_v, cmap = 'Reds')
             plt.title(models[i])
             plt.subplots_adjust(wspace = 2)
             i += 1
-    models = ['lr']*3 + ['rf']*3 + ['xgb']*3 
     if print_num_dim == True and return_top_dim == True:
         top_dim_list = list(map(get_top_dim, model_weights, models, [True]*len(model_weights),
                                 [top_n_coef]*len(model_weights), [True]*len(model_weights)))
@@ -199,6 +199,7 @@ def plot_nearby_impact_num(critical_gene_df, emb_name, top = 10):
     critical_df = critical_gene_df[['gene', 'near_impact_cnt']].loc[:10,]
     critical_df.sort_values('near_impact_cnt', inplace = True)
     plt.rcParams.update({'font.size': 18})
+    plt.rcParams['axes.titlepad'] = 15
     plt.barh(critical_df['gene'], critical_df['near_impact_cnt'])
     plt.xlabel('Number of nearby impact genes')
     plt.ylabel('Critical gene ID')

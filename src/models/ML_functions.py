@@ -107,10 +107,10 @@ def run_ml(processed_embedding, emb_name, max_iter = 1000, print_accuracy = Fals
         weight_list.append(rf_weights)
         weight_list.append(xgb_weights)
         
-        lr_acc.append(round(lr.score(X_test, y_test), 2))
-        rf_acc.append(round(rf.score(X_test, y_test), 2))
+        lr_acc.append(100*round(lr.score(X_test, y_test), 2))
+        rf_acc.append(100*round(rf.score(X_test, y_test), 2))
         xgb_predict = xgb.predict(X_test)
-        xgb_acc.append(round(accuracy_score(y_test, xgb_predict), 2))
+        xgb_acc.append(100*round(accuracy_score(y_test, xgb_predict), 2))
 
         if output_dir:
             if not os.path.exists(output_dir):
@@ -124,11 +124,15 @@ def run_ml(processed_embedding, emb_name, max_iter = 1000, print_accuracy = Fals
               'rf average:', round(np.mean(rf_acc), 2), '; ', 
               'xgb_average:', round(np.mean(xgb_acc), 2))
     acc_df = pd.DataFrame({'LR':lr_acc, 'RF':rf_acc, 'XGB':xgb_acc})
+    plt.figure(figsize = (5,4))
+    plt.rcParams.update({'font.size': 18})
+    plt.rcParams['axes.titlepad'] = 15 
     sns.boxplot(x = 'variable', y = 'value', data = pd.melt(acc_df))
-    plt.ylim(0, 1)
+    plt.ylim(0, 100)
     plt.title(emb_name)
     plt.ylabel('Accuracy')
     plt.xlabel('')
+    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
     plt.savefig(os.path.join(Result.getPath(), f"run_ml_{emb_name}.png"))
     plt.show()
     plt.close()
