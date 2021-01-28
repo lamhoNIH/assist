@@ -26,6 +26,7 @@ def scale_free_validate(network_df, network_name):
     sorted_network_freq = round(log_network_degree, 2).value_counts().reset_index()
     sorted_network_freq[0] = np.log(sorted_network_freq[0])
     plt.figure(figsize = (5,4))
+    plt.rcParams.update({'font.size': 18})
     plt.scatter(sorted_network_freq.index, sorted_network_freq[0])
     plt.xlabel('log(k)')
     plt.ylabel('log(pk)')
@@ -78,6 +79,7 @@ def plot_graph_distance(networks, network_names):
     #     names.append(f'{sub_network1[1]} vs {sub_network2[1]}')
     width = len(networks)*2
     plt.figure(figsize=(width, 5))
+    plt.rcParams.update({'font.size': 18})
     plt.subplot(1, 2, 1)
     plt.bar(names, dc_distance_list)
     plt.title('Deltacon distance')
@@ -328,6 +330,7 @@ def cluster_nmi(cluster_df1, cluster_df2, cluster_column):
 
 def plot_cluster_nmi_comparison(cluster1_name, cluster1, cluster_list, cluster_column, comparison_names):
     plt.figure(figsize = (5,4))
+    plt.rcParams.update({'font.size': 18})
     nmi_scores = []
     for cluster in cluster_list:
         nmi_scores.append(cluster_nmi(cluster1, cluster, cluster_column))
@@ -351,8 +354,10 @@ def plot_cluster_nmi_comparison_v2(cluster1_list, cluster2_list, cluster1_names,
     width = len(cluster1_list)*2
     plt.figure(figsize = (width,4))
     nmi_scores = []
+    comparison_names = []
     for i in range(len(cluster1_list)):
         nmi_scores.append(cluster_nmi_v2(cluster1_list[i], cluster2_list[i], cluster_column))
+        comparison_names.append(f'{cluster1_names[i]} vs {cluster2_names[i]}')
     plt.bar(comparison_names, nmi_scores)
     plt.ylabel('NMI')
     cluster_type = ['community' if cluster_column == 'louvain_label' else 'cluster']
@@ -400,7 +405,7 @@ def cluster_DE_perc(cluster_df, cluster_column, network_name, deseq):
     plt.yticks(rotation=0)
     # no one-size fits all so adjust the title location by # of clusters
     if len(cluster_DE_perc) < 7:
-        top = 0.5 + (len(cluster_DE_perc) - 2)/11
+        top = 0.5 + (len(cluster_DE_perc) - 2)/13
 
     else:
         top = 0.85
