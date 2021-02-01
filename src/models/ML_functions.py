@@ -14,12 +14,12 @@ import os
 import seaborn as sns
 
 def process_emb_for_ML(embedding_df, deseq):
+    if 'abs_log2FC' not in deseq.columns:
+        deseq['abs_log2FC'] = abs(deseq['log2FoldChange'])
     embedding_labeled_df = pd.merge(embedding_df, deseq, left_index = True, right_on = 'id')
     embedding_labeled_df['impact'] = 1
     # The default setting for the human data was abs_log2FC > 0.1 as the "impact", which was ~8% of all genes in deseq
     # use the same logic to derive the cutoff for new data
-    if 'abs_log2FC' not in deseq.columns:
-        deseq['abs_log2FC'] = abs(deseq['log2FoldChange'])
     cutoff_index = int(len(deseq)*0.08)
     cutoff = deseq['abs_log2FC'].sort_values(ascending = False)[cutoff_index]
     embedding_labeled_df.loc[embedding_labeled_df['abs_log2FC'] < cutoff, 'impact'] = 0
