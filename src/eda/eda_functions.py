@@ -523,6 +523,7 @@ def plot_random_vs_actual_z(cluster_df1, cluster_df2, cluster1, cluster2, cluste
         corr_random_rest = np.delete(corr_random, i) # the rest of the correlation value
         z_p_value.append(get_z_score(p_pick1, p_random_rest.mean(), p_random_rest.std())) # calculate z score for p-value
         z_corr.append(get_z_score(corr_pick1, corr_random_rest.mean(), corr_random_rest.std())) # calculate z score for correlation value
+    plt.rcParams.update({'font.size': 18})
     plt.figure(figsize = (13, 5))
     plt.subplot(1,2,1)
     plt.hist(z_p_value, bins = 25)
@@ -532,8 +533,8 @@ def plot_random_vs_actual_z(cluster_df1, cluster_df2, cluster1, cluster2, cluste
     plt.hist(z_corr, bins = 25)
     plt.vlines(network_cluster_stability_df[network_cluster_stability_df[cluster_column] == cluster2]['Z_corr'], 0, 110, color = 'r')
     plt.title('Distribution Z_corr')
-    plt.suptitle(f'Distribution of Z scores if the cluster membership is randomly assigned for {network_comparison_name}: cluster {cluster2}')
-    plt.tight_layout()
+    plt.suptitle(f'Z scores {network_comparison_name}: cluster {cluster2}')
+    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
     plt.savefig(os.path.join(Result.getPath(), f'plot_random_vs_actual_z_{str(cluster2)}.png'))
     plt.show()
     plt.close()
