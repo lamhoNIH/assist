@@ -25,11 +25,9 @@ import matplotlib.pyplot as plt
 def ml_models(config_file, archive_path, run_num):
     data_folder = Input.getPath()
     print("config_file: {} data_folder: {} archive_path: {} run_num: {}".format(config_file, data_folder, archive_path, run_num))
-    Result(os.path.join(data_folder, archive_path, run_num))
-    config_path = os.path.join(data_folder, config_file)
-    print("config_path: {}".format(config_path))
+    Result(os.path.join(archive_path, run_num))
 
-    with open(config_path) as json_data:
+    with open(config_file) as json_data:
         config_json = json.load(json_data)
         
     embedding_path = os.path.join(data_folder, config_json["embedding_path"])
@@ -45,7 +43,12 @@ def ml_models(config_file, archive_path, run_num):
 
     # process embedding to be ready for ML
     processed_emb_dfs = []
-    deseq = pd.read_excel(os.path.join(data_folder, config_json["differentially_expressed_genes"]))
+    if config_json["differentially_expressed_genes"].endswith(".xlsx"):
+        deseq = pd.read_excel(os.path.join(data_folder, config_json["differentially_expressed_genes"]))
+    elif config_json["differentially_expressed_genes"].endswith(".csv"):
+        deseq = pd.read_csv(os.path.join(data_folder, config_json["differentially_expressed_genes"]))
+    else:
+        print(f'Unknown extension detected for {config_json["differentially_expressed_genes"]}')
     deseq['abs_log2FC'] = abs(deseq['log2FoldChange'])
     for emb in emb_list:
         processed_emb_dfs.append(process_emb_for_ML(emb, deseq))
