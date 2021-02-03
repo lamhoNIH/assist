@@ -1,0 +1,77 @@
+{
+	"provided_networks": "HDID_data/TOM_HDID_HS_naive.csv",
+	"differentially_expressed_genes": "HDID_data/de_data.csv",
+	"expression_with_metadata": "network_analysis/expression_meta.csv",
+	"network_louvain_default": "module_extraction/run4/network_louvain_default.csv",
+	"subnet_edge_num_list": [
+		10000,
+		5000,
+		1000
+	],
+	"subnet_weight_min": 0.21,
+	"subnet_weight_max": 0.99,
+	"subset_names": [
+		"10k edges",
+		"5k edges",
+		"1k edges"
+	],
+	"louvain_list": [
+		"whole",
+		"10k",
+		"5k"
+	],
+	"subnet2_edge_num_list": [
+		"10k",
+		"5k",
+		"1k"
+	],
+	"subnet2_weight_min_list": [
+		0.218,
+		0.24,
+		0.278
+	],
+	"subnet2_weight_max": 0.98,
+	"get_subnetwork_params": [
+		{
+			"deg_modules": [4],
+			"num_genes": 100,
+			"min_weight": 0.015,
+			"non_deg_modules": [0]
+		},
+		{
+			"deg_modules": [4],
+			"num_genes": 125,
+			"min_weight": 0.01,
+			"non_deg_modules": [1]
+		},
+		{
+			"deg_modules": [4],
+			"num_genes": 150,
+			"min_weight": 0.01,
+			"non_deg_modules": [2]
+		},
+		{
+			"deg_modules": [4],
+			"num_genes": 150,
+			"min_weight": 0.02,
+			"non_deg_modules": [3]
+		},
+		{
+			"deg_modules": [4],
+			"num_genes": 250,
+			"min_weight": 0.008,
+			"non_deg_modules": []
+		}
+	],
+	"embedding_params": {
+		"walk_length": 16, 
+		"num_walks": 100, 
+		"window": 10
+	},
+	"embedding_testing_params": {
+		"walk_length": [16, 64],
+		"num_walks": [100, 300],
+		"window": 10
+	},
+	"kmeans_test_n_list": [5,10,20]
+}

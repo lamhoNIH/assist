@@ -1,0 +1,8 @@
+{
+	"embedding_path": "pipeline/mouse/module_subselection_embedding/approach2/run1",
+	"embedding_prefix": "embedded_len16_walk100",
+	"expression_with_metadata": "network_analysis/expression_meta.csv",
+	"differentially_expressed_genes": "deseq.alc.vs.control.age.rin.batch.gender.PMI.corrected.w.prot.coding.gene.name.xlsx",
+	"top_n_coef": 0.5,
+	"max_dist": 2
+}
