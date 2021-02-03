@@ -30,7 +30,7 @@ def diagnostic_correlation(config_file, archive_path):
         deseq = pd.read_csv(os.path.join(data_folder, config_json["differentially_expressed_genes"]))
     else:
         print(f'Unknown extension detected for {config_json["differentially_expressed_genes"]}')
-    if "skip_expression_meta" not in config_json or config_json["skip_expression_meta"] is False:
+    if "skip_diagnostics" not in config_json or config_json["skip_diagnostics"] is False:
         expression_meta = True
     else:
         expression_meta = False
