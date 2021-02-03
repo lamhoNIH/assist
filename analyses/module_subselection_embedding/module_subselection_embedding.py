@@ -76,7 +76,8 @@ def module_subselection_approach2(archive_path, run_num, config_json, provided_n
     subnetwork_dfs = []
     subnetwork_names = []
     for p in subnet_params:
-        G, module_df, subnetwork_name = get_subnetwork(p["deg_modules"], p["num_genes"], p["min_weight"], provided_networks_df, comm_df, non_deg_modules=p["non_deg_modules"], deseq=deseq, plot_hist = True, hist_dir = subnetwork_path, subnetwork_dir = subnetwork_path)
+        print(f'non_deg_modules: {p["non_deg_modules"]}')
+        G, module_df, subnetwork_name = get_subnetwork(p["deg_modules"], p["num_genes"], p["min_weight"], provided_networks_df, comm_df, deseq, non_deg_modules=p["non_deg_modules"], plot_hist = True, hist_dir = subnetwork_path, subnetwork_dir = subnetwork_path)
         subnetwork_Gs.append(G)
         subnetwork_dfs.append(module_df)
         subnetwork_names.append(subnetwork_name)
@@ -106,8 +107,9 @@ def module_subselection_approach2(archive_path, run_num, config_json, provided_n
     all_communities = [comm_df] + subset_communities
     for i, cluster_df in enumerate(all_communities):
         cluster_DE_perc(cluster_df, 'louvain_label', all_network_names[i], deseq)
-        plot_sig_perc(cluster_df, 'louvain_label', all_network_names[i], expression_meta_df)
-        cluster_phenotype_corr(cluster_df, 'louvain_label', all_network_names[i], expression_meta_df)
+        if expression_meta_df is not None:
+            plot_sig_perc(cluster_df, 'louvain_label', all_network_names[i], expression_meta_df)
+            cluster_phenotype_corr(cluster_df, 'louvain_label', all_network_names[i], expression_meta_df)
         
     emb_list = []
     kmeans_list = []
@@ -125,8 +127,9 @@ def module_subselection_approach2(archive_path, run_num, config_json, provided_n
 
     for i, kmeans in enumerate(kmeans_list):
         cluster_DE_perc(kmeans, 'kmean_label', subnetwork_names[i], deseq)
-        plot_sig_perc(kmeans, 'kmean_label', subnetwork_names[i], expression_meta_df)
-        cluster_phenotype_corr(kmeans, 'kmean_label', subnetwork_names[i], expression_meta_df)
+        if expression_meta_df is not None:
+            plot_sig_perc(kmeans, 'kmean_label', subnetwork_names[i], expression_meta_df)
+            cluster_phenotype_corr(kmeans, 'kmean_label', subnetwork_names[i], expression_meta_df)
 
     # 2x2 sets of parameters for embedding
     kmeans_list2 = []
@@ -168,7 +171,11 @@ def module_subselection(config_file, archive_path, run_num):
         deseq = pd.read_csv(os.path.join(data_folder, config_json["differentially_expressed_genes"]))
     else:
         print(f'Unknown extension detected for {config_json["differentially_expressed_genes"]}')
-    expression_meta_df = pd.read_csv(os.path.join(data_folder, config_json["expression_with_metadata"]), low_memory = False)
+
+    if "skip_diagnostics" not in config_json or config_json["skip_diagnostics"] is False:
+        expression_meta_df = pd.read_csv(os.path.join(data_folder, config_json["expression_with_metadata"]), low_memory = False)
+    else:
+        expression_meta_df = None
     
     #module_subselection_approach1(data_folder, archive_path, run_num, config_json, provided_networks_df, comm_df1, deseq, expression_meta_df)
     module_subselection_approach2(archive_path, run_num, config_json, provided_networks_df, comm_df1, deseq, expression_meta_df)
