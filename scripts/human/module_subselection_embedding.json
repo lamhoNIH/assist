@@ -1,8 +1,8 @@
 {
 	"provided_networks": "Kapoor_TOM.csv",
 	"differentially_expressed_genes": "deseq.alc.vs.control.age.rin.batch.gender.PMI.corrected.w.prot.coding.gene.name.xlsx",
-	"expression_with_metadata": "network_analysis/expression_meta.csv",
-	"network_louvain_default": "module_extraction/run4/network_louvain_default.csv",
+	"expression_with_metadata": "pipeline/human/network_analysis/expression_meta.csv",
+	"network_louvain_default": "pipeline/human/module_extraction/run6/network_louvain_default.csv",
 	"subnet_edge_num_list": [
 		10000,
 		5000,

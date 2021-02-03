@@ -14,11 +14,10 @@ from src.eda.eda_functions import *
 def extract_modules(config_file, archive_path):
     data_folder = Input.getPath()
     print("config_file: {} data_folder: {} archive_path: {}".format(config_file, data_folder, archive_path))
-    Result(os.path.join(data_folder, archive_path))
-    config_path = os.path.join(data_folder, config_file)
-    shutil.copy(config_path, Result.getPath())
+    Result(archive_path)
+    shutil.copy(config_file, Result.getPath())
 
-    with open(config_path) as json_data:
+    with open(config_file) as json_data:
         config_json = json.load(json_data)
 
     provided_networks_df = pd.read_csv(os.path.join(data_folder, config_json["provided_networks"]), index_col = 0)

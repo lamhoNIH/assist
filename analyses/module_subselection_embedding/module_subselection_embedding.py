@@ -12,8 +12,8 @@ from src.eda.eda_functions import *
 from src.eda.subset_network import *
 from src.embedding.network_embedding import network_embedding
 
-def module_subselection_approach1(data_folder, archive_path, run_num, config_json, provided_networks_df, comm_df1, deseq, expression_meta_df):
-    Result(os.path.join(data_folder, archive_path, "approach1", run_num))
+def module_subselection_approach1(archive_path, run_num, config_json, provided_networks_df, comm_df1, deseq, expression_meta_df):
+    Result(os.path.join(archive_path, "approach1", run_num))
 
     # Original network with no cutoff
     scale_free_validate(provided_networks_df, 'whole network')
@@ -62,8 +62,8 @@ def module_subselection_approach1(data_folder, archive_path, run_num, config_jso
         plot_sig_perc(cluster_df, 'louvain_label', subset_names[i], expression_meta_df)
         cluster_phenotype_corr(cluster_df, 'louvain_label', subset_names[i], expression_meta_df)
 
-def module_subselection_approach2(data_folder, archive_path, run_num, config_json, provided_networks_df, comm_df, deseq, expression_meta_df):
-    Result(os.path.join(data_folder, archive_path, "approach2", run_num))
+def module_subselection_approach2(archive_path, run_num, config_json, provided_networks_df, comm_df, deseq, expression_meta_df):
+    Result(os.path.join(archive_path, "approach2", run_num))
 
     # Original network with no cutoff
     scale_free_validate(provided_networks_df, 'whole network')
@@ -156,19 +156,22 @@ def module_subselection_approach2(data_folder, archive_path, run_num, config_jso
 def module_subselection(config_file, archive_path, run_num):
     data_folder = Input.getPath()
     print("config_file: {} data_folder: {} archive_path: {} run_num: {}".format(config_file, data_folder, archive_path, run_num))
-    config_path = os.path.join(data_folder, config_file)
-    print("config_path: {}".format(config_path))
 
-    with open(config_path) as json_data:
+    with open(config_file) as json_data:
         config_json = json.load(json_data)
 
     provided_networks_df = pd.read_csv(os.path.join(data_folder, config_json["provided_networks"]), index_col = 0)
     comm_df1 = pd.read_csv(os.path.join(data_folder, config_json["network_louvain_default"]))
-    deseq = pd.read_excel(os.path.join(data_folder, config_json["differentially_expressed_genes"]))
+    if config_json["differentially_expressed_genes"].endswith(".xlsx"):
+        deseq = pd.read_excel(os.path.join(data_folder, config_json["differentially_expressed_genes"]))
+    elif config_json["differentially_expressed_genes"].endswith(".csv"):
+        deseq = pd.read_csv(os.path.join(data_folder, config_json["differentially_expressed_genes"]))
+    else:
+        print(f'Unknown extension detected for {config_json["differentially_expressed_genes"]}')
     expression_meta_df = pd.read_csv(os.path.join(data_folder, config_json["expression_with_metadata"]), low_memory = False)
     
     #module_subselection_approach1(data_folder, archive_path, run_num, config_json, provided_networks_df, comm_df1, deseq, expression_meta_df)
-    module_subselection_approach2(data_folder, archive_path, run_num, config_json, provided_networks_df, comm_df1, deseq, expression_meta_df)
+    module_subselection_approach2(archive_path, run_num, config_json, provided_networks_df, comm_df1, deseq, expression_meta_df)
     
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

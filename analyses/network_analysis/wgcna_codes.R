@@ -3,10 +3,10 @@
 library(WGCNA)
 library("rjson")
 
-json_data <- fromJSON(file='./Data/network_analysis/config.json')
+json_data <- fromJSON(file='./Data/pipeline/human/network_analysis/config.json')
 #Load expression df with normalized count and the network ID file
 expression = read.table(file.path('./Data', json_data['normalized_counts']), header = TRUE)
-network_IDs = read.csv('./Data/network_analysis/network_IDs.csv', row.names = 1)
+network_IDs = read.csv('./Data/pipeline/human/network_analysis/network_IDs.csv', row.names = 1)
 
 ## Filter expression for network only expression
 network_only_expression = expression[expression$id %in% network_IDs$X0,]
@@ -35,4 +35,4 @@ rownames(net_df) = 1:nrow(net_df)
 colnames(net_df)[2] = 'louvain_label' # change column name
 
 # change the file name below to wgcna_modules.csv during test
-write.csv(net_df, './Data/network_analysis/wgcna_modules.csv', row.names = F)
+write.csv(net_df, './Data/pipeline/human/network_analysis/wgcna_modules.csv', row.names = F)
