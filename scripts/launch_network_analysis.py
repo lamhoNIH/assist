@@ -13,7 +13,7 @@ script_dir = os.getcwd()
 print(f'{script_dir}')
 
 data = f"{prefix}/Shared drives/NIAAA_ASSIST/Data"
-dataset = "human"
+dataset = "mouse"
 module = "network_analysis"
 
 output_path = f"pipeline/{dataset}/{module}"
