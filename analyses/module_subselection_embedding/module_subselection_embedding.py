@@ -178,7 +178,7 @@ def module_subselection(config_file, archive_path, run_num):
     else:
         print(f'Unknown extension detected for {config_json["differentially_expressed_genes"]}')
 
-    if "skip_diagnostics" not in config_json or config_json["skip_diagnostics"] is False:
+    if ("skip_diagnostics" not in config_json) or (config_json["skip_diagnostics"] is False):
         expression_meta_df = pd.read_csv(os.path.join(data_folder, config_json["expression_with_metadata"]), low_memory = False)
     else:
         expression_meta_df = None
