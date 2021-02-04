@@ -21,7 +21,7 @@ def process_emb_for_ML(embedding_df, deseq):
     # The default setting for the human data was abs_log2FC > 0.1 as the "impact", which was ~8% of all genes in deseq
     # use the same logic to derive the cutoff for new data
     cutoff_index = int(len(deseq)*0.08)
-    cutoff = deseq['abs_log2FC'].sort_values(ascending = False)[cutoff_index]
+    cutoff = deseq['abs_log2FC'].sort_values(ascending = False).reset_index(drop = True)[cutoff_index]
     embedding_labeled_df.loc[embedding_labeled_df['abs_log2FC'] < cutoff, 'impact'] = 0
     return embedding_labeled_df
 

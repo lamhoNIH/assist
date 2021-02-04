@@ -372,15 +372,19 @@ def cluster_DE_perc(cluster_df, cluster_column, network_name, deseq):
     A function to plot 2 heatmaps to show % of differential genes in each cluster
     Differential genes is defined as log2FC > 0.15 or log2FC < -0.15
     '''
-    num_up_impact = (deseq.log2FoldChange > 0.15).sum()
-    num_down_impact = (deseq.log2FoldChange < -0.15).sum()
+    if 'abs_log2FC' not in deseq.columns:
+        deseq['abs_log2FC'] = abs(deseq['log2FoldChange'])
+    cutoff_index = int(len(deseq)*0.02)
+    cutoff = deseq['abs_log2FC'].sort_values(ascending = False).reset_index(drop = True)[cutoff_index]
+    num_up_impact = (deseq.log2FoldChange > cutoff).sum()
+    num_down_impact = (deseq.log2FoldChange < -cutoff).sum()
     clusters = []
     up_impact_perc = []
     down_impact_perc = []
     for cluster in cluster_df[cluster_column].unique():
         cluster_genes = cluster_df[cluster_df[cluster_column] == cluster].id
-        num_up_in_module = (deseq[deseq.id.isin(cluster_genes)]['log2FoldChange'] > 0.15).sum()
-        num_down_in_module = (deseq[deseq.id.isin(cluster_genes)]['log2FoldChange'] < -0.15).sum()
+        num_up_in_module = (deseq[deseq.id.isin(cluster_genes)]['log2FoldChange'] > cutoff).sum()
+        num_down_in_module = (deseq[deseq.id.isin(cluster_genes)]['log2FoldChange'] < -cutoff).sum()
 
         clusters.append(cluster)
         up_impact_perc.append(100*num_up_in_module/num_up_impact)
