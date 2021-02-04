@@ -1,5 +1,4 @@
 # Script to generate WCGNA network
-
 library(WGCNA)
 library("rjson")
 args = commandArgs(trailingOnly = T)
@@ -11,13 +10,25 @@ expression = read.table(file.path('./Data', json_data['normalized_counts']), hea
 rownames(expression) = expression$id
 expression$id = NULL
 expression_t = t(expression)
-
-net = blockwiseModules(expression_t, power = 14,
+tom_output = file.path(archive_path, 'tom')
+net = blockwiseModules(expression_t, power = 14, maxBlockSize = 30000,
                        TOMType = "unsigned", minModuleSize = 100,
                        reassignThreshold = 0, detectCutHeight = 0.99,
                        numericLabels = TRUE, pamRespectsDendro = FALSE,
-                       saveTOMs = F,
+                       saveTOMs = T, 
+                       saveTOMFileBase = tom_output,
                        verbose = 3, deepSplit = T)
+
+# load tom data
+tom_path = paste(tom_output, '-block.1.Rdata', sep = '')
+load(tom_path)
+
+tom_df = as.matrix(TOM)
+# add the gene IDs to the tom file
+colnames(tom_df) = colnames(expression_t)
+rownames(tom_df) = colnames(expression_t)
+# write tom file 
+write.csv(tom_df, file = file.path(archive_path, 'tom.csv'))
 # summary of the network modules (colors represent module assignment)
 net_df = data.frame(net$colors) # convert to a df
 net_df = cbind(id = rownames(net_df), net_df) # change the index (node names) to a column
@@ -25,7 +36,7 @@ rownames(net_df) = 1:nrow(net_df)
 colnames(net_df)[2] = 'louvain_label' # change column name
 
 # change the file name below to wgcna_modules.csv during test
-# write.csv(net_df, './Data/pipeline/human/network_analysis/wgcna_modules.csv', row.names = F)
+# write network modules 
 write.csv(net_df, file.path(archive_path, 'wgcna_modules.csv'), row.names = F)
 
 
