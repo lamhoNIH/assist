@@ -61,6 +61,7 @@ def plot_module_hist(adjacency_df, title, comm_df, output_dir = None):
     if output_dir:
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
+        plt.tight_layout()
         plt.savefig(f'{output_dir}/{title}.png', bbox_inches = 'tight')
         print(f'Figure {title} has been saved.')
     plt.show()

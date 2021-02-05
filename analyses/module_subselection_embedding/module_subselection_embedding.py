@@ -136,7 +136,7 @@ def module_subselection_approach2(archive_path, run_num, config_json, provided_n
             plot_sig_perc(kmeans, 'kmean_label', subnetwork_names[i], expression_meta_df)
             cluster_phenotype_corr(kmeans, 'kmean_label', subnetwork_names[i], expression_meta_df)
 
-    if "skip_kmeans_test" not in config_json or config_json["skip_kmeans_test"] is False:
+    if ("skip_kmeans_test" not in config_json) or (config_json["skip_kmeans_test"] is False):
         # 2x2 sets of parameters for embedding
         kmeans_list2 = []
         parameters = []
