@@ -157,7 +157,7 @@ def calculate_distance_stats(distance_df_list):
     min_mean = np.min(distance_df_joined.mean())
     print('Max mean:', max_mean, 'Min mean:', min_mean)
     
-def get_critical_gene_sets(processed_emb_df, top_dim_list, cutoff = 0.2, max_dist = 0.55):
+def get_critical_gene_sets(processed_emb_df, top_dim_list, cutoff, max_dist):
     '''
     Input: processed embedding df used for ML and top_dim_list (set of 9 for 3 models x 3 repeats)
     Output: 9 sets of critical genes for 3 models x 3 repeats
