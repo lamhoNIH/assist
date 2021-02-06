@@ -61,6 +61,7 @@ def plot_module_hist(adjacency_df, title, comm_df, output_dir = None):
     if output_dir:
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
+        plt.tight_layout()
         plt.savefig(f'{output_dir}/{title}.png', bbox_inches = 'tight')
         print(f'Figure {title} has been saved.')
     plt.show()
@@ -124,7 +125,6 @@ def get_subnetwork(deg_modules, num_genes, min_weight, network_df, comm_df, dese
     if non_deg_modules != []: # if this list isn't empty, then find nodes in non_deg_modules and subselect them
         random.seed(1)
         non_deg_module_tom = get_module_df(network_df, non_deg_modules, comm_df)
-        print(f"columns: {non_deg_module_tom.columns.tolist()} num_genes: {num_genes}")
         non_deg_module_nodes = random.sample(non_deg_module_tom.columns.tolist(), num_genes) # has randomness so I set a seed in the line above to remove the randomness
         for gene in non_deg_module_nodes: # iterate through the nodes
             gene_subnet = network_df[gene][network_df[gene] > min_weight] # set weight to choose neighbors from the whole network to could get nodes from other modules as well

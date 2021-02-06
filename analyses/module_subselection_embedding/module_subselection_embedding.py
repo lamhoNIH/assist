@@ -117,13 +117,18 @@ def module_subselection_approach2(archive_path, run_num, config_json, provided_n
     for i, G in enumerate(subnetwork_Gs):
         emb_df = network_embedding(G, ep["walk_length"], ep["num_walks"], ep["window"], subnetwork_path, subnetwork_names[i])
         emb_list.append(emb_df)
-        kmeans_list.append(run_kmeans(emb_df, n_clusters))
+        kmeans_list.append(run_kmeans(emb_df, config_json["module_number"]))
         
     for i in range(1, n_clusters):
         cluster_jaccard(kmeans_list[0], kmeans_list[i], 'kmean_label', [subnetwork_names[0], subnetwork_names[i]], top = 3)
 
     network_comparison_names = [subnetwork_names[1] + f'vs {subnetwork_names[i]}' for i in range(n_clusters)]
-    plot_cluster_nmi_comparison(subnetwork_names[1], kmeans_list[1], kmeans_list, 'kmean_label', network_comparison_names)
+    #plot_cluster_nmi_comparison(subnetwork_names[1], kmeans_list[1], kmeans_list, 'kmean_label', network_comparison_names)
+    plot_cluster_nmi_comparison_v2([kmeans_list[0], kmeans_list[0], kmeans_list[1]], 
+                                   [kmeans_list[1], kmeans_list[2], kmeans_list[2]], 
+                                   [subnetwork_names[0], subnetwork_names[0], subnetwork_names[1]], 
+                                   [subnetwork_names[1], subnetwork_names[2], subnetwork_names[2]], 
+                                   'kmean_label')
 
     for i, kmeans in enumerate(kmeans_list):
         cluster_DE_perc(kmeans, 'kmean_label', subnetwork_names[i], deseq)
@@ -131,30 +136,31 @@ def module_subselection_approach2(archive_path, run_num, config_json, provided_n
             plot_sig_perc(kmeans, 'kmean_label', subnetwork_names[i], expression_meta_df)
             cluster_phenotype_corr(kmeans, 'kmean_label', subnetwork_names[i], expression_meta_df)
 
-    # 2x2 sets of parameters for embedding
-    kmeans_list2 = []
-    parameters = []
-    etp = config_json["embedding_testing_params"]
-    for length in etp["walk_length"]:
-        for num_walk in etp["num_walks"]: # only use the first embedding to test different parameters based on the EDA
-            emb_df = network_embedding(subnetwork_Gs[0], length, num_walk, etp["window"], Result.getPath(), subnetwork_names[0]) # use the network with 5k edges as a test (less computationally intensive)
-            kmeans_list2.append(run_kmeans(emb_df, n_clusters)) # run k means 
-            parameters.append(f'length={length},num_walk={num_walk}') # add the parameter name to the parameters list
+    if ("skip_kmeans_test" not in config_json) or (config_json["skip_kmeans_test"] is False):
+        # 2x2 sets of parameters for embedding
+        kmeans_list2 = []
+        parameters = []
+        etp = config_json["embedding_testing_params"]
+        for length in etp["walk_length"]:
+            for num_walk in etp["num_walks"]: # only use the first embedding to test different parameters based on the EDA
+                emb_df = network_embedding(subnetwork_Gs[0], length, num_walk, etp["window"], Result.getPath(), subnetwork_names[0]) # use the network with 5k edges as a test (less computationally intensive)
+                kmeans_list2.append(run_kmeans(emb_df, config_json["module_number"])) # run k means 
+                parameters.append(f'length={length},num_walk={num_walk}') # add the parameter name to the parameters list
+                
+        for i in range(n_clusters-1):
+            cluster_DE_perc(kmeans_list2[i], 'kmean_label', parameters[i], deseq)
+            plot_sig_perc(kmeans_list2[i], 'kmean_label', parameters[i], expression_meta_df)
+            cluster_phenotype_corr(kmeans_list2[i], 'kmean_label', parameters[i], expression_meta_df)
+    
+        kmeans_test = []
+        emb = pd.read_csv(os.path.join(subnetwork_path, f'embedded_len{ep["walk_length"]}_walk{ep["num_walks"]}_module[{subnet_params[0]["deg_modules"][0]}]_n_[{subnet_params[0]["non_deg_modules"][0]}]_df.csv'), index_col = 0)
+        n_list = config_json["kmeans_test_n_list"]
+        for n in n_list:
+            kmeans_test.append(run_kmeans(emb, n))
             
-    for i in range(n_clusters-1):
-        cluster_DE_perc(kmeans_list2[i], 'kmean_label', parameters[i], deseq)
-        plot_sig_perc(kmeans_list2[i], 'kmean_label', parameters[i], expression_meta_df)
-        cluster_phenotype_corr(kmeans_list2[i], 'kmean_label', parameters[i], expression_meta_df)
-
-    kmeans_test = []
-    emb = pd.read_csv(os.path.join(subnetwork_path, f'embedded_len{ep["walk_length"]}_walk{ep["num_walks"]}_module[{subnet_params[0]["deg_modules"][0]}]_n_[{subnet_params[0]["non_deg_modules"][0]}]_df.csv'), index_col = 0)
-    n_list = config_json["kmeans_test_n_list"]
-    for n in n_list:
-        kmeans_test.append(run_kmeans(emb, n))
-        
-    for i in range(3):
-        plot_sig_perc(kmeans_test[i], 'kmean_label', f'embedding 1 with {n_list[i]} clusters', expression_meta_df)
-        cluster_phenotype_corr(kmeans_test[i], 'kmean_label', f'embedding 1 with {n_list[i]} clusters', expression_meta_df)
+        for i in range(3):
+            plot_sig_perc(kmeans_test[i], 'kmean_label', f'embedding 1 with {n_list[i]} clusters', expression_meta_df)
+            cluster_phenotype_corr(kmeans_test[i], 'kmean_label', f'embedding 1 with {n_list[i]} clusters', expression_meta_df)
 
 def module_subselection(config_file, archive_path, run_num):
     data_folder = Input.getPath()
