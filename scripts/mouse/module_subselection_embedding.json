@@ -4,7 +4,7 @@
 	"network_louvain_default": "pipeline/mouse/module_extraction/run2/network_louvain_agg1.csv",
 	"skip_diagnostics": true,
 	"module_number": 4,
-	"get_subnetwork_params": [
+	"subnetwork_params": [
 		{
 			"deg_modules": [0,1],
 			"num_genes": 100,
