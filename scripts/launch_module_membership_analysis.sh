@@ -25,5 +25,5 @@ cp "${SCRIPT_DIR}/${DATASET}/${MODULE}".json "${DATA}/${OUTPUT_PATH}"/config.jso
 
 # Takes about 13 minutes to run
 date
-docker run -m 16g --rm -e config_file="Data/${OUTPUT_PATH}/config.json" -e archive_path="Data/${OUTPUT_PATH}/run1" -v "${DATA}":/assist/Data assist/${MODULE}:0.1.0
+docker run -m 16g --rm -e config_file="Data/${OUTPUT_PATH}/config.json" -e archive_path="Data/${OUTPUT_PATH}/run2" -v "${DATA}":/assist/Data assist/${MODULE}:0.1.0
 date
