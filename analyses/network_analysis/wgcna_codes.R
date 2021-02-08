@@ -6,29 +6,34 @@ config_file = args[1]
 archive_path = args[2]
 
 json_data = fromJSON(file = config_file)
-expression = read.table(file.path('./Data', json_data['normalized_counts']), header = TRUE)
+expression = read.table(file.path('./Data', json_data[['normalized_counts']]), header = TRUE)
 rownames(expression) = expression$id
 expression$id = NULL
 expression_t = t(expression)
 tom_output = file.path(archive_path, 'tom')
+
+if (json_data[["skip_tom"]] == FALSE || length(json_data[['skip_tom']]) == 0) {
+  saveTOMs = T} else {saveTOMs = F}
+
 net = blockwiseModules(expression_t, power = 14, maxBlockSize = 30000,
                        TOMType = "unsigned", minModuleSize = 100,
                        reassignThreshold = 0, detectCutHeight = 0.99,
                        numericLabels = TRUE, pamRespectsDendro = FALSE,
-                       saveTOMs = T, 
+                       saveTOMs = saveTOMs,
                        saveTOMFileBase = tom_output,
                        verbose = 3, deepSplit = T)
 
 # load tom data
-tom_path = paste(tom_output, '-block.1.Rdata', sep = '')
-load(tom_path)
-
-tom_df = as.matrix(TOM)
-# add the gene IDs to the tom file
-colnames(tom_df) = colnames(expression_t)
-rownames(tom_df) = colnames(expression_t)
-# write tom file 
-write.csv(tom_df, file = file.path(archive_path, 'tom.csv'))
+if (json_data[["skip_tom"]] == FALSE || length(json_data[['skip_tom']]) == 0) {
+    tom_path = paste(tom_output, '-block.1.Rdata', sep = '')
+    load(tom_path)
+    tom_df = as.matrix(TOM)
+    # add the gene IDs to the tom file
+    colnames(tom_df) = colnames(expression_t)
+    rownames(tom_df) = colnames(expression_t)
+    # write tom file
+    write.csv(tom_df, file = file.path(archive_path, 'tom.csv'))
+}
 # summary of the network modules (colors represent module assignment)
 net_df = data.frame(net$colors) # convert to a df
 net_df = cbind(id = rownames(net_df), net_df) # change the index (node names) to a column
