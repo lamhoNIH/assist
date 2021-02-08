@@ -1,7 +1,7 @@
 {
-	"provided_networks": "HDID_data/TOM_HDID_HS_naive.csv",
+	"provided_networks": "pipeline/mouse/network_analysis/tom.csv",
 	"differentially_expressed_genes": "HDID_data/de_data.csv",
-	"network_louvain_default": "pipeline/mouse/module_extraction/run2/network_louvain_agg1.csv",
+	"network_louvain_default": "pipeline/mouse/module_extraction/run3/network_louvain_agg1.csv",
 	"skip_diagnostics": true,
 	"module_number": 4,
 	"subnetwork_params": [
