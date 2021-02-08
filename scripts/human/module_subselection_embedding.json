@@ -32,7 +32,7 @@
 	],
 	"subnet2_weight_max": 0.98,
 	"module_number": 4,
-	"get_subnetwork_params": [
+	"subnetwork_params": [
 		{
 			"deg_modules": [4],
 			"num_genes": 100,

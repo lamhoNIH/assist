@@ -25,6 +25,6 @@ cp "${SCRIPT_DIR}/${DATASET}/${MODULE}".json "${DATA}/${OUTPUT_PATH}"/config.jso
 
 # Takes about 8 minutes to run on human data
 date
-# tried 20G and the process got killed
-docker run -m 32g --rm -e config_file="Data/${OUTPUT_PATH}/config.json" -e archive_path="Data/${OUTPUT_PATH}/run5" -v "${DATA}":/assist/Data assist/${MODULE}:0.1.0
+# tried -m 28g, Docker host (28GB, Swap 4GB, Disk image size 160GB)
+docker run -m 28g --rm -e config_file="Data/${OUTPUT_PATH}/config.json" -e archive_path="Data/${OUTPUT_PATH}/run2" -v "${DATA}":/assist/Data assist/${MODULE}:0.1.0
 date
