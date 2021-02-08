@@ -5,6 +5,7 @@ import math
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
+import memory_profiler
 
 from itertools import combinations
 from sklearn.cluster import KMeans
@@ -58,7 +59,32 @@ def plot_gene_cnt_each_cluster(cluster_dfs, cluster_column, network_names):
     plt.savefig(os.path.join(Result.getPath(), "plot_gene_cnt_each_cluster.png"))
     plt.show()
     plt.close()
-        
+
+def get_graph_distance(wholenetwork_np, network_np):
+    dc_distance = netcomp.deltacon0(wholenetwork_np, network_np)
+    ged_distance = netcomp.edit_distance(wholenetwork_np, network_np)
+    return dc_distance, ged_distance
+
+def plot_graph_distances(dc_distance_list, ged_distance_list, names):
+    width = (len(dc_distance_list)+1)*2
+    plt.figure(figsize=(width, 5))
+    plt.rcParams.update({'font.size': 18})
+    plt.subplot(1, 2, 1)
+    plt.bar(names, dc_distance_list)
+    plt.title('Deltacon distance')
+    plt.xticks(rotation = 45, ha = 'right')
+
+    plt.subplot(1, 2, 2)
+    plt.bar(names, ged_distance_list)
+    plt.title('GEM distance')
+    plt.xlabel('Number of edges')
+    plt.xticks(rotation = 45, ha = 'right')
+    plt.subplots_adjust(wspace=0.5)
+    plt.tight_layout()
+    plt.savefig(os.path.join(Result.getPath(), "plot_graph_distance.png"))
+    plt.show()
+    plt.close()
+
 def plot_graph_distance(networks, network_names):
 
     dc_distance_list = []
@@ -107,6 +133,14 @@ def run_louvain(adjacency_df, resolution = 1, n_aggregations = -1):
     louvain = Louvain(modularity = 'Newman', resolution = resolution, n_aggregations  = n_aggregations)
     labels = louvain.fit_transform(adjacency_df.values) # using networkx community requires converting the df to G first and the original network takes very long but this method can work on df 
     louvain_df = pd.DataFrame({'id':adjacency_df.index, 'louvain_label':labels})
+    return louvain_df
+
+def run_louvain2(adjacency_np, ajacency_idx, resolution = 1, n_aggregations = -1):
+    # louvain communities
+    louvain = Louvain(modularity = 'Newman', resolution = resolution, n_aggregations  = n_aggregations)
+    labels = louvain.fit_transform(adjacency_np) # using networkx community requires converting the df to G first and the original network takes very long but this method can work on df 
+    del louvain
+    louvain_df = pd.DataFrame({'id':ajacency_idx, 'louvain_label':labels})
     return louvain_df
 
 def jaccard_similarity(list1, list2):
