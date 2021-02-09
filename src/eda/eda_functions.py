@@ -5,7 +5,6 @@ import math
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
-import memory_profiler
 
 from itertools import combinations
 from sklearn.cluster import KMeans
