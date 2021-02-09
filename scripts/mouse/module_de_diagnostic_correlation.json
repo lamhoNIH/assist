@@ -1,6 +1,6 @@
 {
 	"differentially_expressed_genes": "HDID_data/de_data.csv",
-	"networks_of_coregulated_genes": "HDID_data/wgcna_modules.csv",
+	"networks_of_coregulated_genes": "pipeline/mouse/network_analysis/wgcna_modules.csv",
 	"network_louvain_default": "pipeline/mouse/module_extraction/run2/network_louvain_default.csv",
 	"network_louvain_agg1": "pipeline/mouse/module_extraction/run2/network_louvain_agg1.csv",
 	"skip_diagnostics": true
