@@ -1,0 +1,37 @@
+{
+	"provided_networks": "Kapoor_TOM.csv",
+	"differentially_expressed_genes": "deseq.alc.vs.control.age.rin.batch.gender.PMI.corrected.w.prot.coding.gene.name.xlsx",
+	"network_louvain_default": "pipeline/human/module_extraction/run6/network_louvain_default.csv",
+	"subnetwork_params": [
+		{
+			"deg_modules": [4],
+			"num_genes": 100,
+			"min_weight": 0.015,
+			"non_deg_modules": [0]
+		},
+		{
+			"deg_modules": [4],
+			"num_genes": 125,
+			"min_weight": 0.01,
+			"non_deg_modules": [1]
+		},
+		{
+			"deg_modules": [4],
+			"num_genes": 150,
+			"min_weight": 0.01,
+			"non_deg_modules": [2]
+		},
+		{
+			"deg_modules": [4],
+			"num_genes": 150,
+			"min_weight": 0.02,
+			"non_deg_modules": [3]
+		},
+		{
+			"deg_modules": [4],
+			"num_genes": 250,
+			"min_weight": 0.008,
+			"non_deg_modules": []
+		}
+	]
+}
