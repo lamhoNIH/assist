@@ -15,6 +15,8 @@ export MEMBERSHIP_ANALYSIS_DIR := analyses/module_membership_analysis
 export MEMBERSHIP_ANALYSIS_TAG := assist/module_membership_analysis:0.1.0
 export DIAGNOSTIC_CORRELATION_DIR := analyses/module_de_diagnostic_correlation
 export DIAGNOSTIC_CORRELATION_TAG := assist/module_de_diagnostic_correlation:0.1.0
+export MODULE_SUBSELECTION_EDA_DIR := analyses/module_subselection_eda
+export MODULE_SUBSELECTION_EDA_TAG := assist/module_subselection_eda:0.1.0
 export MODULE_SUBSELECTION_EMBEDDING_DIR := analyses/module_subselection_embedding
 export MODULE_SUBSELECTION_EMBEDDING_TAG := assist/module_subselection_embedding:0.1.0
 export ML_AND_CRITICAL_GENE_IDENTIFIER_DIR := analyses/ml_and_critical_gene_identifier
@@ -69,7 +71,19 @@ diagnostic-correlation-image:
 	docker build -t ${DIAGNOSTIC_CORRELATION_TAG} .; \
 	rm version.txt; \
 	rm -r src
-	
+
+module-subselection-eda-image:
+	python record_version_info.py > version.txt; \
+	cp version.txt $(MODULE_SUBSELECTION_EDA_DIR); \
+	mkdir $(MODULE_SUBSELECTION_EDA_DIR)/src; \
+	cp -r src/eda $(MODULE_SUBSELECTION_EDA_DIR)/src; \
+	cp -r src/preproc $(MODULE_SUBSELECTION_EDA_DIR)/src; \
+	cd $(MODULE_SUBSELECTION_EDA_DIR); \
+	find . -name '*.pyc' -delete; \
+	docker build -t ${MODULE_SUBSELECTION_EDA_TAG} .; \
+	rm version.txt; \
+	rm -r src
+
 module-subselection-embedding-image:
 	python record_version_info.py > version.txt; \
 	cp version.txt $(MODULE_SUBSELECTION_EMBEDDING_DIR); \

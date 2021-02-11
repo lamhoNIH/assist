@@ -1,0 +1,31 @@
+{
+	"provided_networks": "pipeline/mouse/network_analysis/tom.csv",
+	"differentially_expressed_genes": "HDID_data/de_data.csv",
+	"network_louvain_default": "pipeline/mouse/network_analysis/wgcna_modules.csv",
+	"subnetwork_params": [
+		{
+			"deg_modules": [0,1],
+			"num_genes": 130,
+			"min_weight": 0.098,
+			"non_deg_modules": [2]
+		},
+		{
+			"deg_modules": [0,1],
+			"num_genes": 400,
+			"min_weight": 0.066,
+			"non_deg_modules": [3]
+		},
+		{
+			"deg_modules": [0,1],
+			"num_genes": 350,
+			"min_weight": 0.073,
+			"non_deg_modules": [4]
+		},
+		{
+			"deg_modules": [0],
+			"num_genes": 150,
+			"min_weight": 0.067,
+			"non_deg_modules": [1]
+		}
+	]
+}
