@@ -214,6 +214,64 @@ def cluster_jaccard(cluster_df1, cluster_df2, cluster_column, comparison_names,
     plt.show()
     plt.close()
 
+def cluster_jaccard_v2(cluster_df1, cluster_df2, cluster1_column, cluster2_column, comparison_names, 
+                       top=None, y_max = 1):
+    '''
+    plot jaccard pairwise comparison on the communities in 2 networks or the kmeans clusters in 2 network embeddings
+    title: main title for the two subplots
+    cluster1_column: the column name of the cluster labels in cluster_df1
+    cluster2_column: the column name of the cluster labels in cluster_df2
+    comparison_names: names of the groups in comparison
+    top: top n comparison to show in the boxplot since it could be misleadingly small if we include all jaccard scores
+    y_max to adjust y label
+    # we're only interested in the modules that have majority of the matching nodes between 2 networks
+    '''
+    c1_list = []
+    c2_list = []
+    j_list = []
+
+    for c1 in cluster_df1[cluster1_column].unique():
+        for c2 in cluster_df2[cluster2_column].unique():
+            sub1 = cluster_df1[cluster_df1[cluster1_column] == c1].index
+            sub2 = cluster_df2[cluster_df2[cluster2_column] == c2].index
+            c1_list.append(c1)
+            c2_list.append(c2)
+            j_list.append(jaccard_similarity(sub1, sub2))
+
+    jac_df = pd.DataFrame({'cluster1': c1_list, 'cluster2': c2_list, 'jaccard': j_list})
+    jac_df = jac_df.pivot(index='cluster1', columns='cluster2', values='jaccard')
+    sns.set(font_scale=1.25)
+    sns.set_style('white')
+
+    w = len(cluster_df2[cluster2_column].unique())/1.3
+    h = len(cluster_df1[cluster1_column].unique())/2
+    fig = plt.figure(figsize=(w, h))
+    gs = gridspec.GridSpec(1, 2, width_ratios=[3, 1])  # set the subplot width ratio
+    ax0 = plt.subplot(gs[0])
+    # plot heatmap for pairwise jaccard comparison
+    sns.heatmap(jac_df, cmap='Reds', xticklabels=True, yticklabels=True)
+    plt.xlabel(comparison_names[1])
+    plt.ylabel(comparison_names[0])
+    plt.title('Jaccard pairwise')
+    plt.xticks(rotation=0)
+    ax1 = plt.subplot(gs[1])
+    # boxplot of jaccard distribution
+    all_jac_values = jac_df.values.flatten()
+    if top != None:
+        sorted_jac_values = sorted(all_jac_values, reverse=True)
+        g = sns.boxplot(x=None, y=sorted_jac_values[:top])
+        g.set(ylim=(0, y_max))
+
+    else:
+        sns.boxplot(x=None, y=all_jac_values)
+    plt.ylim(0, y_max)
+    plt.title('Jaccard distribution')
+#     plt.suptitle(f'{comparison_names[0]} vs {comparison_names[1]}')
+    plt.subplots_adjust(top = 0.8, wspace = 1)
+    plt.savefig(os.path.join(Result.getPath(), f'cluster_jaccard_{comparison_names[0]} vs {comparison_names[1]}_{cutout_nodes}.png'), bbox_inches = 'tight')
+    plt.show()
+    plt.close()
+    
 def get_module_sig_gene_perc(expression_meta_df, cluster_df, cluster_column, cluster, trait):
     '''
     A function to get the percentage of genes in a module that are significantly variable by trait
@@ -403,7 +461,6 @@ def plot_cluster_nmi_comparison_v2(cluster1_list, cluster2_list, cluster1_names,
 def cluster_DE_perc(cluster_df, cluster_column, network_name, deseq):
     '''
     A function to plot 2 heatmaps to show % of differential genes in each cluster
-    Differential genes is defined as log2FC > 0.15 or log2FC < -0.15
     '''
     if 'abs_log2FC' not in deseq.columns:
         deseq['abs_log2FC'] = abs(deseq['log2FoldChange'])
