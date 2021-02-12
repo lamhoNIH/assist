@@ -93,8 +93,6 @@ def get_subnetwork_by_DE(network_df, comm_df, abs_log2FC, deseq, pvalue = 0.05, 
         joined_df.to_csv(subnetwork_file + f'subnetwork_{abs_log2FC}_{pvalue}_{min_weight}.csv')
     return G_joined, joined_df
 
-
-
 def get_subnetwork(deg_modules, num_genes, min_weight, network_df, comm_df, deseq, non_deg_modules= [],
                    plot_hist = True, hist_dir = None, subnetwork_dir = None):
     '''This function subset the whole network by taking the top num_genes of DE genes(nodes) from module 4 and same number of genes(nodes) from 1 of the non-DE module in the original network
