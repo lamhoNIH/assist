@@ -243,9 +243,7 @@ def cluster_jaccard_v2(cluster_df1, cluster_df2, cluster1_column, cluster2_colum
     sns.set(font_scale=1.25)
     sns.set_style('white')
 
-    w = len(cluster_df2[cluster2_column].unique())/1.3
-    h = len(cluster_df1[cluster1_column].unique())/2
-    fig = plt.figure(figsize=(w, h))
+    fig = plt.figure(figsize=(8,4))
     gs = gridspec.GridSpec(1, 2, width_ratios=[3, 1])  # set the subplot width ratio
     ax0 = plt.subplot(gs[0])
     # plot heatmap for pairwise jaccard comparison
@@ -268,7 +266,7 @@ def cluster_jaccard_v2(cluster_df1, cluster_df2, cluster1_column, cluster2_colum
     plt.title('Jaccard distribution')
 #     plt.suptitle(f'{comparison_names[0]} vs {comparison_names[1]}')
     plt.subplots_adjust(top = 0.8, wspace = 1)
-    plt.savefig(os.path.join(Result.getPath(), f'cluster_jaccard_{comparison_names[0]} vs {comparison_names[1]}_{cutout_nodes}.png'), bbox_inches = 'tight')
+    plt.savefig(os.path.join(Result.getPath(), f'cluster_jaccard_{comparison_names[0]} vs {comparison_names[1]}.png'), bbox_inches = 'tight')
     plt.show()
     plt.close()
     
@@ -457,6 +455,28 @@ def plot_cluster_nmi_comparison_v2(cluster1_list, cluster2_list, cluster1_names,
     plt.savefig(os.path.join(Result.getPath(), f'plot_{cluster_type}_nmi_comparison.png'), bbox_inches = 'tight')
     plt.show()
     plt.close()    
+
+def cluster_nmi_v3(cluster_df1, cluster1_column, cluster_df2, cluster2_column):
+    '''NMI to compare communities from the whole netowrk and the subnetwork or clusters from different network embeddings'''
+    sub1_plus_sub2 = pd.merge(cluster_df1, cluster_df2, left_on = 'id', right_on = 'id', how = 'outer')
+    max_cluster_num = max(sub1_plus_sub2[[cluster1_column, cluster2_column]].max())
+    sub1_plus_sub2[cluster2_column].fillna(max_cluster_num+1, inplace = True) # for the nodes that were cut out, give them a new community number
+    return nmi(sub1_plus_sub2[cluster1_column], sub1_plus_sub2[cluster2_column])
+
+def plot_cluster_nmi_comparison_v3(cluster1_name, cluster1, cluster1_column, cluster2_list, cluster2_column, comparison_names):
+    '''plot cluster_nmi_v3() results'''
+    plt.figure(figsize = (5,4))
+    plt.rcParams.update({'font.size': 18})
+    nmi_scores = []
+    for cluster2 in cluster2_list:
+        nmi_scores.append(cluster_nmi_v3(cluster1, cluster1_column, cluster2, cluster2_column))
+    plt.bar(comparison_names, nmi_scores)
+    plt.ylabel('NMI')
+    plt.title(f'NMI for cluster comparison')
+    plt.xticks(rotation = 45, ha = 'right')
+    plt.savefig(os.path.join(Result.getPath(), f'plot_cluster_nmi_comparison.png'), bbox_inches = 'tight')
+    plt.show()
+    plt.close()
     
 def cluster_DE_perc(cluster_df, cluster_column, network_name, deseq):
     '''
