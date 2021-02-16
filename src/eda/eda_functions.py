@@ -18,7 +18,8 @@ from scipy.stats import pearsonr
 from sys import platform
 from .process_phenotype import *
 from ..preproc.result import Result
-from ..preproc.deseq_data import DESeqData
+from sklearn.metrics.pairwise import euclidean_distances as ed
+
 
 def scale_free_validate(network_df, network_name):
     network_degree = network_df.sum()
@@ -796,3 +797,32 @@ def gene_set_phenotype_corr(gene_sets, network_names, expression_meta_df, file_n
     plt.show()
     plt.close()
     
+def get_closest_genes_jaccard(network, emb, gene_list, top_n, title):
+    '''A function to compare how much closest genes are in common between a network and its embedding
+    network: tom df
+    emb: embedding df
+    gene_list: a list of genes to query
+    top_n: top n closest genes to the genes in gene_list
+    title: title for the figure
+    '''
+    ed_data = ed(emb, emb)
+    ed_df = pd.DataFrame(ed_data, index = emb.index, columns = emb.index)
+    closest_genes1 = [] # find closest genes in the subnetwork
+    closest_genes2 = [] # find closest genes in the embedding
+    for gene in gene_list:
+        closest_genes1.append(network[gene].sort_values(ascending = False)[:top_n].index)
+        top_n_genes = ed_df[gene].sort_values()[1:top_n+1].index
+        closest_genes2.append(top_n_genes)
+    jac_list = []
+    for i in range(len(closest_genes1)):
+        jac_list.append(jaccard_similarity(closest_genes1[i], closest_genes2[i]))
+#     xticks = le.inverse_transform(subnet1_edge.source.unique())
+    plt.rcParams.update({'font.size':18})
+    plt.bar(gene_list, jac_list)
+    plt.ylim(0, 1)
+    plt.ylabel('Jaccard similarity')
+    plt.xlabel('gene')
+    plt.xticks(rotation = 45, ha = 'right')
+    plt.title(title)
+    plt.show()
+    plt.close()
