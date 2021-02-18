@@ -71,14 +71,11 @@ def ml_models(config_file, archive_path, run_num):
     for i, top_dim in enumerate(top_dim_list):
         jaccard_average(top_dim, embedding_names[i])
 
-    # The cutoff for impact genes for finding critical genes was 0.2 previously, ~ 0.004 of the total data
-    # Apply the same logic to find the cutoff value to call an impact gene
-    cutoff = deseq['abs_log2FC'].sort_values(ascending = False)[int(len(deseq) * 0.004)]
 
     critical_gene_sets = []
     critical_gene_dfs = []
     for i, processed_df in enumerate(processed_emb_dfs):
-        gene_set = get_critical_gene_sets(processed_df, top_dim_list[i], cutoff, config_json["max_dist"])
+        gene_set = get_critical_gene_sets(processed_df, top_dim_list[i], deseq)
         critical_gene_sets.append(gene_set)
         critical_gene_dfs.append(get_critical_gene_df(gene_set, embedding_names[i], Result.getPath()))
 

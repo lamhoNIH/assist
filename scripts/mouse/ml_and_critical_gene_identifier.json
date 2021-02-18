@@ -3,6 +3,5 @@
 	"embedding_prefix": "embedded_len16_walk100",
 	"differentially_expressed_genes": "HDID_data/de_data.csv",
 	"top_n_coef": 0.5,
-	"max_dist": 0.55,
 	"skip_diagnostics": true
 }

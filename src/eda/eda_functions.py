@@ -765,10 +765,10 @@ def gene_set_phenotype_corr(gene_sets, network_names, expression_meta_df, file_n
     clusters_corr = np.round(clusters_corr, 2)
     clusters_pvalue = clusters_pvalue.T.sort_index(ascending = False)
     
-    fig = plt.figure(figsize=(15, 8))
+    fig = plt.figure(figsize=(17.5, 4))
     plt.rcParams.update({'font.size': 18})
 
-    gs = gridspec.GridSpec(1, 2, width_ratios=[2.5, 1])  # set the subplot width ratio
+    gs = gridspec.GridSpec(1, 2, width_ratios=[3, 1])  # set the subplot width ratio
     # first subplot to show the correlation heatmap
     ax0 = plt.subplot(gs[0])
     sns.heatmap(clusters_corr, cmap='RdBu_r', annot = True,
@@ -789,8 +789,8 @@ def gene_set_phenotype_corr(gene_sets, network_names, expression_meta_df, file_n
     plt.yticks(np.arange(len(yticklabels)) +1, labels=yticklabels, 
                rotation = 0)
     plt.title('# significant traits')
-    plt.tight_layout(rect=[0, 0.03, 0.85, 0.95])
-    plt.suptitle(f'Trait-gene set correlation', fontsize = 22)
+    plt.subplots_adjust(top = 1, bottom = 0.1)
+    plt.tight_layout()
     for index in empty_set_index:
         print(network_names[index], 'does not have critical genes in common between all 3 models')
     plt.savefig(os.path.join(Result.getPath(), f'gene_set_phenotype_corr_{file_name}.png'))
