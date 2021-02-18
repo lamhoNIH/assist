@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 
-from itertools import combinations
 from sklearn.cluster import KMeans
 from sklearn.metrics import normalized_mutual_info_score as nmi
 from sklearn.decomposition import PCA
@@ -15,7 +14,6 @@ from scipy.stats import f_oneway
 from sknetwork.clustering import Louvain
 from statsmodels.stats.multitest import multipletests
 from scipy.stats import pearsonr
-from sys import platform
 from .process_phenotype import *
 from ..preproc.result import Result
 from sklearn.metrics.pairwise import euclidean_distances as ed
@@ -765,7 +763,7 @@ def gene_set_phenotype_corr(gene_sets, network_names, expression_meta_df, file_n
     clusters_corr = np.round(clusters_corr, 2)
     clusters_pvalue = clusters_pvalue.T.sort_index(ascending = False)
     
-    fig = plt.figure(figsize=(17.5, 4))
+    fig = plt.figure(figsize=(17.5, 4.5))
     plt.rcParams.update({'font.size': 18})
 
     gs = gridspec.GridSpec(1, 2, width_ratios=[3, 1])  # set the subplot width ratio

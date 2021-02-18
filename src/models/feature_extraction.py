@@ -223,7 +223,8 @@ def plot_nearby_impact_num(critical_gene_df, emb_name, top = 10):
     plt.xlabel('Number of nearby impact genes')
     plt.ylabel('Critical gene ID')
     plt.title(emb_name)
-    plt.savefig(os.path.join(Result.getPath(), f'plot_nearby_impact_num_{emb_name}.png'))
+#     plt.tight_layout()
+    plt.savefig(os.path.join(Result.getPath(), f'plot_nearby_impact_num_{emb_name}.png'), bbox_inches='tight')
     plt.show()
     plt.close()
     return critical_df['gene']
