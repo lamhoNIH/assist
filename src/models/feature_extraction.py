@@ -165,7 +165,7 @@ def get_max_dist(distance_dfs):
     for distance in distance_dfs:
         distance_np = distance.iloc[:,:int(len(distance)*0.4)].to_numpy() # use only 40% of the df
         flatten_distance = distance_np.flatten()
-        max_dist = np.sort(flatten_distance, axis = 0)[int(len(flatten_distance)*8*1e-5)]
+        max_dist = np.sort(flatten_distance, axis = 0)[int(len(flatten_distance)*2*1e-4)] #8*1e-5 was determined by manual testing
         max_dist_list.append(max_dist)
     return max_dist_list
 
