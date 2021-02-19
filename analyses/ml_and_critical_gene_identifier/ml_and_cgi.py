@@ -3,24 +3,16 @@ import json
 import os
 import pandas as pd
 pd.set_option('mode.chained_assignment', None)
-import numpy as np
-import seaborn as sns
-import networkx as nx
 
 from src.preproc.input import Input
 from src.preproc.result import Result
 
 Input('./Data')
 
-from src.eda.subset_network import *
-from src.eda.eda_functions import *
+from src.eda.eda_functions import gene_set_phenotype_corr
 from src.eda.process_phenotype import *
-from src.embedding.network_embedding import network_embedding
 from src.models.feature_extraction import *
 from src.models.ML_functions import *
-import time
-from sklearn.model_selection import train_test_split
-import matplotlib.pyplot as plt
 
 def ml_models(config_file, archive_path, run_num):
     data_folder = Input.getPath()

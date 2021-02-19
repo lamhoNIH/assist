@@ -102,7 +102,6 @@ ml-and-critical-gene-identifier-image:
 	cp version.txt $(ML_AND_CRITICAL_GENE_IDENTIFIER_DIR); \
 	mkdir $(ML_AND_CRITICAL_GENE_IDENTIFIER_DIR)/src; \
 	cp -r src/eda $(ML_AND_CRITICAL_GENE_IDENTIFIER_DIR)/src; \
-	cp -r src/embedding $(ML_AND_CRITICAL_GENE_IDENTIFIER_DIR)/src; \
 	cp -r src/models $(ML_AND_CRITICAL_GENE_IDENTIFIER_DIR)/src; \
 	cp -r src/preproc $(ML_AND_CRITICAL_GENE_IDENTIFIER_DIR)/src; \
 	cd $(ML_AND_CRITICAL_GENE_IDENTIFIER_DIR); \
