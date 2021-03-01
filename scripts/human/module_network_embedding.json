@@ -1,0 +1,11 @@
+{
+	"provided_networks": "Kapoor_TOM.csv",
+	"differentially_expressed_genes": "deseq.alc.vs.control.age.rin.batch.gender.PMI.corrected.w.prot.coding.gene.name.xlsx",
+	"network_louvain_default": "network_louvain_default.csv",
+	"embedding_params": [
+		{
+			"max_epoch": 100,
+			"learning_rate": 0.1
+		}
+	]
+}
