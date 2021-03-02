@@ -21,7 +21,7 @@ def process_emb_for_ML(embedding_df, deseq):
     # The default setting for the human data was abs_log2FC > 0.1 as the "impact", which was ~8% of all genes in deseq
     # use the same logic to derive the cutoff for new data
     cutoff_index = int(len(deseq)*0.08)
-    cutoff = deseq['abs_log2FC'].sort_values(ascending = False)[cutoff_index]
+    cutoff = deseq['abs_log2FC'].sort_values(ascending = False).reset_index(drop = True)[cutoff_index]
     embedding_labeled_df.loc[embedding_labeled_df['abs_log2FC'] < cutoff, 'impact'] = 0
     return embedding_labeled_df
 
@@ -86,7 +86,7 @@ def run_ml(processed_embedding, emb_name, max_iter = 1000, print_accuracy = Fals
     '''Run ML using sklearn with LR, RF and XGBoost'''
     lr = LogisticRegression(max_iter = max_iter)
     rf = RandomForestClassifier()
-    xgb = XGBClassifier()
+    xgb = XGBClassifier(use_label_encoder=False)
     lr_acc = []
     rf_acc = []
     xgb_acc = []
@@ -98,7 +98,7 @@ def run_ml(processed_embedding, emb_name, max_iter = 1000, print_accuracy = Fals
         X_train, X_test, y_train, y_test = train_test_split(emb_subset.iloc[:, :64], emb_subset['impact'], test_size = 0.2)
         lr.fit(X_train, y_train)
         rf.fit(X_train, y_train)
-        xgb.fit(X_train, y_train)
+        xgb.fit(X_train, y_train, eval_metric = 'logloss')
        
         lr_weights = get_important_features(lr)
         rf_weights = get_important_features(rf)
@@ -120,14 +120,21 @@ def run_ml(processed_embedding, emb_name, max_iter = 1000, print_accuracy = Fals
             pickle.dump(xgb, open(output_dir + f'xgb_{emb_name}{i}.pkl', 'wb'))
             print(emb_name, 'model saved')
     if print_accuracy == True:
-        print('lr average:', round(np.mean(lr_acc), 2), '; ',
-              'rf average:', round(np.mean(rf_acc), 2), '; ', 
-              'xgb_average:', round(np.mean(xgb_acc), 2))
+        print('lr average:', round(np.mean(lr_acc)), '; ',
+              'rf average:', round(np.mean(rf_acc)), '; ',
+              'xgb_average:', round(np.mean(xgb_acc)))
     acc_df = pd.DataFrame({'LR':lr_acc, 'RF':rf_acc, 'XGB':xgb_acc})
     plt.figure(figsize = (5,4))
     plt.rcParams.update({'font.size': 18})
     plt.rcParams['axes.titlepad'] = 15 
-    sns.boxplot(x = 'variable', y = 'value', data = pd.melt(acc_df))
+    ax = sns.boxplot(x = 'variable', y = 'value', data = pd.melt(acc_df))
+    
+    means = np.round(pd.melt(acc_df).groupby(['variable'])['value'].mean())
+    vertical_offset = pd.melt(acc_df)['value'].mean() * 0.05 # offset from mean for display
+    for xtick in ax.get_xticks():
+        ax.text(xtick, means[xtick] + vertical_offset, int(means[xtick]), 
+                      horizontalalignment='center',size='small',color='r')
+    
     plt.ylim(0, 100)
     plt.title(emb_name)
     plt.ylabel('Accuracy')

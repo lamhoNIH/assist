@@ -1,0 +1,45 @@
+{
+	"provided_networks": "pipeline/mouse/network_analysis/tom.csv",
+	"differentially_expressed_genes": "HDID_data/de_data.csv",
+	"network_louvain_default": "pipeline/mouse/network_analysis/wgcna_modules.csv",
+	"skip_diagnostics": true,
+	"module_number": 4,
+	"subnetwork_params": [
+		{
+			"deg_modules": [0,1],
+			"num_genes": 130,
+			"min_weight": 0.098,
+			"non_deg_modules": [2]
+		},
+		{
+			"deg_modules": [0,1],
+			"num_genes": 400,
+			"min_weight": 0.066,
+			"non_deg_modules": [3]
+		},
+		{
+			"deg_modules": [0,1],
+			"num_genes": 350,
+			"min_weight": 0.073,
+			"non_deg_modules": [4]
+		},
+		{
+			"deg_modules": [0],
+			"num_genes": 150,
+			"min_weight": 0.067,
+			"non_deg_modules": [1]
+		}
+	],
+	"skip_kmeans_test": true,
+	"embedding_params": {
+		"walk_length": 16, 
+		"num_walks": 100, 
+		"window": 10
+	},
+	"embedding_testing_params": {
+		"walk_length": [16, 64],
+		"num_walks": [100, 300],
+		"window": 10
+	},
+	"kmeans_test_n_list": [5,10,20]
+}

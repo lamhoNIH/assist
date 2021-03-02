@@ -87,7 +87,7 @@ def jaccard_average(top_dim_list, title):
     
 def plot_random_feature_importance(feature_importance_list, top_dim_list, subnetwork_name):
     models = ['LR', 'RF', 'XGB']
-    plt.figure(figsize = (12, 3))
+    plt.figure(figsize = (15, 3))
     plt.rcParams.update({'font.size': 18})
     for j in range(0, 9, 3):
         l = int(j/3)
@@ -136,10 +136,10 @@ def get_critical_genes(pairwise_distance_df, cutoff, max_dist = 0.55):
     size = len(pairwise_distance_df[pairwise_distance_df.abs_log2FC > cutoff]) # cutoff of abs_log2FC > 0.2 as impact gene
     for i in range(size):
         subset_distance = pairwise_distance_df.iloc[i,:-2].sort_values()
-        key = subset_distance[subset_distance.between(0.01,max_dist)].reset_index().columns[1] # Euclidean distance < 0.55 as "close", key is an impact gene when 20% important features were used. Increase the size when more features are used 
-        values = subset_distance[subset_distance.between(0.01,max_dist)].reset_index()['id'].tolist() # values are the list of close genes, aka potential critical genes
+        key = subset_distance[subset_distance.between(1e-6,max_dist)].reset_index().columns[1]
+        values = subset_distance[subset_distance.between(1e-6,max_dist)].reset_index()['id'].tolist() # values are the list of close genes, aka potential critical genes
         gene_pair_dict[key] = values
-        critical_gene_list += list(subset_distance[subset_distance.between(0.01,max_dist)].index)
+        critical_gene_list += list(subset_distance[subset_distance.between(1e-6,max_dist)].index)
     critical_gene_dict = Counter(critical_gene_list)
     critical_gene_dict = sorted(critical_gene_dict.items(), key=lambda x: x[1], reverse=True)
     return critical_gene_dict, gene_pair_dict
@@ -156,16 +156,35 @@ def calculate_distance_stats(distance_df_list):
     max_mean = np.max(distance_df_joined.mean())
     min_mean = np.min(distance_df_joined.mean())
     print('Max mean:', max_mean, 'Min mean:', min_mean)
-    
-def get_critical_gene_sets(processed_emb_df, top_dim_list, cutoff = 0.2, max_dist = 0.55):
+
+def get_max_dist(distance_dfs):
+    '''
+    A method to determine max_dist for critical gene identification
+    '''
+    max_dist_list = []
+    for distance in distance_dfs:
+        distance_np = distance.iloc[:,:int(len(distance)*0.4)].to_numpy() # use only 40% of the df
+        flatten_distance = distance_np.flatten()
+        max_dist = np.sort(flatten_distance, axis = 0)[int(len(flatten_distance)*2*1e-4)] #8*1e-5 was determined by manual testing
+        max_dist_list.append(max_dist)
+    return max_dist_list
+
+def get_critical_gene_sets(processed_emb_df, top_dim_list, deseq):
     '''
     Input: processed embedding df used for ML and top_dim_list (set of 9 for 3 models x 3 repeats)
     Output: 9 sets of critical genes for 3 models x 3 repeats
     '''
+    if 'abs_log2FC' not in deseq.columns:
+        deseq['abs_log2FC'] = abs(deseq['log2FoldChange'])
     process_emb_df_subset = [processed_emb_df[top_dim_list[i]] for i in range(9)]
-    distance_dfs = list(map(get_pairwise_distances, process_emb_df_subset))
+    distance_dfs = []
+    for process_emb_df in process_emb_df_subset:
+        distance_dfs.append(get_pairwise_distances(process_emb_df))
+    # return distance_dfs
+    cutoff = deseq['abs_log2FC'].sort_values(ascending = False).reset_index(drop = True)[int(len(deseq) * 0.01)]
+    max_dist_list = get_max_dist(distance_dfs)
 #     calculate_distance_stats(distance_dfs)
-    critical_gene_sets = list(map(get_critical_genes, distance_dfs, [cutoff]*len(distance_dfs), [max_dist]*len(distance_dfs)))
+    critical_gene_sets = list(map(get_critical_genes, distance_dfs, [cutoff]*len(distance_dfs), max_dist_list))
     return critical_gene_sets
 
 
@@ -204,7 +223,8 @@ def plot_nearby_impact_num(critical_gene_df, emb_name, top = 10):
     plt.xlabel('Number of nearby impact genes')
     plt.ylabel('Critical gene ID')
     plt.title(emb_name)
-    plt.savefig(os.path.join(Result.getPath(), f'plot_nearby_impact_num_{emb_name}.png'))
+#     plt.tight_layout()
+    plt.savefig(os.path.join(Result.getPath(), f'plot_nearby_impact_num_{emb_name}.png'), bbox_inches='tight')
     plt.show()
     plt.close()
     return critical_df['gene']

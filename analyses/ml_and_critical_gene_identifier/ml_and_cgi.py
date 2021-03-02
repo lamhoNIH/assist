@@ -3,33 +3,23 @@ import json
 import os
 import pandas as pd
 pd.set_option('mode.chained_assignment', None)
-import numpy as np
-import seaborn as sns
-import networkx as nx
 
 from src.preproc.input import Input
 from src.preproc.result import Result
 
 Input('./Data')
 
-from src.eda.subset_network import *
-from src.eda.eda_functions import *
+from src.eda.eda_functions import gene_set_phenotype_corr
 from src.eda.process_phenotype import *
-from src.embedding.network_embedding import network_embedding
 from src.models.feature_extraction import *
 from src.models.ML_functions import *
-import time
-from sklearn.model_selection import train_test_split
-import matplotlib.pyplot as plt
 
 def ml_models(config_file, archive_path, run_num):
     data_folder = Input.getPath()
     print("config_file: {} data_folder: {} archive_path: {} run_num: {}".format(config_file, data_folder, archive_path, run_num))
-    Result(os.path.join(data_folder, archive_path, run_num))
-    config_path = os.path.join(data_folder, config_file)
-    print("config_path: {}".format(config_path))
+    Result(os.path.join(archive_path, run_num))
 
-    with open(config_path) as json_data:
+    with open(config_file) as json_data:
         config_json = json.load(json_data)
         
     embedding_path = os.path.join(data_folder, config_json["embedding_path"])
@@ -45,8 +35,13 @@ def ml_models(config_file, archive_path, run_num):
 
     # process embedding to be ready for ML
     processed_emb_dfs = []
-    deseq = pd.read_excel(os.path.join(data_folder, config_json["differentially_expressed_genes"]))
-    deseq['abs_log2FC'] = abs(deseq['log2FoldChange'])
+    if config_json["differentially_expressed_genes"].endswith(".xlsx"):
+        deseq = pd.read_excel(os.path.join(data_folder, config_json["differentially_expressed_genes"]))
+    elif config_json["differentially_expressed_genes"].endswith(".csv"):
+        deseq = pd.read_csv(os.path.join(data_folder, config_json["differentially_expressed_genes"]))
+    else:
+        print(f'Unknown extension detected for {config_json["differentially_expressed_genes"]}')
+    #deseq['abs_log2FC'] = abs(deseq['log2FoldChange'])
     for emb in emb_list:
         processed_emb_dfs.append(process_emb_for_ML(emb, deseq))
 
@@ -68,10 +63,11 @@ def ml_models(config_file, archive_path, run_num):
     for i, top_dim in enumerate(top_dim_list):
         jaccard_average(top_dim, embedding_names[i])
 
+
     critical_gene_sets = []
     critical_gene_dfs = []
     for i, processed_df in enumerate(processed_emb_dfs):
-        gene_set = get_critical_gene_sets(processed_df, top_dim_list[i], max_dist = config_json["max_dist"])
+        gene_set = get_critical_gene_sets(processed_df, top_dim_list[i], deseq)
         critical_gene_sets.append(gene_set)
         critical_gene_dfs.append(get_critical_gene_df(gene_set, embedding_names[i], Result.getPath()))
 
@@ -80,8 +76,13 @@ def ml_models(config_file, archive_path, run_num):
         intersect_genes = jaccard_critical_genes(critical_gene_df, embedding_names[i])
         intersect_gene_list.append(intersect_genes)
 
-    expression_meta_df = pd.read_csv(os.path.join(data_folder, config_json["expression_with_metadata"]), low_memory = False)
-    gene_set_phenotype_corr(intersect_gene_list, embedding_names, expression_meta_df, 'intersect genes between 3 models')
+    if ("skip_diagnostics" not in config_json) or (config_json["skip_diagnostics"] is False):
+        expression_meta_df = pd.read_csv(os.path.join(data_folder, config_json["expression_with_metadata"]), low_memory = False)
+    else:
+        expression_meta_df = None
+
+    if expression_meta_df is not None:
+        gene_set_phenotype_corr(intersect_gene_list, embedding_names, expression_meta_df, 'intersect genes between 3 models')
 
     # critical_gene_sets2 is different from critical_gene_sets in that it only has # of nearby DEGs to the critical genes and is a complete list. 
     # critical_gene_sets2 only has gene IDs and only has the top 10 genes
@@ -91,7 +92,8 @@ def ml_models(config_file, archive_path, run_num):
         critical_gene_sets2.append(gene_set)
 
     # Plot correlation of top critical genes (with most nearby impact genes) for each embedding
-    gene_set_phenotype_corr(critical_gene_sets2, embedding_names, expression_meta_df, 'top 10 genes')
+    if expression_meta_df is not None:
+        gene_set_phenotype_corr(critical_gene_sets2, embedding_names, expression_meta_df, 'top 10 genes')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

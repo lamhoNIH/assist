@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 
-from itertools import combinations
 from sklearn.cluster import KMeans
 from sklearn.metrics import normalized_mutual_info_score as nmi
 from sklearn.decomposition import PCA
@@ -15,22 +14,22 @@ from scipy.stats import f_oneway
 from sknetwork.clustering import Louvain
 from statsmodels.stats.multitest import multipletests
 from scipy.stats import pearsonr
-from sys import platform
 from .process_phenotype import *
 from ..preproc.result import Result
-from ..preproc.deseq_data import DESeqData
+from sklearn.metrics.pairwise import euclidean_distances as ed
+
 
 def scale_free_validate(network_df, network_name):
     network_degree = network_df.sum()
     log_network_degree = np.log(network_degree)
     sorted_network_freq = round(log_network_degree, 2).value_counts().reset_index()
     sorted_network_freq[0] = np.log(sorted_network_freq[0])
-    plt.figure(figsize = (5,4))
-    plt.rcParams.update({'font.size': 18})
+    plt.figure(figsize = (4,4))
+    plt.rcParams.update({'font.size': 15})
     plt.scatter(sorted_network_freq.index, sorted_network_freq[0])
     plt.xlabel('log(k)')
     plt.ylabel('log(pk)')
-    plt.title(f'Scale-free check for {network_name}')
+    plt.title(f'Scale-free check for \n {network_name}')
     plot_name = f'scale_free_validate_{network_name.replace(" ", "_")}.png'
     plt.tight_layout()
     plt.savefig(os.path.join(Result.getPath(), plot_name))
@@ -58,7 +57,32 @@ def plot_gene_cnt_each_cluster(cluster_dfs, cluster_column, network_names):
     plt.savefig(os.path.join(Result.getPath(), "plot_gene_cnt_each_cluster.png"))
     plt.show()
     plt.close()
-        
+
+def get_graph_distance(wholenetwork_np, network_np):
+    dc_distance = netcomp.deltacon0(wholenetwork_np, network_np)
+    ged_distance = netcomp.edit_distance(wholenetwork_np, network_np)
+    return dc_distance, ged_distance
+
+def plot_graph_distances(dc_distance_list, ged_distance_list, names):
+    width = (len(dc_distance_list)+1)*2
+    plt.figure(figsize=(width, 5))
+    plt.rcParams.update({'font.size': 18})
+    plt.subplot(1, 2, 1)
+    plt.bar(names, dc_distance_list)
+    plt.title('Deltacon distance')
+    plt.xticks(rotation = 45, ha = 'right')
+
+    plt.subplot(1, 2, 2)
+    plt.bar(names, ged_distance_list)
+    plt.title('GEM distance')
+    plt.xlabel('Number of edges')
+    plt.xticks(rotation = 45, ha = 'right')
+    plt.subplots_adjust(wspace=0.5)
+    plt.tight_layout()
+    plt.savefig(os.path.join(Result.getPath(), "plot_graph_distance.png"))
+    plt.show()
+    plt.close()
+
 def plot_graph_distance(networks, network_names):
 
     dc_distance_list = []
@@ -107,6 +131,14 @@ def run_louvain(adjacency_df, resolution = 1, n_aggregations = -1):
     louvain = Louvain(modularity = 'Newman', resolution = resolution, n_aggregations  = n_aggregations)
     labels = louvain.fit_transform(adjacency_df.values) # using networkx community requires converting the df to G first and the original network takes very long but this method can work on df 
     louvain_df = pd.DataFrame({'id':adjacency_df.index, 'louvain_label':labels})
+    return louvain_df
+
+def run_louvain2(adjacency_np, ajacency_idx, resolution = 1, n_aggregations = -1):
+    # louvain communities
+    louvain = Louvain(modularity = 'Newman', resolution = resolution, n_aggregations  = n_aggregations)
+    labels = louvain.fit_transform(adjacency_np) # using networkx community requires converting the df to G first and the original network takes very long but this method can work on df 
+    del louvain
+    louvain_df = pd.DataFrame({'id':ajacency_idx, 'louvain_label':labels})
     return louvain_df
 
 def jaccard_similarity(list1, list2):
@@ -181,6 +213,62 @@ def cluster_jaccard(cluster_df1, cluster_df2, cluster_column, comparison_names,
     plt.show()
     plt.close()
 
+def cluster_jaccard_v2(cluster_df1, cluster_df2, cluster1_column, cluster2_column, comparison_names, 
+                       top=None, y_max = 1):
+    '''
+    plot jaccard pairwise comparison on the communities in 2 networks or the kmeans clusters in 2 network embeddings
+    title: main title for the two subplots
+    cluster1_column: the column name of the cluster labels in cluster_df1
+    cluster2_column: the column name of the cluster labels in cluster_df2
+    comparison_names: names of the groups in comparison
+    top: top n comparison to show in the boxplot since it could be misleadingly small if we include all jaccard scores
+    y_max to adjust y label
+    # we're only interested in the modules that have majority of the matching nodes between 2 networks
+    '''
+    c1_list = []
+    c2_list = []
+    j_list = []
+
+    for c1 in cluster_df1[cluster1_column].unique():
+        for c2 in cluster_df2[cluster2_column].unique():
+            sub1 = cluster_df1[cluster_df1[cluster1_column] == c1].index
+            sub2 = cluster_df2[cluster_df2[cluster2_column] == c2].index
+            c1_list.append(c1)
+            c2_list.append(c2)
+            j_list.append(jaccard_similarity(sub1, sub2))
+
+    jac_df = pd.DataFrame({'cluster1': c1_list, 'cluster2': c2_list, 'jaccard': j_list})
+    jac_df = jac_df.pivot(index='cluster1', columns='cluster2', values='jaccard')
+    sns.set(font_scale=1.25)
+    sns.set_style('white')
+
+    fig = plt.figure(figsize=(8,4))
+    gs = gridspec.GridSpec(1, 2, width_ratios=[3, 1])  # set the subplot width ratio
+    ax0 = plt.subplot(gs[0])
+    # plot heatmap for pairwise jaccard comparison
+    sns.heatmap(jac_df, cmap='Reds', xticklabels=True, yticklabels=True)
+    plt.xlabel(comparison_names[1])
+    plt.ylabel(comparison_names[0])
+    plt.title('Jaccard pairwise')
+    plt.xticks(rotation=0)
+    ax1 = plt.subplot(gs[1])
+    # boxplot of jaccard distribution
+    all_jac_values = jac_df.values.flatten()
+    if top != None:
+        sorted_jac_values = sorted(all_jac_values, reverse=True)
+        g = sns.boxplot(x=None, y=sorted_jac_values[:top])
+        g.set(ylim=(0, y_max))
+
+    else:
+        sns.boxplot(x=None, y=all_jac_values)
+    plt.ylim(0, y_max)
+    plt.title('Jaccard distribution')
+#     plt.suptitle(f'{comparison_names[0]} vs {comparison_names[1]}')
+    plt.subplots_adjust(top = 0.8, wspace = 1)
+    plt.savefig(os.path.join(Result.getPath(), f'cluster_jaccard_{comparison_names[0]} vs {comparison_names[1]}.png'), bbox_inches = 'tight')
+    plt.show()
+    plt.close()
+    
 def get_module_sig_gene_perc(expression_meta_df, cluster_df, cluster_column, cluster, trait):
     '''
     A function to get the percentage of genes in a module that are significantly variable by trait
@@ -366,21 +454,46 @@ def plot_cluster_nmi_comparison_v2(cluster1_list, cluster2_list, cluster1_names,
     plt.savefig(os.path.join(Result.getPath(), f'plot_{cluster_type}_nmi_comparison.png'), bbox_inches = 'tight')
     plt.show()
     plt.close()    
+
+def cluster_nmi_v3(cluster_df1, cluster1_column, cluster_df2, cluster2_column):
+    '''NMI to compare communities from the whole netowrk and the subnetwork or clusters from different network embeddings'''
+    sub1_plus_sub2 = pd.merge(cluster_df1, cluster_df2, left_on = 'id', right_on = 'id', how = 'outer')
+    max_cluster_num = max(sub1_plus_sub2[[cluster1_column, cluster2_column]].max())
+    sub1_plus_sub2[cluster2_column].fillna(max_cluster_num+1, inplace = True) # for the nodes that were cut out, give them a new community number
+    return nmi(sub1_plus_sub2[cluster1_column], sub1_plus_sub2[cluster2_column])
+
+def plot_cluster_nmi_comparison_v3(cluster1_name, cluster1, cluster1_column, cluster2_list, cluster2_column, comparison_names):
+    '''plot cluster_nmi_v3() results'''
+    plt.figure(figsize = (5,4))
+    plt.rcParams.update({'font.size': 18})
+    nmi_scores = []
+    for cluster2 in cluster2_list:
+        nmi_scores.append(cluster_nmi_v3(cluster1, cluster1_column, cluster2, cluster2_column))
+    plt.bar(comparison_names, nmi_scores)
+    plt.ylabel('NMI')
+    plt.title(f'NMI for cluster comparison')
+    plt.xticks(rotation = 45, ha = 'right')
+    plt.savefig(os.path.join(Result.getPath(), f'plot_cluster_nmi_comparison.png'), bbox_inches = 'tight')
+    plt.show()
+    plt.close()
     
 def cluster_DE_perc(cluster_df, cluster_column, network_name, deseq):
     '''
     A function to plot 2 heatmaps to show % of differential genes in each cluster
-    Differential genes is defined as log2FC > 0.15 or log2FC < -0.15
     '''
-    num_up_impact = (deseq.log2FoldChange > 0.15).sum()
-    num_down_impact = (deseq.log2FoldChange < -0.15).sum()
+    if 'abs_log2FC' not in deseq.columns:
+        deseq['abs_log2FC'] = abs(deseq['log2FoldChange'])
+    cutoff_index = int(len(deseq)*0.02)
+    cutoff = deseq['abs_log2FC'].sort_values(ascending = False).reset_index(drop = True)[cutoff_index]
+    num_up_impact = (deseq.log2FoldChange > cutoff).sum()
+    num_down_impact = (deseq.log2FoldChange < -cutoff).sum()
     clusters = []
     up_impact_perc = []
     down_impact_perc = []
     for cluster in cluster_df[cluster_column].unique():
         cluster_genes = cluster_df[cluster_df[cluster_column] == cluster].id
-        num_up_in_module = (deseq[deseq.id.isin(cluster_genes)]['log2FoldChange'] > 0.15).sum()
-        num_down_in_module = (deseq[deseq.id.isin(cluster_genes)]['log2FoldChange'] < -0.15).sum()
+        num_up_in_module = (deseq[deseq.id.isin(cluster_genes)]['log2FoldChange'] > cutoff).sum()
+        num_down_in_module = (deseq[deseq.id.isin(cluster_genes)]['log2FoldChange'] < -cutoff).sum()
 
         clusters.append(cluster)
         up_impact_perc.append(100*num_up_in_module/num_up_impact)
@@ -650,10 +763,10 @@ def gene_set_phenotype_corr(gene_sets, network_names, expression_meta_df, file_n
     clusters_corr = np.round(clusters_corr, 2)
     clusters_pvalue = clusters_pvalue.T.sort_index(ascending = False)
     
-    fig = plt.figure(figsize=(15, 8))
+    fig = plt.figure(figsize=(17.5, 4.5))
     plt.rcParams.update({'font.size': 18})
 
-    gs = gridspec.GridSpec(1, 2, width_ratios=[2.5, 1])  # set the subplot width ratio
+    gs = gridspec.GridSpec(1, 2, width_ratios=[3, 1])  # set the subplot width ratio
     # first subplot to show the correlation heatmap
     ax0 = plt.subplot(gs[0])
     sns.heatmap(clusters_corr, cmap='RdBu_r', annot = True,
@@ -674,11 +787,40 @@ def gene_set_phenotype_corr(gene_sets, network_names, expression_meta_df, file_n
     plt.yticks(np.arange(len(yticklabels)) +1, labels=yticklabels, 
                rotation = 0)
     plt.title('# significant traits')
-    plt.tight_layout(rect=[0, 0.03, 0.85, 0.95])
-    plt.suptitle(f'Trait-gene set correlation', fontsize = 22)
+    plt.subplots_adjust(top = 1, bottom = 0.1)
+    plt.tight_layout()
     for index in empty_set_index:
         print(network_names[index], 'does not have critical genes in common between all 3 models')
     plt.savefig(os.path.join(Result.getPath(), f'gene_set_phenotype_corr_{file_name}.png'))
     plt.show()
     plt.close()
     
+def get_closest_genes_jaccard(network, emb, gene_list, top_n, title):
+    '''A function to compare how much closest genes are in common between a network and its embedding
+    network: tom df
+    emb: embedding df
+    gene_list: a list of genes to query
+    top_n: top n closest genes to the genes in gene_list
+    title: title for the figure
+    '''
+    ed_data = ed(emb, emb)
+    ed_df = pd.DataFrame(ed_data, index = emb.index, columns = emb.index)
+    closest_genes1 = [] # find closest genes in the subnetwork
+    closest_genes2 = [] # find closest genes in the embedding
+    for gene in gene_list:
+        closest_genes1.append(network[gene].sort_values(ascending = False)[:top_n].index)
+        top_n_genes = ed_df[gene].sort_values()[1:top_n+1].index
+        closest_genes2.append(top_n_genes)
+    jac_list = []
+    for i in range(len(closest_genes1)):
+        jac_list.append(jaccard_similarity(closest_genes1[i], closest_genes2[i]))
+#     xticks = le.inverse_transform(subnet1_edge.source.unique())
+    plt.rcParams.update({'font.size':18})
+    plt.bar(gene_list, jac_list)
+    plt.ylim(0, 1)
+    plt.ylabel('Jaccard similarity')
+    plt.xlabel('gene')
+    plt.xticks(rotation = 45, ha = 'right')
+    plt.title(title)
+    plt.show()
+    plt.close()

@@ -1,0 +1,7 @@
+{
+	"diagnostics": "Kapoor2019_coga.inia.detailed.pheno.04.12.17.csv",
+	"normalized_counts": "kapoor_expression.txt",
+	"expression_with_metadata": "expression_meta.csv",
+	"skip_tom": true,
+	"skip_preproc": false
+}
