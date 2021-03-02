@@ -18,8 +18,7 @@ prefix = 'G:' if platform == 'win32' else '/Volumes/GoogleDrive'
 script_dir = os.getcwd()
 print(f'{script_dir}')
 
-# data = f"{prefix}/Shared drives/NIAAA_ASSIST/Data"
-data = 'C:/Users/bbche/Documents/GitRepos/assist/data'
+data = f"{prefix}/Shared drives/NIAAA_ASSIST/Data"
 dataset = sys.argv[1]
 module = "module_network_embedding"
 
