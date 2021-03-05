@@ -11,5 +11,7 @@ RUN chmod +x /assist/run.sh
 WORKDIR /assist
 
 RUN pip install -r /assist/requirements.txt
-
+RUN pip uninstall -y csrgraph
+RUN git clone https://github.com/netrias/CSRGraph.git
+RUN pip install CSRGraph
 CMD ["./run.sh"]
