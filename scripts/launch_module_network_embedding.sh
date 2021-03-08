@@ -24,5 +24,5 @@ fi
 cp "${SCRIPT_DIR}/${DATASET}/${MODULE}".json "${DATA}/${OUTPUT_PATH}"/config.json
 
 date
-docker run --rm -m 30g -e config_file="Data/${OUTPUT_PATH}/config.json" -e archive_path="Data/${OUTPUT_PATH}" -e run_num="run1" -v "${DATA}":/assist/Data assist/${MODULE}:0.1.0
+docker run --rm -m 28g -e config_file="Data/${OUTPUT_PATH}/config.json" -e archive_path="Data/${OUTPUT_PATH}" -e run_num="run1" -v "${DATA}":/assist/Data assist/${MODULE}:0.1.0
 date
