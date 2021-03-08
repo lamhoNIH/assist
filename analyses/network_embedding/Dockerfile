@@ -12,8 +12,8 @@ WORKDIR /assist
 
 RUN pip install -r /assist/requirements.txt
 #RUN pip uninstall -y csrgraph
-#RUN git clone https://github.com/netrias/CSRGraph.git@NET-1750-reduce-memory
+#RUN git clone -b NET-1750-reduce-memory https://github.com/netrias/CSRGraph.git
 #RUN pip install --upgrade --no-cache-dir git+https://github.com/netrias/CSRGraph.git@NET-1750-reduce-memory
 RUN pip install --upgrade --no-cache-dir git+https://github.com/netrias/CSRGraph.git
-#RUN pip install CSRGraph
+#RUN pip install -e CSRGraph
 CMD ["./run.sh"]

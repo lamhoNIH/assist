@@ -8,14 +8,16 @@ import nodevectors
 def adj_to_edgelist(adj_df, output_dir = None):
 # convert df from adjacency to edgelist for csgraph import
     adj_df_copy = adj_df.copy()
+    del adj_df
+    adj_df_copy = adj_df_copy.astype('float16')
     adj_df_copy.values[tuple([np.arange(len(adj_df_copy))]*2)] = np.nan
     edge_df = adj_df_copy.stack().reset_index()
+    del adj_df_copy
     if output_dir != None:
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
         edge_df.to_csv(f'{output_dir}/edgelist.txt', sep = '\t', index = 0, header = None)
         print(f'edgelist.txt has been saved.')
-    return edge_df
 
 def network_embedding_fast(edgelist_data, max_epoch = 100, learning_rate = 0.1, negative_ratio = 0.15, tol_samples = 75, output_dir = None, name_spec = ''):
     '''
