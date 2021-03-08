@@ -1,0 +1,11 @@
+{
+	"provided_networks": "pipeline/mouse/network_analysis/tom.csv",
+	"differentially_expressed_genes": "HDID_data/de_data.csv",
+	"network_louvain_default": "pipeline/mouse/network_analysis/wgcna_modules.csv",
+	"embedding_params": [
+		{
+			"max_epoch": 100,
+			"learning_rate": 0.1
+		}
+	]
+}

@@ -58,6 +58,24 @@ def plot_gene_cnt_each_cluster(cluster_dfs, cluster_column, network_names):
     plt.show()
     plt.close()
 
+def plot_gene_cnt_each_cluster_v2(cluster_df, cluster_column, network_name, name_spec = ''):
+    '''
+    bar graphs to show # genes in each cluster
+    cluster_dfs: a list of cluster dfs with id and cluster assignment
+    cluster_column: cluster type, louvain or k means
+    network_names: names to show in the subplot titles
+    '''
+    plt.rcParams.update({'font.size': 18})
+    plt.figure(figsize = (6,4))
+    plt.bar(cluster_df[cluster_column].value_counts().index, cluster_df[cluster_column].value_counts().values)
+    plt.ylabel('# genes')
+    plt.xlabel('Cluster id')
+    plt.title(network_name)
+    plt.tight_layout()
+    plt.savefig(os.path.join(Result.getPath(), f"plot_gene_cnt_each_cluster{name_spec}.png"))
+    plt.show()
+    plt.close()
+
 def get_graph_distance(wholenetwork_np, network_np):
     dc_distance = netcomp.deltacon0(wholenetwork_np, network_np)
     ged_distance = netcomp.edit_distance(wholenetwork_np, network_np)

@@ -6,17 +6,16 @@ from sys import platform
 import csrgraph as cg
 import nodevectors
 
-def adj_to_edgelist(adj_df, filename = None, output_dir = None):
+def adj_to_edgelist(adj_df, output_dir = None):
 # convert df from adjacency to edgelist for csgraph import
     adj_df_copy = adj_df.copy()
     adj_df_copy.values[tuple([np.arange(len(adj_df_copy))]*2)] = np.nan
     edge_df = adj_df_copy.stack().reset_index()
     if output_dir != None:
-        assert filename != None, 'Need the filename for saving'
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
-        edge_df.to_csv(f'{output_dir}/{filename}_edge.txt', sep = '\t', index = 0, header = None)
-        print(f'{filename}_edge.txt has been saved.')
+        edge_df.to_csv(f'{output_dir}/edgelist.txt', sep = '\t', index = 0, header = None)
+        print(f'edgelist.txt has been saved.')
     return edge_df
 
 def network_embedding(graph, walk_length, num_walks, window, output_dir = None, name_spec = ''):
