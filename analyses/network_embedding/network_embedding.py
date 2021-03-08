@@ -2,6 +2,7 @@ import argparse
 import json
 import os
 import pandas as pd
+import memory_profiler
 
 from src.preproc.input import Input
 from src.preproc.result import Result
@@ -18,14 +19,19 @@ def run_embedding(config_file, archive_path, run_num):
     with open(config_file) as json_data:
         config_json = json.load(json_data)
 
+    print('m0', memory_profiler.memory_usage()[0])
     network_df = pd.read_csv(os.path.join(data_folder, config_json["provided_networks"]), index_col=0)
-    print("read provided_networks")
+    print('m1', memory_profiler.memory_usage()[0])
 
     Result(os.path.join(archive_path, run_num))
     output_path = Result.getPath()
+
     # This steps can take a lot of memory but the next step is worse
-    network_edgelist = adj_to_edgelist(network_df, output_dir = output_path)
-    del network_edgelist # once it's saved, it can be deleted
+    #network_edgelist = adj_to_edgelist(network_df, output_dir = output_path)
+    #del network_edgelist # once it's saved, it can be deleted
+    adj_to_edgelist(network_df, output_dir = output_path)
+    del network_df
+    print('m2', memory_profiler.memory_usage()[0])
     embed_params = config_json["embedding_params"]
     max_epoch = embed_params[0]['max_epoch']
     learning_rate = embed_params[0]['learning_rate']
@@ -33,6 +39,7 @@ def run_embedding(config_file, archive_path, run_num):
     emb_df = network_embedding_fast(f'{output_path}/edgelist.txt',
                                     max_epoch=max_epoch, learning_rate=learning_rate,
                                     output_dir=output_path, name_spec=f'epoch={max_epoch}_alpha={learning_rate}')
+    print('m3', memory_profiler.memory_usage()[0])
 
     # Plot DEG % in each cluster
     if config_json["differentially_expressed_genes"].endswith(".xlsx"):
