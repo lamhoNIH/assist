@@ -1,6 +1,5 @@
 {
-	"embedding_path": "pipeline/mouse/module_subselection_embedding/approach2/run1",
-	"embedding_prefix": "embedded_len16_walk100",
+	"embedding_file": "pipeline/mouse/module_network_embedding/run1/embedded_ggvec_epoch=100_alpha=0.1.csv",
 	"differentially_expressed_genes": "HDID_data/de_data.csv",
 	"top_n_coef": 0.5,
 	"skip_diagnostics": true

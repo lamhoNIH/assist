@@ -1,6 +1,5 @@
 {
-	"embedding_path": "pipeline/human/module_subselection_embedding/approach2/run5",
-	"embedding_prefix": "embedded_len16_walk100",
+	"embedding_file": "pipeline/human/module_network_embedding/run1/embedded_ggvec_epoch=100_alpha=0.1.csv",
 	"expression_with_metadata": "pipeline/human/network_analysis/expression_meta.csv",
 	"differentially_expressed_genes": "deseq.alc.vs.control.age.rin.batch.gender.PMI.corrected.w.prot.coding.gene.name.xlsx",
 	"top_n_coef": 0.5
