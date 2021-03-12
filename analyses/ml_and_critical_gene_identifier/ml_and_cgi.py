@@ -39,11 +39,11 @@ def ml_models(config_file, archive_path, run_num):
     top_dim = plot_feature_importances(model_weights, top_n_coef=0.5, print_num_dim=False, plot_heatmap=False,
                                        return_top_dim=True)
     plot_random_feature_importance(model_weights, top_dim, emb_name)
-    jaccard_average(top_dim, emb_name)
+    jaccard_average(top_dim, f'Important dim overlap between models')
 
     gene_set = get_critical_gene_sets(processed_emb_df, top_dim, deseq)
     critical_gene_df = get_critical_gene_df(gene_set, emb_name, Result.getPath())
-    intersect_genes = jaccard_critical_genes(critical_gene_df, emb_name)
+    intersect_genes = jaccard_critical_genes(critical_gene_df, f'Critical gene overlap between models')
 
     if ("skip_diagnostics" not in config_json) or (config_json["skip_diagnostics"] is False):
         expression_meta_df = pd.read_csv(os.path.join(data_folder, config_json["expression_with_metadata"]), low_memory = False)
@@ -51,7 +51,7 @@ def ml_models(config_file, archive_path, run_num):
         expression_meta_df = None
 
     if expression_meta_df is not None:
-        gene_set_phenotype_corr(intersect_genes, emb_name, expression_meta_df, 'intersect genes between 3 models')
+        gene_set_phenotype_corr([intersect_genes], [emb_name], expression_meta_df, 'common genes across the 3 models')
 
     # critical_gene_sets2 is different from critical_gene_sets in that it only has # of nearby DEGs to the critical genes and is a complete list. 
     # critical_gene_sets2 only has gene IDs and only has the top 10 genes
@@ -59,7 +59,7 @@ def ml_models(config_file, archive_path, run_num):
 
     # Plot correlation of top critical genes (with most nearby impact genes) for each embedding
     if expression_meta_df is not None:
-        gene_set_phenotype_corr([critical_gene_sets2], [emb_name], expression_meta_df, 'top 10 genes')
+        gene_set_phenotype_corr([critical_gene_sets2], [emb_name], expression_meta_df, 'Top 10 critical genes')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
