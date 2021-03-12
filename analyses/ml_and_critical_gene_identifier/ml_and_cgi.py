@@ -23,8 +23,8 @@ def ml_models(config_file, archive_path, run_num):
         config_json = json.load(json_data)
         
     emb_df = pd.read_csv(os.path.join(data_folder, config_json["embedding_file"]), index_col = 0)
-    emb_name = '_'.join(config_json["embedding_file"].split('_')[2:])[:-4]
-
+    emb_name = '_'.join(os.path.basename(config_json["embedding_file"]).split('_')[2:])[:-4]
+    
     if config_json["differentially_expressed_genes"].endswith(".xlsx"):
         deseq = pd.read_excel(os.path.join(data_folder, config_json["differentially_expressed_genes"]))
     elif config_json["differentially_expressed_genes"].endswith(".csv"):
