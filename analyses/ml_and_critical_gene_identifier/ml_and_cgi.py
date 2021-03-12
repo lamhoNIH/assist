@@ -22,19 +22,9 @@ def ml_models(config_file, archive_path, run_num):
     with open(config_file) as json_data:
         config_json = json.load(json_data)
         
-    embedding_path = os.path.join(data_folder, config_json["embedding_path"])
-    embedding_prefix = config_json["embedding_prefix"]
-    emb_list = []
-    embedding_names = []
-    for file in os.listdir(embedding_path):
-        if file.startswith(embedding_prefix):
-            emb = pd.read_csv(os.path.join(embedding_path, file), index_col = 0)
-            emb_list.append(emb)
-            emb_name = '_'.join(file.split('_')[-4:-1])
-            embedding_names.append(emb_name)
-
-    # process embedding to be ready for ML
-    processed_emb_dfs = []
+    emb_df = pd.read_csv(os.path.join(data_folder, config_json["embedding_file"]), index_col = 0)
+    emb_name = '_'.join(os.path.basename(config_json["embedding_file"]).split('_')[2:])[:-4]
+    
     if config_json["differentially_expressed_genes"].endswith(".xlsx"):
         deseq = pd.read_excel(os.path.join(data_folder, config_json["differentially_expressed_genes"]))
     elif config_json["differentially_expressed_genes"].endswith(".csv"):
@@ -42,39 +32,18 @@ def ml_models(config_file, archive_path, run_num):
     else:
         print(f'Unknown extension detected for {config_json["differentially_expressed_genes"]}')
     #deseq['abs_log2FC'] = abs(deseq['log2FoldChange'])
-    for emb in emb_list:
-        processed_emb_dfs.append(process_emb_for_ML(emb, deseq))
+    # process embedding to be ready for ML
+    processed_emb_df = process_emb_for_ML(emb_df, deseq)
 
-    model_weight_list = []
-    for i, processed_df in enumerate(processed_emb_dfs):
-        model_weight_list.append(run_ml(processed_df, emb_name = embedding_names[i], print_accuracy = True))
+    model_weights = run_ml(processed_emb_df, emb_name=emb_name, print_accuracy=True)
+    top_dim = plot_feature_importances(model_weights, top_n_coef=0.5, print_num_dim=False, plot_heatmap=False,
+                                       return_top_dim=True)
+    plot_random_feature_importance(model_weights, top_dim, emb_name)
+    jaccard_average(top_dim, f'Important dim overlap between models')
 
-    top_dim_list = []
-    for model_weights in model_weight_list:
-        top_dim = plot_feature_importances(model_weights, top_n_coef = config_json["top_n_coef"], print_num_dim = False, plot_heatmap = False, return_top_dim = True)
-        top_dim_list.append(top_dim)
-
-    # The blue bars are the feature importance sum from random selection of the dimensions
-    # The red vertical line is the actual feature importance sum selected by ML
-    # Note each model was repeated 3 times but only 1 was shown
-    for i in range(len(model_weight_list)):
-        plot_random_feature_importance(model_weight_list[i], top_dim_list[i], embedding_names[i])
-
-    for i, top_dim in enumerate(top_dim_list):
-        jaccard_average(top_dim, embedding_names[i])
-
-
-    critical_gene_sets = []
-    critical_gene_dfs = []
-    for i, processed_df in enumerate(processed_emb_dfs):
-        gene_set = get_critical_gene_sets(processed_df, top_dim_list[i], deseq)
-        critical_gene_sets.append(gene_set)
-        critical_gene_dfs.append(get_critical_gene_df(gene_set, embedding_names[i], Result.getPath()))
-
-    intersect_gene_list = []
-    for i, critical_gene_df in enumerate(critical_gene_dfs):
-        intersect_genes = jaccard_critical_genes(critical_gene_df, embedding_names[i])
-        intersect_gene_list.append(intersect_genes)
+    gene_set = get_critical_gene_sets(processed_emb_df, top_dim, deseq)
+    critical_gene_df = get_critical_gene_df(gene_set, emb_name, Result.getPath())
+    intersect_genes = jaccard_critical_genes(critical_gene_df, f'Critical gene overlap between models')
 
     if ("skip_diagnostics" not in config_json) or (config_json["skip_diagnostics"] is False):
         expression_meta_df = pd.read_csv(os.path.join(data_folder, config_json["expression_with_metadata"]), low_memory = False)
@@ -82,18 +51,15 @@ def ml_models(config_file, archive_path, run_num):
         expression_meta_df = None
 
     if expression_meta_df is not None:
-        gene_set_phenotype_corr(intersect_gene_list, embedding_names, expression_meta_df, 'intersect genes between 3 models')
+        gene_set_phenotype_corr([intersect_genes], [emb_name], expression_meta_df, 'common genes across the 3 models')
 
     # critical_gene_sets2 is different from critical_gene_sets in that it only has # of nearby DEGs to the critical genes and is a complete list. 
     # critical_gene_sets2 only has gene IDs and only has the top 10 genes
-    critical_gene_sets2 = []
-    for i, critical_gene_df in enumerate(critical_gene_dfs):
-        gene_set = plot_nearby_impact_num(critical_gene_df, embedding_names[i])
-        critical_gene_sets2.append(gene_set)
+    critical_gene_sets2 = plot_nearby_impact_num(critical_gene_df, emb_name)
 
     # Plot correlation of top critical genes (with most nearby impact genes) for each embedding
     if expression_meta_df is not None:
-        gene_set_phenotype_corr(critical_gene_sets2, embedding_names, expression_meta_df, 'top 10 genes')
+        gene_set_phenotype_corr([critical_gene_sets2], [emb_name], expression_meta_df, 'Top 10 critical genes')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
