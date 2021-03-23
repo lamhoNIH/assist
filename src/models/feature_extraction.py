@@ -24,18 +24,22 @@ def plot_feature_importances(model_weights, top_n_coef = 0.2, print_num_dim = Tr
     A function to show feature importances in each model
     and can return feature importance and the top dim from each model
     '''
-    models = ['lr']*3 + ['rf']*3 + ['xgb']*3 
+    models = ['LR']*3 + ['RF']*3 + ['XGB']*3 
     if plot_heatmap == True:
         sns.set(font_scale=1.5)
         sns.set_style('white')
-        plt.figure(figsize = (7, 23))
+#         plt.figure(figsize = (0.5, 20))
         i = 0
         for coef in model_weights:
+            plt.figure(figsize = (1,9))
             min_v, max_v, center = get_min_max_center(coef)
-            plt.subplot(3, 3,i+1)
-            sns.heatmap(coef.reshape(64, 1), center = center, vmin = min_v, vmax = max_v, cmap = 'Reds')
-            plt.title(models[i])
-            plt.subplots_adjust(wspace = 2)
+#             plt.subplot(3, 3,i+1)
+            sns.heatmap(coef.reshape(64, 1), center = center, vmin = min_v, vmax = max_v, cmap = 'Reds', xticklabels = [])
+            plt.title(models[i], fontsize=24)
+            plt.yticks(rotation = 0)
+            plt.show()
+            plt.close()
+#             plt.subplots_adjust(wspace = 2)
             i += 1
     if print_num_dim == True and return_top_dim == True:
         top_dim_list = list(map(get_top_dim, model_weights, models, [True]*len(model_weights),
