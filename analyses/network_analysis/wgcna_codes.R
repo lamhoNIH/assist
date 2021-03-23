@@ -12,9 +12,8 @@ expression$id = NULL
 expression_t = t(expression)
 tom_output = file.path(archive_path, 'tom')
 
-if (json_data[['parameters']][["skip_tom"]] == FALSE || length(json_data[['parameters']][['skip_tom']]) == 0) {
-  saveTOMs = T} else {saveTOMs = F}
-
+is_mouse = json_data[['parameters']][['skip_tom']] == FALSE || length(json_data[['parameters']][['skip_tom']]) == 0
+if (is_mouse == TRUE) {saveTOMs = T} else {saveTOMs = F}
 net = blockwiseModules(expression_t, power = 14, maxBlockSize = 30000,
                        TOMType = "unsigned", minModuleSize = 100,
                        reassignThreshold = 0, detectCutHeight = 0.99,
@@ -24,7 +23,7 @@ net = blockwiseModules(expression_t, power = 14, maxBlockSize = 30000,
                        verbose = 3, deepSplit = T)
 
 # load tom data
-if (json_data[["parameters"]][["skip_tom"]] == FALSE || length(json_data[["parameters"]][['skip_tom']]) == 0) {
+if (is_mouse) {
     tom_path = paste(tom_output, '-block.1.Rdata', sep = '')
     load(tom_path)
     tom_df = as.matrix(TOM)
@@ -32,7 +31,7 @@ if (json_data[["parameters"]][["skip_tom"]] == FALSE || length(json_data[["param
     colnames(tom_df) = colnames(expression_t)
     rownames(tom_df) = colnames(expression_t)
     # write tom file
-    write.csv(tom_df, file = file.path(archive_path, 'tom.csv'))
+    write.csv(tom_df, file = file.path(archive_path, json_data[["outputs"]][['provided_networks']]))
 }
 # summary of the network modules (colors represent module assignment)
 net_df = data.frame(net$colors) # convert to a df

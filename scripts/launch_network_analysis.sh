@@ -4,7 +4,13 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 echo ${SCRIPT_DIR}
 
 DATA="/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data"
-DATASET="human"
+if [[ $1 = "human" || $1 = "mouse" ]]
+then
+	DATASET=$1
+else
+	echo "dataset must be either human or mouse"
+	exit
+fi
 MODULE="network_analysis"
 
 OUTPUT_PATH="pipeline/${DATASET}/${MODULE}"
