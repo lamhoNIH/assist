@@ -14,6 +14,9 @@ def ade_entrypoint_v1(
 ):
     work_path = tempfile.mkdtemp()
 
+    config_path = path.join(work_path, 'config.json')
+    archive_path = path.join(work_path, 'output')
+
     # Convert commas to tabs so the script can process it properly
     new_in_normalized_counts = path.join(work_path, 'in_normalized_counts.tsv')
     with open(in_normalized_counts, 'rU') as f1, open(new_in_normalized_counts, 'w') as f2:
