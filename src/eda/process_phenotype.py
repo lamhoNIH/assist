@@ -19,10 +19,10 @@ def get_liver_class(expression_meta_df):
 
 def get_expression_by_alcohol_perday(expression_meta_df):
     expression_meta_df['alcohol_intake_category'] = 0
-    expression_meta_df.loc[expression_meta_df['alcohol_intake_gmsperday'] < 50, 'alcohol_intake_category'] = 'under 50'
-    expression_meta_df.loc[expression_meta_df['alcohol_intake_gmsperday'].between(50, 100), 'alcohol_intake_category'] = '50-100'
-    expression_meta_df.loc[expression_meta_df['alcohol_intake_gmsperday'].between(100, 300), 'alcohol_intake_category'] = '100-300'
-    expression_meta_df.loc[expression_meta_df['alcohol_intake_gmsperday']> 300, 'alcohol_intake_category'] = 'above 300'
+    expression_meta_df.loc[expression_meta_df['Alcohol_intake_gmsperday'] < 50, 'alcohol_intake_category'] = 'under 50'
+    expression_meta_df.loc[expression_meta_df['Alcohol_intake_gmsperday'].between(50, 100), 'alcohol_intake_category'] = '50-100'
+    expression_meta_df.loc[expression_meta_df['Alcohol_intake_gmsperday'].between(100, 300), 'alcohol_intake_category'] = '100-300'
+    expression_meta_df.loc[expression_meta_df['Alcohol_intake_gmsperday']> 300, 'alcohol_intake_category'] = 'above 300'
     alc_intake_subset = expression_meta_df[expression_meta_df.alcohol_intake_category != 0]
     return alc_intake_subset
 

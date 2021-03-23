@@ -670,57 +670,73 @@ def plot_random_vs_actual_z(cluster_df1, cluster_df2, cluster1, cluster2, cluste
     plt.show()
     plt.close()
     
-def gene_phenotype_corr(critical_genes, expression_meta_df):
+def gene_phenotype_corr(critical_genes, expression_meta_df, title):
     '''
     Plot correlation heatmap between critical genes and alcohol phenotypes
     '''
     i = 1
-    phenotypes = ['BMI', 'Age', 'Brain_pH', 'Pack_yrs_1_pktperday_1_yr)', 'AUDIT', 
-                  'alcohol_intake_gmsperday', 'Total_drinking_yrs', 'SR']
+    phenotypes = ['BMI', 'Age', 'Brain_pH', 'Pack_yrs_1_pktperday_1_yr', 'AUDIT', 
+                  'Alcohol_intake_gmsperday', 'Total_drinking_yrs', 'SR']
     for pheno in phenotypes:
         corr_list = []
-        p_list = []
-        corrected_p_list = []
+#         p_list = []
+#         corrected_p_list = []
         labels = []
         for gene in critical_genes:
-            sub = expression_meta_df[[gene, pheno]]
-            sub = sub.dropna()
-            corr_list.append(pearsonr(sub[gene], sub[pheno])[0])
-            p_list.append(pearsonr(sub[gene], sub[pheno])[1])
-        corrected_p_list = multipletests(p_list, method ='fdr_bh')[1] # correct for multiple tests
+            if gene in expression_meta_df.columns:
+                sub = expression_meta_df[[gene, pheno]]
+                sub = sub.dropna()
+                corr_list.append(pearsonr(sub[gene], sub[pheno])[0])
+#                 p_list.append(pearsonr(sub[gene], sub[pheno])[1])
+#         corrected_p_list = multipletests(p_list, method ='fdr_bh')[1] # correct for multiple tests
         if i == 1:
             genes_corr = pd.DataFrame({pheno: corr_list})
-            genes_pvalue = pd.DataFrame({pheno: corrected_p_list})
+#             genes_pvalue = pd.DataFrame({pheno: corrected_p_list})
             i += 1
 
         else:
             genes_corr[pheno] = corr_list
-            genes_pvalue[pheno] = corrected_p_list
+#             genes_pvalue[pheno] = corrected_p_list
     genes_corr.index = critical_genes
-    genes_pvalue.index = critical_genes
-    fig = plt.figure(figsize=(12, 8))
-    plt.rcParams.update({'font.size': 18})
-    gs = gridspec.GridSpec(1, 2, width_ratios=[2.5, 1])  # set the subplot width ratio
-    # first subplot to show the correlation heatmap
-    ax0 = plt.subplot(gs[0])
-    sns.heatmap(genes_corr.sort_index(), cmap='RdBu_r', annot = True,
-                annot_kws = {'fontsize':12}, vmin=-1, vmax=1, xticklabels = phenotypes) 
+    sort_corr1 = genes_corr[genes_corr.abs().mean().sort_values().index] # sort columns by column abs mean
+    sort_corr2 = sort_corr1.reindex(sort_corr1.mean(axis = 1).sort_values().index) 
+    # sort index by index mean (not abs so the pos and neg correlation are divergent)
+#     genes_pvalue.index = critical_genes
+    plt.rcParams.update({'font.size':14})
+    plt.figure(figsize = (6, 11))
+#     gs = gridspec.GridSpec(1, 2, width_ratios=[2.5, 1])  # set the subplot width ratio
+#     # first subplot to show the correlation heatmap
+#     ax0 = plt.subplot(gs[0])
+# #     sns.heatmap(genes_corr.sort_index(), cmap='RdBu_r', annot = True,
+# #                 annot_kws = {'fontsize':12}, vmin=-1, vmax=1, xticklabels = phenotypes) 
+
+#     plt.xticks(rotation = 45, ha = 'right')
+#     plt.ylabel('Gene symbol')
+#     plt.title('Trait gene correlation')
+#     # second subplot to show count of significant traits in each cluster. "Significant" here means adj p value < 0.2
+#     ax1 = plt.subplot(gs[1])
+#     genes_pvalue = genes_pvalue
+#     sig_count = (genes_pvalue < 0.2).sum(axis = 1) # count num of traits with p-adj < 0.2 in each cluster
+#     sig_count = sig_count.sort_index(ascending = False)
+#     plt.barh(sig_count.index, sig_count.values) # horizontal bar plot
+#     plt.xlim(0,9) # there are 9 traits here so set the scale to between 0 and 9. change it if the # traits change
+#     plt.ylabel('Gene symbol')
+#     plt.xlabel('Trait count')
+#     plt.title('Number of correlated traits')
+#     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+#     plt.show()
+#     plt.subplots_adjust(wspace = 1)
+
+    plt.title(title)
+    sns.heatmap(sort_corr2, cmap='RdBu_r', vmin = -1, vmax=1, xticklabels = phenotypes, yticklabels = True)
     plt.xticks(rotation = 45, ha = 'right')
-    plt.ylabel('Gene ID')
-    plt.title('Trait gene correlation')
-    # second subplot to show count of significant traits in each cluster. "Significant" here means adj p value < 0.2
-    ax1 = plt.subplot(gs[1])
-    genes_pvalue = genes_pvalue
-    sig_count = (genes_pvalue < 0.2).sum(axis = 1) # count num of traits with p-adj < 0.2 in each cluster
-    sig_count = sig_count.sort_index(ascending = False)
-    plt.barh(sig_count.index, sig_count.values) # horizontal bar plot
-    plt.xlim(0,9) # there are 9 traits here so set the scale to between 0 and 9. change it if the # traits change
-    plt.ylabel('Gene ID')
-    plt.xlabel('Trait count')
-    plt.title('Number of significant traits for each gene')
-    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
-    plt.show()
-    plt.subplots_adjust(wspace = 1)
+    plt.ylabel('Gene Symbol')
+    return genes_corr
+    
+
+
+
+
     
     
 def gene_set_phenotype_corr(gene_sets, network_names, expression_meta_df, file_name):
