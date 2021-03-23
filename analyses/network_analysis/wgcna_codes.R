@@ -6,13 +6,13 @@ config_file = args[1]
 archive_path = args[2]
 
 json_data = fromJSON(file = config_file)
-expression = read.table(file.path('./Data', json_data[['normalized_counts']]), header = TRUE)
+expression = read.table(file.path('./Data', json_data[['inputs']][['normalized_counts']]), header = TRUE)
 rownames(expression) = expression$id
 expression$id = NULL
 expression_t = t(expression)
 tom_output = file.path(archive_path, 'tom')
 
-if (json_data[["skip_tom"]] == FALSE || length(json_data[['skip_tom']]) == 0) {
+if (json_data[['parameters']][["skip_tom"]] == FALSE || length(json_data[['parameters']][['skip_tom']]) == 0) {
   saveTOMs = T} else {saveTOMs = F}
 
 net = blockwiseModules(expression_t, power = 14, maxBlockSize = 30000,
@@ -24,7 +24,7 @@ net = blockwiseModules(expression_t, power = 14, maxBlockSize = 30000,
                        verbose = 3, deepSplit = T)
 
 # load tom data
-if (json_data[["skip_tom"]] == FALSE || length(json_data[['skip_tom']]) == 0) {
+if (json_data[["parameters"]][["skip_tom"]] == FALSE || length(json_data[["parameters"]][['skip_tom']]) == 0) {
     tom_path = paste(tom_output, '-block.1.Rdata', sep = '')
     load(tom_path)
     tom_df = as.matrix(TOM)
@@ -42,7 +42,7 @@ colnames(net_df)[2] = 'louvain_label' # change column name
 
 # change the file name below to wgcna_modules.csv during test
 # write network modules 
-write.csv(net_df, file.path(archive_path, 'wgcna_modules.csv'), row.names = F)
+write.csv(net_df, file.path(archive_path, json_data[["outputs"]][["gene_to_module_mapping"]]), row.names = F)
 
 
 

@@ -1,7 +1,14 @@
 {
-	"diagnostics": "Kapoor2019_coga.inia.detailed.pheno.04.12.17.csv",
-	"normalized_counts": "kapoor_expression.txt",
-	"expression_with_metadata": "expression_meta.csv",
-	"skip_tom": true,
-	"skip_preproc": false
+	"inputs": {
+		"diagnostics": "Kapoor2019_coga.inia.detailed.pheno.04.12.17.csv",
+		"normalized_counts": "kapoor_expression.txt"
+	},
+	"outputs": {
+		"expression_with_metadata": "expression_meta.csv",
+		"gene_to_module_mapping": "wgcna_modules.csv"
+	},
+	"parameters": {
+		"skip_tom": true,
+		"skip_preproc": false
+	}
 }

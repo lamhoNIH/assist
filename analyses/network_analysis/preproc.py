@@ -13,11 +13,11 @@ def preproc(config_file, archive_path):
 
     with open(config_file) as json_data:
         config_json = json.load(json_data)
-    if ("skip_preproc" not in config_json) or (config_json["skip_preproc"] is False):
-        meta = pd.read_csv(os.path.join(data_folder, config_json["diagnostics"]))
-        expression = pd.read_csv(os.path.join(data_folder, config_json["normalized_counts"]), sep = '\t', index_col = 0)
+    if ("skip_preproc" not in config_json["parameters"]) or (config_json["parameters"]["skip_preproc"] is False):
+        meta = pd.read_csv(os.path.join(data_folder, config_json["inputs"]["diagnostics"]))
+        expression = pd.read_csv(os.path.join(data_folder, config_json["inputs"]["normalized_counts"]), sep = '\t', index_col = 0)
         expression_meta = pd.merge(expression.T, meta, left_index = True, right_on = 'IID')
-        expression_meta.to_csv(os.path.join(Result.getPath(), config_json["expression_with_metadata"]), index = 0)
+        expression_meta.to_csv(os.path.join(Result.getPath(), config_json["outputs"]["expression_with_metadata"]), index = 0)
     else:
         return None
 if __name__ == '__main__':
