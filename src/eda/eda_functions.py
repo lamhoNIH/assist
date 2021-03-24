@@ -698,8 +698,8 @@ def gene_phenotype_corr(critical_genes, expression_meta_df, title):
             genes_corr[pheno] = corr_list
 #             genes_pvalue[pheno] = corrected_p_list
     genes_corr.index = critical_genes
-    sort_corr1 = genes_corr[genes_corr.abs().mean().sort_values().index] # sort columns by column abs mean
-    sort_corr2 = sort_corr1.reindex(sort_corr1.mean(axis = 1).sort_values().index) 
+#     sort_corr1 = genes_corr[genes_corr.abs().mean().sort_values().index] # sort columns by column abs mean
+    sort_corr2 = genes_corr.reindex(genes_corr.mean(axis = 1).sort_values().index) 
     # sort index by index mean (not abs so the pos and neg correlation are divergent)
 #     genes_pvalue.index = critical_genes
     plt.rcParams.update({'font.size':14})

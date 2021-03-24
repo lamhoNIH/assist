@@ -1,5 +1,13 @@
 {
-	"normalized_counts": "HDID_data/PFC_HDID_norm_exp.txt",
-	"skip_tom": false,
-	"skip_preproc": true
+	"inputs": {
+		"normalized_counts": "HDID_data/PFC_HDID_norm_exp.txt"
+	},
+	"outputs": {
+		"provided_networks": "tom.csv",
+		"gene_to_module_mapping": "wgcna_modules.csv"
+	},
+	"parameters": {
+		"skip_tom": false,
+		"skip_preproc": true
+	}
 }
