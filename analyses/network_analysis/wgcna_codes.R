@@ -6,7 +6,7 @@ config_file = args[1]
 archive_path = args[2]
 
 json_data = fromJSON(file = config_file)
-expression = read.table(file.path('./Data', json_data[['inputs']][['normalized_counts']]), header = TRUE)
+expression = read.table(json_data[['inputs']][['normalized_counts']], header = TRUE)
 rownames(expression) = expression$id
 expression$id = NULL
 expression_t = t(expression)
@@ -31,7 +31,7 @@ if (is_mouse) {
     colnames(tom_df) = colnames(expression_t)
     rownames(tom_df) = colnames(expression_t)
     # write tom file
-    write.csv(tom_df, file = file.path(archive_path, json_data[["outputs"]][['provided_networks']]))
+    write.csv(tom_df, file = json_data[["outputs"]][['provided_networks']])
 }
 # summary of the network modules (colors represent module assignment)
 net_df = data.frame(net$colors) # convert to a df
@@ -41,4 +41,4 @@ colnames(net_df)[2] = 'louvain_label' # change column name
 
 # change the file name below to wgcna_modules.csv during test
 # write network modules 
-write.csv(net_df, file.path(archive_path, json_data[["outputs"]][["gene_to_module_mapping"]]), row.names = F)
+write.csv(net_df, json_data[["outputs"]][["gene_to_module_mapping"]], row.names = F)

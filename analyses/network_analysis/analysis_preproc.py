@@ -2,8 +2,8 @@ import argparse
 import json
 import os
 import pandas as pd
-from src.preproc.input import Input
-from src.preproc.result import Result
+from preproc.input import Input
+from preproc.result import Result
 
 def preproc(config_file, archive_path):
     Input('./Data')
