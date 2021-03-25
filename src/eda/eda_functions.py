@@ -370,9 +370,9 @@ def cluster_phenotype_corr(cluster_df, cluster_column, network_name, expression_
 #                                          'RIN': expression_meta_df['RIN'],
                                          'Age': expression_meta_df['Age'], 'PM!': expression_meta_df['PM!'],
                                          'Brain_pH': expression_meta_df['Brain_pH'],
-                                         'Pack_yrs_1_pktperday_1_yr': expression_meta_df['Pack_yrs_1_pktperday_1_yr)'],
+                                         'Pack_yrs_1_pktperday_1_yr': expression_meta_df['Pack_yrs_1_pktperday_1_yr'],
                                          'AUDIT': expression_meta_df['AUDIT'],
-                                         'alcohol_intake_gmsperday': expression_meta_df['alcohol_intake_gmsperday'],
+                                         'Alcohol_intake_gmsperday': expression_meta_df['Alcohol_intake_gmsperday'],
                                          'Total_drinking_yrs': expression_meta_df['Total_drinking_yrs'],
                                          'SR': expression_meta_df['SR']})
 
@@ -768,9 +768,9 @@ def gene_set_phenotype_corr(gene_sets, network_names, expression_meta_df, file_n
     #                                          'RIN': expression_meta_df['RIN'],
                                              'Age': expression_meta_df['Age'], 'PM!': expression_meta_df['PM!'],
                                              'Brain_pH': expression_meta_df['Brain_pH'],
-                                             'Pack_yrs_1_pktperday_1_yr': expression_meta_df['Pack_yrs_1_pktperday_1_yr)'],
+                                             'Pack_yrs_1_pktperday_1_yr': expression_meta_df['Pack_yrs_1_pktperday_1_yr'],
                                              'AUDIT': expression_meta_df['AUDIT'],
-                                             'alcohol_intake_gmsperday': expression_meta_df['alcohol_intake_gmsperday'],
+                                             'Alcohol_intake_gmsperday': expression_meta_df['Alcohol_intake_gmsperday'],
                                              'Total_drinking_yrs': expression_meta_df['Total_drinking_yrs'],
                                              'SR': expression_meta_df['SR']})
 
