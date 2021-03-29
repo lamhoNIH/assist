@@ -351,6 +351,7 @@ def plot_sig_perc(cluster_df, cluster_column, network_name, expression_meta_df):
     plt.savefig(os.path.join(Result.getPath(), f'plot_sig_perc_{network_name}.png'))
     plt.show()
     plt.close()
+    return cluster_sig_perc
 
 def cluster_phenotype_corr(cluster_df, cluster_column, network_name, expression_meta_df):
     '''
@@ -698,8 +699,7 @@ def gene_phenotype_corr(critical_genes, expression_meta_df, title):
             genes_corr[pheno] = corr_list
 #             genes_pvalue[pheno] = corrected_p_list
     genes_corr.index = critical_genes
-#     sort_corr1 = genes_corr[genes_corr.abs().mean().sort_values().index] # sort columns by column abs mean
-    sort_corr2 = genes_corr.reindex(genes_corr.mean(axis = 1).sort_values().index) 
+    sort_corr = genes_corr.reindex(genes_corr.mean(axis = 1).sort_values().index) 
     # sort index by index mean (not abs so the pos and neg correlation are divergent)
 #     genes_pvalue.index = critical_genes
     plt.rcParams.update({'font.size':14})
@@ -728,7 +728,7 @@ def gene_phenotype_corr(critical_genes, expression_meta_df, title):
 #     plt.subplots_adjust(wspace = 1)
 
     plt.title(title)
-    sns.heatmap(sort_corr2, cmap='RdBu_r', vmin = -1, vmax=1, xticklabels = phenotypes, yticklabels = True)
+    sns.heatmap(sort_corr, cmap='RdBu_r', vmin = -1, vmax=1, xticklabels = phenotypes, yticklabels = True)
     plt.xticks(rotation = 45, ha = 'right')
     plt.ylabel('Gene Symbol')
     return genes_corr
