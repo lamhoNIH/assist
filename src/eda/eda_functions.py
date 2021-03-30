@@ -324,7 +324,7 @@ def plot_sig_perc(cluster_df, cluster_column, network_name, expression_meta_df, 
             cluster_sig_perc = pd.DataFrame({traits[i]: sig_gene_perc})
         else:
             cluster_sig_perc[traits[i]] = sig_gene_perc
-        
+    cluster_sig_perc.index = clusters    
     cluster_sig_perc = cluster_sig_perc.sort_index(ascending = False)
     fig = plt.figure(figsize=(12, 8))
     plt.rcParams.update({'font.size': 18})
