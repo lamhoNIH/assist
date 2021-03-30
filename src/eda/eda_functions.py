@@ -304,7 +304,7 @@ def get_module_sig_gene_perc(expression_meta_df, cluster_df, cluster_column, clu
             anova_sig_genes.append(gene)
     return round(100 * len(anova_sig_genes) / len(module_genes), 2)  # return the % of genes found significant by ANOVA
 
-def plot_sig_perc(cluster_df, cluster_column, network_name, expression_meta_df):
+def plot_sig_perc(cluster_df, cluster_column, network_name, expression_meta_df, output_sig_df = False):
     '''
     A function to iterate through the clusters to get % significant genes in each clusters for each trait and show the results in a heatmap and barplot
     '''
@@ -324,7 +324,7 @@ def plot_sig_perc(cluster_df, cluster_column, network_name, expression_meta_df):
             cluster_sig_perc = pd.DataFrame({traits[i]: sig_gene_perc})
         else:
             cluster_sig_perc[traits[i]] = sig_gene_perc
-        
+    cluster_sig_perc.index = clusters    
     cluster_sig_perc = cluster_sig_perc.sort_index(ascending = False)
     fig = plt.figure(figsize=(12, 8))
     plt.rcParams.update({'font.size': 18})
@@ -351,9 +351,10 @@ def plot_sig_perc(cluster_df, cluster_column, network_name, expression_meta_df):
     plt.savefig(os.path.join(Result.getPath(), f'plot_sig_perc_{network_name}.png'))
     plt.show()
     plt.close()
-    return cluster_sig_perc
+    if output_sig_df == True:
+        return cluster_sig_perc
 
-def cluster_phenotype_corr(cluster_df, cluster_column, network_name, expression_meta_df):
+def cluster_phenotype_corr(cluster_df, cluster_column, network_name, expression_meta_df, output_corr_df = False):
     '''
     Plot correlation heatmap between modules/clusters and alcohol phenotypes
     '''
@@ -402,7 +403,7 @@ def cluster_phenotype_corr(cluster_df, cluster_column, network_name, expression_
 
     fig = plt.figure(figsize=(12, 8))
     plt.rcParams.update({'font.size': 18})
-
+    clusters_corr.columns = eigen_n_features.columns[1:]
     gs = gridspec.GridSpec(1, 2, width_ratios=[2.5, 1])  # set the subplot width ratio
     # first subplot to show the correlation heatmap
     ax0 = plt.subplot(gs[0])
@@ -425,6 +426,8 @@ def cluster_phenotype_corr(cluster_df, cluster_column, network_name, expression_
     plt.savefig(os.path.join(Result.getPath(), f'cluster_phenotype_corr_{network_name}.png'))
     plt.show()
     plt.close()
+    if output_corr_df == True:
+        return clusters_corr
     
 def cluster_nmi(cluster_df1, cluster_df2, cluster_column):
     '''NMI to compare communities from the whole netowrk and the subnetwork or clusters from different network embeddings'''
@@ -858,3 +861,20 @@ def get_closest_genes_jaccard(network, emb, gene_list, top_n, title):
     plt.title(title)
     plt.show()
     plt.close()
+    
+    
+def plot_dist(summary_df, sample_name, trait, summary_type):
+    '''Plot distribution of some kind of summary table'''
+    plt.rcParams.update({'font.size':18})
+    sns.kdeplot(summary_df, label = sample_name)
+    plt.title(trait)
+    if summary_type == 'correlation':
+        xlabel = 'Correlation coefficient'
+    elif summary_type == 'significance':
+        xlabel = '% significant genes'
+    else:
+        print('Summary type not recognized')
+        xlabel = ''
+    plt.xlabel(xlabel)
+    plt.ylabel('Events')
+    plt.legend()
