@@ -11,6 +11,7 @@ from xgboost.sklearn import XGBClassifier
 from sklearn.metrics import accuracy_score
 import pickle
 import os
+from functools import reduce
 import seaborn as sns
 
 def process_emb_for_ML(embedding_df, deseq):
@@ -82,7 +83,7 @@ def get_important_features(model):
         coef = model.feature_importances_
     return coef
 
-def run_ml(processed_embedding, emb_name, max_iter = 1000, print_accuracy = False, output_dir = None):
+def run_ml(processed_embedding, emb_name, max_iter = 1000, dim = 64, print_accuracy = False, output_dir = None):
     '''Run ML using sklearn with LR, RF and XGBoost'''
     lr = LogisticRegression(max_iter = max_iter)
     rf = RandomForestClassifier()
@@ -95,7 +96,7 @@ def run_ml(processed_embedding, emb_name, max_iter = 1000, print_accuracy = Fals
     for i in range(3):
         num_sample = processed_embedding.impact.value_counts().min()
         emb_subset = processed_embedding.groupby('impact').sample(num_sample).reset_index() # subset to have equal samples in the two classes
-        X_train, X_test, y_train, y_test = train_test_split(emb_subset.iloc[:, :64], emb_subset['impact'], test_size = 0.2)
+        X_train, X_test, y_train, y_test = train_test_split(emb_subset.iloc[:, :dim], emb_subset['impact'], test_size = 0.2)
         lr.fit(X_train, y_train)
         rf.fit(X_train, y_train)
         xgb.fit(X_train, y_train, eval_metric = 'logloss')
@@ -146,3 +147,60 @@ def run_ml(processed_embedding, emb_name, max_iter = 1000, print_accuracy = Fals
     # reorder the weight list to match with other functions (same models go together 3 times)
     reordered_weight_list = [weight_list[i] for j in range(3) for i in range(j, 9, 3)]
     return reordered_weight_list
+
+
+def run_ml_top_dim(processed_embedding, model, 
+                   max_iter = 1000, dim = 64):
+    '''Run ML using sklearn with LR, RF and XGBoost'''
+    if model == 'lr':
+        ml_model = LogisticRegression(max_iter = max_iter)
+    elif model == 'rf':
+        ml_model = RandomForestClassifier()
+    elif model == 'xgb':
+        ml_model = XGBClassifier(use_label_encoder=False)
+    else:
+        print('model type is not recognized')
+        return None
+    acc = []
+    # repeat 3 times
+    for i in range(3):
+        num_sample = processed_embedding.impact.value_counts().min()
+        emb_subset = processed_embedding.groupby('impact').sample(num_sample).reset_index() # subset to have equal samples in the two classes
+        X_train, X_test, y_train, y_test = train_test_split(emb_subset.iloc[:, :dim], emb_subset['impact'], test_size = 0.2)
+        if model == 'xgb':
+            ml_model.fit(X_train, y_train, eval_metric = 'logloss')
+            prediction = ml_model.predict(X_test)
+            acc.append(100*round(accuracy_score(y_test, prediction), 2))
+
+        else:
+            ml_model.fit(X_train, y_train)
+            acc.append(100*round(ml_model.score(X_test, y_test), 2))
+            
+    acc_df = pd.DataFrame({f'{model}':acc})
+    return acc_df
+
+def plot_ml_w_top_dim(processed_embedding, top_dim_list):
+    acc_df_list = []
+    model_list = ['lr']*3 + ['rf']*3 + ['xgb']*3
+    model_names = [f'{model}{i}' for model in ['lr', 'rf', 'xgb'] for i in range(1,4)]
+    for i in range(9):
+        acc_df = run_ml_top_dim(processed_embedding[top_dim_list[i]+['impact']], model = model_list[i], dim = len(top_dim_list[i]) - 2)
+        acc_df_list.append(acc_df)
+    joined_acc_df = reduce(lambda left,right: pd.merge(left,right,left_index = True, right_index = True), acc_df_list)
+    joined_acc_df.columns = model_names   
+    
+    plt.figure(figsize = (6,4))
+    plt.rcParams.update({'font.size': 18})
+    plt.rcParams['axes.titlepad'] = 15 
+    ax = sns.boxplot(x = 'variable', y = 'value', data = pd.melt(joined_acc_df))
+    means = np.round(pd.melt(joined_acc_df).groupby(['variable'])['value'].mean())
+    vertical_offset = pd.melt(joined_acc_df)['value'].mean() * 0.05 # offset from mean for display
+    for xtick in ax.get_xticks():
+        ax.text(xtick, means[xtick] + vertical_offset, int(means[xtick]), 
+                      horizontalalignment='center',size='small',color='r')
+    
+    plt.ylim(0, 100)
+#     plt.title('')
+    plt.ylabel('Accuracy')
+    plt.xticks(rotation = 45, ha = 'right')
+    plt.xlabel('')
