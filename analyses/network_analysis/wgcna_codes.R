@@ -12,7 +12,7 @@ expression_t = t(expression)
 tom_output = json_data[["outputs"]][['provided_networks']]
 tom_data = sub('\\..*$', '', tom_output)
 
-is_mouse = json_data[['parameters']][['skip_tom']] == FALSE || length(json_data[['parameters']][['skip_tom']]) == 0
+is_mouse = length(json_data[['parameters']][['skip_tom']]) == 0 || tolower(json_data[['parameters']][['skip_tom']]) == "false"
 if (is_mouse == TRUE) {saveTOMs = T} else {saveTOMs = F}
 net = blockwiseModules(expression_t, power = 14, maxBlockSize = 30000,
                        TOMType = "unsigned", minModuleSize = 100,
