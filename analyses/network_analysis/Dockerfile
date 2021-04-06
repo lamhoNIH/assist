@@ -7,8 +7,7 @@ RUN mkdir /assist
 
 COPY requirements.txt /assist
 COPY requirements.r /assist
-COPY src /assist/src
-COPY preproc.py /assist
+COPY analysis_preproc.py /assist
 COPY wgcna_codes.R /assist
 COPY version.txt /assist
 COPY run.sh /assist
