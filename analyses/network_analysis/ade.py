@@ -7,18 +7,18 @@ from subprocess import Popen, PIPE
 import analysis_preproc
 from os import path, mkdir
 
-
+# Value for prop_docker_mem = 10GB
 def ade_entrypoint_v1(
     in_diagnostics, in_normalized_counts,
     out_expression_with_metadata, out_gene_to_module_mapping,
     prop_skip_tom='true', prop_skip_preproc='false',
-    prop_docker_mem='10737418240', prop_docker_cpu='4', prop_docker_volume_1='/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST:/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST'
+    prop_docker_mem='10737418240',
+    prop_docker_cpu='4', 
+    prop_docker_volume_1='/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST:/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST'
 ):
     work_path = tempfile.mkdtemp()
 
-    config_path = path.join(work_path, 'config.json')
-    archive_path = path.join(work_path, 'archive_path')
-    mkdir(archive_path)
+    config_path = path.join(work_path, 'network_analysis.json')
 
     # Convert commas to tabs so the script can process it properly
     new_in_normalized_counts = path.join(work_path, 'in_normalized_counts.tsv')
@@ -47,10 +47,10 @@ def ade_entrypoint_v1(
     with open(config_path, 'w') as f:
         json.dump(config, f, indent=2)
 
-    print(' '.join(['Rscript', 'wgcna_codes.R', config_path, archive_path]))
+    print(' '.join(['Rscript', 'wgcna_codes.R', config_path]))
 
-    analysis_preproc.preproc(config_path, archive_path)
-    process = Popen(['Rscript', 'wgcna_codes.R', config_path, archive_path], stdout=PIPE, stderr=PIPE)
+    analysis_preproc.preproc(config_path)
+    process = Popen(['Rscript', 'wgcna_codes.R', config_path], stdout=PIPE, stderr=PIPE)
     stdout, stderr = process.communicate()
     exit_code = process.wait()
     print(f'{stdout}')
