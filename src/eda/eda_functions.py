@@ -412,6 +412,7 @@ def cluster_phenotype_corr(cluster_df, cluster_column, network_name, expression_
     sns.heatmap(clusters_corr, cmap='RdBu_r', annot = True,
                 annot_kws = {'fontsize':12}, vmin=-1, vmax=1, xticklabels = eigen_n_features.columns[1:]) 
     plt.xticks(rotation = 45, ha = 'right')
+    plt.yticks(rotation = 0)
     plt.ylabel('cluster id')
 #     plt.title('Trait cluster correlation')
     # second subplot to show count of significant traits in each cluster. "Significant" here means adj p value < 0.2
