@@ -40,8 +40,16 @@ def ml_models(config_file, archive_path, run_num):
                                        return_top_dim=True)
     plot_random_feature_importance(model_weights, top_dim, emb_name)
     jaccard_average(top_dim, f'Important dim overlap between models')
-
-    gene_set = get_critical_gene_sets(processed_emb_df, top_dim, deseq)
+    ratio = config_json['ratio']
+    gene_set = get_critical_gene_sets(processed_emb_df, top_dim, deseq, ratio = ratio)
+    is_0_cnt = 0
+    for i in range(len(gene_set)):
+        if len(gene_set[i][0]) == 0:
+            is_0_cnt += 1
+    if is_0_cnt > 0:
+        print('Critical gene identification INCOMPLETE')
+        print(f'{is_0_cnt} out of 9 models identified 0 critical genes. Try increasing ratio')
+        exit(1)
     critical_gene_df = get_critical_gene_df(gene_set, emb_name, Result.getPath())
     intersect_genes = jaccard_critical_genes(critical_gene_df, f'Critical gene overlap between models')
 

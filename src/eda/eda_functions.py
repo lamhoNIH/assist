@@ -304,7 +304,7 @@ def get_module_sig_gene_perc(expression_meta_df, cluster_df, cluster_column, clu
             anova_sig_genes.append(gene)
     return round(100 * len(anova_sig_genes) / len(module_genes), 2)  # return the % of genes found significant by ANOVA
 
-def plot_sig_perc(cluster_df, cluster_column, network_name, expression_meta_df):
+def plot_sig_perc(cluster_df, cluster_column, network_name, expression_meta_df, output_sig_df = False):
     '''
     A function to iterate through the clusters to get % significant genes in each clusters for each trait and show the results in a heatmap and barplot
     '''
@@ -312,10 +312,12 @@ def plot_sig_perc(cluster_df, cluster_column, network_name, expression_meta_df):
     liver_class_subset = get_liver_class(expression_meta_df)
     alc_perday_subset = get_expression_by_alcohol_perday(expression_meta_df)
     drinking_yr_subset = get_expression_by_drinking_yrs(expression_meta_df)
-    smoke_freq_subset = get_smoke_freq(expression_meta_df)
-    traits = ['audit_category', 'Liver_class', 'alcohol_intake_category', 'drinking_yrs_category', 'Smoking_frequency']
-    for i, subset in enumerate([audit_subset, liver_class_subset, alc_perday_subset, 
-                                drinking_yr_subset, smoke_freq_subset]):
+#     smoke_freq_subset = get_smoke_freq(expression_meta_df)
+#     traits = ['audit_category', 'Liver_class', 'alcohol_intake_category', 'drinking_yrs_category', 'Smoking_frequency']
+    traits = ['audit_category', 'Liver_class', 'alcohol_intake_category', 'drinking_yrs_category']
+#     for i, subset in enumerate([audit_subset, liver_class_subset, alc_perday_subset, 
+#                                 drinking_yr_subset, smoke_freq_subset]):
+    for i, subset in enumerate([audit_subset, liver_class_subset, alc_perday_subset, drinking_yr_subset]):
         sig_gene_perc = []
         clusters = cluster_df[cluster_column].unique()
         for cluster in clusters:
@@ -324,35 +326,38 @@ def plot_sig_perc(cluster_df, cluster_column, network_name, expression_meta_df):
             cluster_sig_perc = pd.DataFrame({traits[i]: sig_gene_perc})
         else:
             cluster_sig_perc[traits[i]] = sig_gene_perc
-        
+    cluster_sig_perc.index = clusters    
     cluster_sig_perc = cluster_sig_perc.sort_index(ascending = False)
-    fig = plt.figure(figsize=(12, 8))
+    fig = plt.figure(figsize=(8, 8))
     plt.rcParams.update({'font.size': 18})
-    gs = gridspec.GridSpec(1, 2, width_ratios=[2.5, 1])  # set the subplot width ratio
-    # first subplot to show the correlation heatmap
-    ax0 = plt.subplot(gs[0])
+#     gs = gridspec.GridSpec(1, 2, width_ratios=[2.5, 1])  # set the subplot width ratio
+#     # first subplot to show the correlation heatmap
+#     ax0 = plt.subplot(gs[0])
     sns.heatmap(cluster_sig_perc, cmap='Reds',
                 vmin=0, vmax=100) 
     plt.xticks(rotation = 45, ha = 'right')
     plt.ylabel('cluster id')
     plt.title('% significant genes by cluster')
-    # second subplot to show count of significant traits in each cluster. "Significant" here means adj p value < 0.2
-    ax1 = plt.subplot(gs[1])
-    sig_count = cluster_sig_perc[cluster_sig_perc > 5].count(axis = 1).values # count num of traits with significant gene % > 5 in each cluster
-    plt.barh(cluster_sig_perc.index, sig_count) # horizontal bar plot
-    plt.xlim(0,5) # there are 5 traits here so set the scale to between 0 and 5. change it if the # traits change
-    plt.yticks(cluster_sig_perc.index, cluster_sig_perc.index)
+#     # second subplot to show count of significant traits in each cluster. "Significant" here means adj p value < 0.2
+#     ax1 = plt.subplot(gs[1])
+#     sig_count = cluster_sig_perc[cluster_sig_perc > 5].count(axis = 1).values # count num of traits with significant gene % > 5 in each cluster
+#     plt.barh(cluster_sig_perc.index, sig_count) # horizontal bar plot
+#     plt.xlim(0,5) # there are 5 traits here so set the scale to between 0 and 5. change it if the # traits change
+#     plt.yticks(cluster_sig_perc.index, cluster_sig_perc.index)
 
-    plt.ylabel('cluster id')
-    plt.xlabel('# Trait with >5% significant genes')
-    plt.title('Number of significant traits each cluster')
-    plt.suptitle(f'% significant genes for each trait for {network_name}', fontsize = 22)
-    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+#     plt.ylabel('cluster id')
+#     plt.xlabel('# Trait with >5% significant genes')
+#     plt.title('Number of significant traits each cluster')
+#     plt.suptitle(f'% significant genes for each trait for {network_name}', fontsize = 22)
+#     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+    plt.tight_layout()
     plt.savefig(os.path.join(Result.getPath(), f'plot_sig_perc_{network_name}.png'))
     plt.show()
     plt.close()
+    if output_sig_df == True:
+        return cluster_sig_perc
 
-def cluster_phenotype_corr(cluster_df, cluster_column, network_name, expression_meta_df):
+def cluster_phenotype_corr(cluster_df, cluster_column, network_name, expression_meta_df, output_corr_df = False):
     '''
     Plot correlation heatmap between modules/clusters and alcohol phenotypes
     '''
@@ -366,64 +371,65 @@ def cluster_phenotype_corr(cluster_df, cluster_column, network_name, expression_
         # originally I used pd.corr() to get pairwise correlation matrix but since I need a separate calculation for correlation p value
         # I just used pearsonr and collected the results in lists. Making a df here isn't necessary anymore. 
         eigen_n_features = pd.DataFrame({'eigen': pca_cluster_expression.reshape(len(pca_cluster_expression), ),
-                                         'BMI': expression_meta_df['BMI'], 
+#                                          'BMI': expression_meta_df['BMI'], 
 #                                          'RIN': expression_meta_df['RIN'],
-                                         'Age': expression_meta_df['Age'], 'PM!': expression_meta_df['PM!'],
-                                         'Brain_pH': expression_meta_df['Brain_pH'],
-                                         'Pack_yrs_1_pktperday_1_yr': expression_meta_df['Pack_yrs_1_pktperday_1_yr)'],
+#                                          'Age': expression_meta_df['Age'], 'PM!': expression_meta_df['PM!'],
+#                                          'Brain_pH': expression_meta_df['Brain_pH'],
+#                                          'Pack_yrs_1_pktperday_1_yr': expression_meta_df['Pack_yrs_1_pktperday_1_yr'],
                                          'AUDIT': expression_meta_df['AUDIT'],
-                                         'alcohol_intake_gmsperday': expression_meta_df['alcohol_intake_gmsperday'],
-                                         'Total_drinking_yrs': expression_meta_df['Total_drinking_yrs'],
-                                         'SR': expression_meta_df['SR']})
+                                         'Alcohol_intake_gmsperday': expression_meta_df['Alcohol_intake_gmsperday'],
+                                         'Total_drinking_yrs': expression_meta_df['Total_drinking_yrs']})
 
         corr_list = []
-        p_list = []
-        corrected_p_list = []
+#         p_list = []
+#         corrected_p_list = []
         labels = []
         for col in eigen_n_features.columns[1:]:
             sub = eigen_n_features[['eigen', col]]
             sub = sub.dropna()
             corr_list.append(pearsonr(sub['eigen'], sub[col])[0])
-            p_list.append(pearsonr(sub['eigen'], sub[col])[1])
-        corrected_p_list = multipletests(p_list, method ='fdr_bh')[1] # correct for multiple tests
+#             p_list.append(pearsonr(sub['eigen'], sub[col])[1])
+#         corrected_p_list = multipletests(p_list, method ='fdr_bh')[1] # correct for multiple tests
         if i == 1:
             clusters_corr = pd.DataFrame({cluster: corr_list})
-            clusters_pvalue = pd.DataFrame({cluster: corrected_p_list})
+#             clusters_pvalue = pd.DataFrame({cluster: corrected_p_list})
             i += 1
 
         else:
             clusters_corr[cluster] = corr_list
-            clusters_pvalue[cluster] = corrected_p_list
+#             clusters_pvalue[cluster] = corrected_p_list
 
     clusters_corr = clusters_corr.T.sort_index(ascending = False)
     clusters_corr = np.round(clusters_corr, 2)
-    clusters_pvalue = clusters_pvalue.T.sort_index(ascending = False)
+#     clusters_pvalue = clusters_pvalue.T.sort_index(ascending = False)
 
-    fig = plt.figure(figsize=(12, 8))
+    fig = plt.figure(figsize=(8, 8))
     plt.rcParams.update({'font.size': 18})
-
-    gs = gridspec.GridSpec(1, 2, width_ratios=[2.5, 1])  # set the subplot width ratio
-    # first subplot to show the correlation heatmap
-    ax0 = plt.subplot(gs[0])
+    clusters_corr.columns = eigen_n_features.columns[1:]
+#     gs = gridspec.GridSpec(1, 2, width_ratios=[2, 1])  # set the subplot width ratio
+#     # first subplot to show the correlation heatmap
+#     ax0 = plt.subplot(gs[0])
     sns.heatmap(clusters_corr, cmap='RdBu_r', annot = True,
                 annot_kws = {'fontsize':12}, vmin=-1, vmax=1, xticklabels = eigen_n_features.columns[1:]) 
     plt.xticks(rotation = 45, ha = 'right')
     plt.ylabel('cluster id')
-    plt.title('Trait cluster correlation')
+#     plt.title('Trait cluster correlation')
     # second subplot to show count of significant traits in each cluster. "Significant" here means adj p value < 0.2
-    ax1 = plt.subplot(gs[1])
-    sig_count = (clusters_pvalue < 0.2).sum(axis = 1) # count num of traits with p-adj < 0.2 in each cluster
-    plt.barh(sig_count.index, sig_count.values) # horizontal bar plot
-    plt.xlim(0,9) # there are 9 traits here so set the scale to between 0 and 9. change it if the # traits change
-    plt.yticks(clusters_pvalue.index, clusters_pvalue.index)
-    plt.ylabel('cluster id')
-    plt.xlabel('Trait count')
-    plt.title('Number of significant traits each cluster')
-    plt.suptitle(f'Trait cluster correlation for {network_name}', fontsize = 22)
-    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+#     ax1 = plt.subplot(gs[1])
+#     sig_count = (clusters_pvalue < 0.2).sum(axis = 1) # count num of traits with p-adj < 0.2 in each cluster
+#     plt.barh(sig_count.index, sig_count.values) # horizontal bar plot
+#     plt.xlim(0,3.5) # there are 9 traits here so set the scale to between 0 and 9. change it if the # traits change
+#     plt.yticks(clusters_pvalue.index, clusters_pvalue.index)
+#     plt.ylabel('cluster id')
+#     plt.xlabel('Trait count')
+#     plt.title('Number of significant traits each cluster')
+#     plt.suptitle(f'Trait cluster correlation for {network_name}', fontsize = 22)
+#     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
     plt.savefig(os.path.join(Result.getPath(), f'cluster_phenotype_corr_{network_name}.png'))
     plt.show()
     plt.close()
+    if output_corr_df == True:
+        return clusters_corr
     
 def cluster_nmi(cluster_df1, cluster_df2, cluster_column):
     '''NMI to compare communities from the whole netowrk and the subnetwork or clusters from different network embeddings'''
@@ -698,8 +704,7 @@ def gene_phenotype_corr(critical_genes, expression_meta_df, title):
             genes_corr[pheno] = corr_list
 #             genes_pvalue[pheno] = corrected_p_list
     genes_corr.index = critical_genes
-#     sort_corr1 = genes_corr[genes_corr.abs().mean().sort_values().index] # sort columns by column abs mean
-    sort_corr2 = genes_corr.reindex(genes_corr.mean(axis = 1).sort_values().index) 
+    sort_corr = genes_corr.reindex(genes_corr.mean(axis = 1).sort_values().index) 
     # sort index by index mean (not abs so the pos and neg correlation are divergent)
 #     genes_pvalue.index = critical_genes
     plt.rcParams.update({'font.size':14})
@@ -728,7 +733,7 @@ def gene_phenotype_corr(critical_genes, expression_meta_df, title):
 #     plt.subplots_adjust(wspace = 1)
 
     plt.title(title)
-    sns.heatmap(sort_corr2, cmap='RdBu_r', vmin = -1, vmax=1, xticklabels = phenotypes, yticklabels = True)
+    sns.heatmap(sort_corr, cmap='RdBu_r', vmin = -1, vmax=1, xticklabels = phenotypes, yticklabels = True)
     plt.xticks(rotation = 45, ha = 'right')
     plt.ylabel('Gene Symbol')
     return genes_corr
@@ -763,65 +768,64 @@ def gene_set_phenotype_corr(gene_sets, network_names, expression_meta_df, file_n
             pca_geneset_expression = pca.fit_transform(geneset_expression)
             # originally I used pd.corr() to get pairwise correlation matrix but since I need a separate calculation for correlation p value
             # I just used pearsonr and collected the results in lists. Making a df here isn't necessary anymore. 
-            eigen_n_features = pd.DataFrame({'eigen': pca_geneset_expression.reshape(len(pca_geneset_expression), ),
-                                             'BMI': expression_meta_df['BMI'], 
+            eigen_n_features = pd.DataFrame({'eigen': pca_cluster_expression.reshape(len(pca_cluster_expression), ),
+    #                                          'BMI': expression_meta_df['BMI'], 
     #                                          'RIN': expression_meta_df['RIN'],
-                                             'Age': expression_meta_df['Age'], 'PM!': expression_meta_df['PM!'],
-                                             'Brain_pH': expression_meta_df['Brain_pH'],
-                                             'Pack_yrs_1_pktperday_1_yr': expression_meta_df['Pack_yrs_1_pktperday_1_yr)'],
+    #                                          'Age': expression_meta_df['Age'], 'PM!': expression_meta_df['PM!'],
+    #                                          'Brain_pH': expression_meta_df['Brain_pH'],
+    #                                          'Pack_yrs_1_pktperday_1_yr': expression_meta_df['Pack_yrs_1_pktperday_1_yr'],
                                              'AUDIT': expression_meta_df['AUDIT'],
-                                             'alcohol_intake_gmsperday': expression_meta_df['alcohol_intake_gmsperday'],
-                                             'Total_drinking_yrs': expression_meta_df['Total_drinking_yrs'],
-                                             'SR': expression_meta_df['SR']})
+                                             'Alcohol_intake_gmsperday': expression_meta_df['Alcohol_intake_gmsperday'],
+                                             'Total_drinking_yrs': expression_meta_df['Total_drinking_yrs']})
 
             corr_list = []
-            p_list = []
-            corrected_p_list = []
+#             p_list = []
+#             corrected_p_list = []
             labels = []
             for col in eigen_n_features.columns[1:]:
                 sub = eigen_n_features[['eigen', col]]
                 sub = sub.dropna()
                 corr_list.append(pearsonr(sub['eigen'], sub[col])[0])
-                p_list.append(pearsonr(sub['eigen'], sub[col])[1])
-            corrected_p_list = multipletests(p_list, method ='fdr_bh')[1] # correct for multiple tests
+#                 p_list.append(pearsonr(sub['eigen'], sub[col])[1])
+#             corrected_p_list = multipletests(p_list, method ='fdr_bh')[1] # correct for multiple tests
             if i == 1:
                 clusters_corr = pd.DataFrame({i: corr_list})
-                clusters_pvalue = pd.DataFrame({i: corrected_p_list})
+#                 clusters_pvalue = pd.DataFrame({i: corrected_p_list})
                 i += 1
 
             else:
                 clusters_corr[i] = corr_list
-                clusters_pvalue[i] = corrected_p_list
+#                 clusters_pvalue[i] = corrected_p_list
                 i += 1
     clusters_corr = clusters_corr.T.sort_index(ascending = False)
     clusters_corr = np.round(clusters_corr, 2)
-    clusters_pvalue = clusters_pvalue.T.sort_index(ascending = False)
+#     clusters_pvalue = clusters_pvalue.T.sort_index(ascending = False)
     
-    fig = plt.figure(figsize=(17.5, 4.5))
+    fig = plt.figure(figsize=(10, 8))
     plt.rcParams.update({'font.size': 18})
 
-    gs = gridspec.GridSpec(1, 2, width_ratios=[3, 1])  # set the subplot width ratio
-    # first subplot to show the correlation heatmap
-    ax0 = plt.subplot(gs[0])
-    sns.heatmap(clusters_corr, cmap='RdBu_r', annot = True,
-                annot_kws = {'fontsize':12}, vmin=-1, vmax=1, xticklabels = eigen_n_features.columns[1:]) 
-    plt.xticks(rotation = 45, ha = 'right')
-    yticklabels = [network_names[index] for index in non_empty_set_index]
-    plt.yticks(np.arange(len(yticklabels))+0.5, labels=yticklabels, 
-               rotation = 0)
-    plt.ylabel('gene set id')
-    plt.title('Trait-critical gene set correlation')
-    # second subplot to show count of significant traits in each cluster. "Significant" here means adj p value < 0.2
-    ax1 = plt.subplot(gs[1])
-    sig_count = (clusters_pvalue < 0.2).sum(axis = 1) # count num of traits with p-adj < 0.2 in each cluster
-    plt.barh(sig_count.index, sig_count.values) # horizontal bar plot
-    plt.xlim(0,9) # there are 9 traits here so set the scale to between 0 and 9. change it if the # traits change
-    plt.ylabel('gene set id')
-    plt.xlabel('Trait count')
-    plt.yticks(np.arange(len(yticklabels)) +1, labels=yticklabels, 
-               rotation = 0)
-    plt.title('# significant traits')
-    plt.subplots_adjust(top = 1, bottom = 0.1)
+#     gs = gridspec.GridSpec(1, 2, width_ratios=[3, 1])  # set the subplot width ratio
+#     # first subplot to show the correlation heatmap
+#     ax0 = plt.subplot(gs[0])
+#     sns.heatmap(clusters_corr, cmap='RdBu_r', annot = True,
+#                 annot_kws = {'fontsize':12}, vmin=-1, vmax=1, xticklabels = eigen_n_features.columns[1:]) 
+#     plt.xticks(rotation = 45, ha = 'right')
+#     yticklabels = [network_names[index] for index in non_empty_set_index]
+#     plt.yticks(np.arange(len(yticklabels))+0.5, labels=yticklabels, 
+#                rotation = 0)
+#     plt.ylabel('gene set id')
+#     plt.title('Trait-critical gene set correlation')
+#     # second subplot to show count of significant traits in each cluster. "Significant" here means adj p value < 0.2
+#     ax1 = plt.subplot(gs[1])
+#     sig_count = (clusters_pvalue < 0.2).sum(axis = 1) # count num of traits with p-adj < 0.2 in each cluster
+#     plt.barh(sig_count.index, sig_count.values) # horizontal bar plot
+#     plt.xlim(0,9) # there are 9 traits here so set the scale to between 0 and 9. change it if the # traits change
+#     plt.ylabel('gene set id')
+#     plt.xlabel('Trait count')
+#     plt.yticks(np.arange(len(yticklabels)) +1, labels=yticklabels, 
+#                rotation = 0)
+#     plt.title('# significant traits')
+#     plt.subplots_adjust(top = 1, bottom = 0.1)
     plt.tight_layout()
     for index in empty_set_index:
         print(network_names[index], 'does not have critical genes in common between all 3 models')
@@ -858,3 +862,20 @@ def get_closest_genes_jaccard(network, emb, gene_list, top_n, title):
     plt.title(title)
     plt.show()
     plt.close()
+    
+    
+def plot_dist(summary_df, sample_name, trait, summary_type):
+    '''Plot distribution of some kind of summary table'''
+    plt.rcParams.update({'font.size':18})
+    sns.kdeplot(summary_df, label = sample_name)
+    plt.title(trait)
+    if summary_type == 'correlation':
+        xlabel = 'Correlation coefficient'
+    elif summary_type == 'significance':
+        xlabel = '% significant genes'
+    else:
+        print('Summary type not recognized')
+        xlabel = ''
+    plt.xlabel(xlabel)
+    plt.ylabel('Events')
+    plt.legend()
