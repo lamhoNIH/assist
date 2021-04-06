@@ -681,9 +681,8 @@ def gene_phenotype_corr(critical_genes, expression_meta_df, title):
     '''
     Plot correlation heatmap between critical genes and alcohol phenotypes
     '''
-    i = 1
-    phenotypes = ['BMI', 'Age', 'Brain_pH', 'Pack_yrs_1_pktperday_1_yr', 'AUDIT', 
-                  'Alcohol_intake_gmsperday', 'Total_drinking_yrs', 'SR']
+    i = 1    
+    phenotypes = ['AUDIT', 'Alcohol_intake_gmsperday', 'Total_drinking_yrs']
     for pheno in phenotypes:
         corr_list = []
 #         p_list = []
@@ -734,7 +733,7 @@ def gene_phenotype_corr(critical_genes, expression_meta_df, title):
 #     plt.subplots_adjust(wspace = 1)
 
     plt.title(title)
-    sns.heatmap(sort_corr, cmap='RdBu_r', vmin = -1, vmax=1, xticklabels = phenotypes, yticklabels = True)
+    sns.heatmap(sort_corr, cmap='RdBu_r', vmin = -0.5, vmax=0.5, xticklabels = phenotypes, yticklabels = True)
     plt.xticks(rotation = 45, ha = 'right')
     plt.ylabel('Gene Symbol')
     return genes_corr
