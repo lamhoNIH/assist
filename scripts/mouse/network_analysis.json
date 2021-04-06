@@ -7,7 +7,7 @@
 		"gene_to_module_mapping": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/pipeline/mouse/network_analysis/wgcna_modules.csv"
 	},
 	"parameters": {
-		"skip_tom": false,
-		"skip_preproc": true
+		"skip_tom": "false",
+		"skip_preproc": "true"
 	}
 }
