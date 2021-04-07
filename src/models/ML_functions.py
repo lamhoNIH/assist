@@ -188,19 +188,23 @@ def plot_ml_w_top_dim(processed_embedding, top_dim_list):
         acc_df_list.append(acc_df)
     joined_acc_df = reduce(lambda left,right: pd.merge(left,right,left_index = True, right_index = True), acc_df_list)
     joined_acc_df.columns = model_names   
+
+    # get mean for each model so only show 1 instance for each model
+    col_names = ['lr_mean','rf_mean','xgb_mean']
+    mean_df = pd.DataFrame(columns = col_names)
+    for i in range(0,9,3):
+        mean_df.iloc[:,int(i/3)] = joined_acc_df.iloc[:,i:i+3].mean(axis =1)
     
-    plt.figure(figsize = (6,4))
+    plt.figure(figsize = (5,4))
     plt.rcParams.update({'font.size': 18})
     plt.rcParams['axes.titlepad'] = 15 
-    ax = sns.boxplot(x = 'variable', y = 'value', data = pd.melt(joined_acc_df))
-    means = np.round(pd.melt(joined_acc_df).groupby(['variable'])['value'].mean())
-    vertical_offset = pd.melt(joined_acc_df)['value'].mean() * 0.05 # offset from mean for display
+    ax = sns.boxplot(x = 'variable', y = 'value', data = pd.melt(mean_df))
+    means = np.round(pd.melt(mean_df).groupby(['variable'])['value'].mean())
+    vertical_offset = pd.melt(mean_df)['value'].mean() * 0.05 # offset from mean for display
     for xtick in ax.get_xticks():
         ax.text(xtick, means[xtick] + vertical_offset, int(means[xtick]), 
                       horizontalalignment='center',size='small',color='r')
-    
+    ax.set_xticklabels(['LR','RF','XGB'])
     plt.ylim(0, 100)
-#     plt.title('')
     plt.ylabel('Accuracy')
-    plt.xticks(rotation = 45, ha = 'right')
     plt.xlabel('')
