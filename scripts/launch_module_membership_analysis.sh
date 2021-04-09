@@ -14,16 +14,16 @@ else
 fi
 
 MODULE="module_membership_analysis"
-OUTPUT_PATH="pipeline/${DATASET}/${MODULE}"
+CONFIG_PATH="pipeline/${DATASET}/${MODULE}"
 
-if [ ! -d "${DATA}/${OUTPUT_PATH}" ] 
+if [ ! -d "${DATA}/${CONFIG_PATH}" ]
 then
-    mkdir "${DATA}/${OUTPUT_PATH}"
+    mkdir "${DATA}/${CONFIG_PATH}"
 fi
 
-cp "${SCRIPT_DIR}/${DATASET}/${MODULE}".json "${DATA}/${OUTPUT_PATH}"/config.json
+cp "${SCRIPT_DIR}/${DATASET}/${MODULE}".json "${DATA}/${CONFIG_PATH}/${MODULE}".json
 
 # Takes about 13 minutes to run
 date
-docker run -m 16g --rm -e config_file="Data/${OUTPUT_PATH}/config.json" -e archive_path="Data/${OUTPUT_PATH}/run2" -v "${DATA}":/assist/Data assist/${MODULE}:0.1.0
+docker run -m 16g --rm -e config_file="${DATA}/${CONFIG_PATH}/${MODULE}".json -v "${DATA}":"${DATA}" assist/${MODULE}:0.1.0
 date
