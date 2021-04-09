@@ -10,7 +10,7 @@ from os import path, mkdir
 # Value for prop_docker_mem = 10GB
 def ade_entrypoint_v1(
     in_diagnostics, in_normalized_counts,
-    out_expression_with_metadata, out_provided_networks, out_gene_to_module_mapping,
+    out_provided_networks, out_expression_with_metadata, out_gene_to_module_mapping,
     prop_skip_tom='true', prop_skip_preproc='false',
     prop_docker_mem='10737418240',
     prop_docker_cpu='4', 
@@ -79,16 +79,16 @@ if __name__ == '__main__':
         ade_entrypoint_v1(
             path.join(data_folder, 'kapoor2019_coga.inia.detailed.pheno.04.12.17.csv'),
             normalized_counts_but_with_comma_delim,
-            path.join(data_folder, 'pipeline/human/network_analysis/ade_expression_meta.csv'),
             'NA',
+            path.join(data_folder, 'pipeline/human/network_analysis/ade_expression_meta.csv'),
             path.join(data_folder, 'pipeline/human/network_analysis/ade_wgcna_modules.csv')
         )
     else:
          ade_entrypoint_v1(
             'NA',
             normalized_counts_but_with_comma_delim,
-            'NA',
             path.join(data_folder, 'pipeline/mouse/network_analysis/tom.csv'),
+            'NA',
             path.join(data_folder, 'pipeline/mouse/network_analysis/ade_wgcna_modules.csv'),
             prop_skip_tom='false', prop_skip_preproc='true'
         )
