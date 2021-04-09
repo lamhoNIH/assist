@@ -15,7 +15,7 @@ from sknetwork.clustering import Louvain
 from statsmodels.stats.multitest import multipletests
 from scipy.stats import pearsonr
 from .process_phenotype import *
-from ..preproc.result import Result
+from preproc.result import Result
 from sklearn.metrics.pairwise import euclidean_distances as ed
 
 
