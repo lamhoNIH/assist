@@ -59,5 +59,5 @@ if __name__ == '__main__':
             path.join(data_folder, 'pipeline/mouse/module_extraction/network_louvain_default.csv'),
             path.join(data_folder, 'pipeline/mouse/module_extraction/network_louvain_agg1.csv'),
             path.join(data_folder, 'pipeline/mouse/module_membership_analysis/artifacts'),
-            "true"
+            'true'
         )

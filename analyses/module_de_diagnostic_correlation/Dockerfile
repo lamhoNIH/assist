@@ -4,7 +4,8 @@ RUN mkdir /assist
 
 COPY requirements.txt /assist
 COPY diagnostic_correlation.py /assist
-COPY src /assist/src
+COPY src/preproc /assist/preproc
+COPY src/eda /assist/eda
 COPY version.txt /assist
 COPY run.sh /assist
 RUN chmod +x /assist/run.sh
