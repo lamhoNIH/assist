@@ -12,3 +12,4 @@ nodevectors==0.1.22
 statsmodels==0.12.1
 xlrd==1.2.0
 git+https://github.com/netrias/CSRGraph.git
+../../src
