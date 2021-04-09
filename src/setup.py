@@ -8,5 +8,5 @@ setup(name='src',
       author='Fake',
       author_email='fake@fake.com',
       url='https://fake.com',
-      packages=['preproc'],
+      packages=['preproc', 'eda']
      )
