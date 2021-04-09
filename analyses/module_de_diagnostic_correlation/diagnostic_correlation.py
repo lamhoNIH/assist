@@ -28,6 +28,7 @@ def correlate_diagnostics(config_file):
         deseq = pd.read_csv(config_json["inputs"]["differentially_expressed_genes"])
     else:
         print(f'Unknown extension {split_tup[1]} detected for {split_tup[0]}')
+        # Added to work with ADE
         deseq = pd.read_csv(config_json["inputs"]["differentially_expressed_genes"])
     if ("skip_diagnostics" not in config_json["parameters"]) or (json.loads(config_json["parameters"]["skip_diagnostics"].lower()) is False):
         expression_meta = True
