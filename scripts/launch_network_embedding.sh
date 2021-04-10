@@ -13,16 +13,16 @@ else
 	exit
 fi
 
-MODULE="module_network_embedding"
-OUTPUT_PATH="pipeline/${DATASET}/${MODULE}"
+MODULE="network_embedding"
+CONFIG_PATH="pipeline/${DATASET}/${MODULE}"
 
-if [ ! -d "${DATA}/${OUTPUT_PATH}" ] 
+if [ ! -d "${DATA}/${CONFIG_PATH}" ] 
 then
-    mkdir "${DATA}/${OUTPUT_PATH}"
+    mkdir "${DATA}/${CONFIG_PATH}"
 fi
 
-cp "${SCRIPT_DIR}/${DATASET}/${MODULE}".json "${DATA}/${OUTPUT_PATH}"/config.json
+cp "${SCRIPT_DIR}/${DATASET}/${MODULE}".json "${DATA}/${CONFIG_PATH}/${MODULE}".json
 
 date
-docker run --rm -m 28g -e config_file="Data/${OUTPUT_PATH}/config.json" -e archive_path="Data/${OUTPUT_PATH}" -e run_num="run1" -v "${DATA}":/assist/Data assist/${MODULE}:0.1.0
+docker run --rm -m 28g -e config_file="${DATA}/${CONFIG_PATH}/${MODULE}".json -v "${DATA}":"${DATA}" assist/${MODULE}:0.1.0
 date

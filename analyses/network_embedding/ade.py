@@ -6,14 +6,15 @@ import tempfile
 import network_embedding
 from os import path, mkdir
 
-# Value for prop_docker_mem = 16GB
+# Value for prop_docker_mem = 32GB
+# prop_docker_mem='34359738368'
 def ade_entrypoint_v1(
     in_provided_networks, in_differentially_expressed_genes, in_network_louvain_default, 
     out_network_embedding,
     prop_plot_path,
     prop_max_epoch,
     prop_learning_rate,
-    prop_docker_mem='17179869184',
+    prop_docker_mem='42949672960',
     prop_docker_cpu='4', 
     prop_docker_volume_1='/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST:/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST'
 ):
@@ -25,15 +26,17 @@ def ade_entrypoint_v1(
     # CONFIG.JSON EXAMPLE: G:\Shared drives\NIAAA_ASSIST\Data\pipeline\human\network_analysis\config.json
     config = {
         'inputs': {
+            'provided_networks': in_provided_networks,
             'differentially_expressed_genes': in_differentially_expressed_genes,
-            'expression_with_metadata': in_expression_with_metadata,
-            'gene_to_module_mapping': in_gene_to_module_mapping,
-            'network_louvain_default': in_network_louvain_default,
-            'network_louvain_agg1': in_network_louvain_agg1
+            'network_louvain_default': in_network_louvain_default
+        },
+        'outputs': {
+            'network_embedding': out_network_embedding
         },
         'parameters': {
             'plot_path': prop_plot_path,
-            'skip_diagnostics': prop_skip_diagnostics
+            'max_epoch': prop_max_epoch,
+            'learning_rate': prop_learning_rate
         }
     }
 
