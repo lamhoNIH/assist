@@ -739,11 +739,6 @@ def gene_phenotype_corr(critical_genes, expression_meta_df, title):
     return genes_corr
     
 
-
-
-
-    
-    
 def gene_set_phenotype_corr(gene_sets, network_names, expression_meta_df, file_name):
     '''
     Plot correlation heatmap between critical gene sets and alcohol phenotypes
