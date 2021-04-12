@@ -1,7 +1,15 @@
 {
-	"embedding_file": "pipeline/human/module_network_embedding/run1/embedded_ggvec_epoch=100_alpha=0.1.csv",
-	"expression_with_metadata": "pipeline/human/network_analysis/expression_meta.csv",
-	"differentially_expressed_genes": "deseq.alc.vs.control.age.rin.batch.gender.PMI.corrected.w.prot.coding.gene.name.xlsx",
-	"top_n_coef": 0.5,
-	"ratio": 0.7
+	"inputs": {
+		"embedding_file": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/pipeline/human/network_embedding/embedded_ggvec.csv",
+		"expression_with_metadata": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/pipeline/human/network_analysis/expression_meta.csv",
+		"differentially_expressed_genes": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/deseq.alc.vs.control.age.rin.batch.gender.PMI.corrected.w.prot.coding.gene.name.xlsx"
+	},
+	"outputs": {
+		"critical_genes": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/pipeline/human/ml_and_critical_gene_identifier/critical_gene_df.csv"
+	},
+	"parameters": {
+		"plot_path": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/pipeline/human/ml_and_critical_gene_identifier/artifacts",
+		"top_n_coef": "0.5",
+		"ratio": "0.7"
+	}
 }
