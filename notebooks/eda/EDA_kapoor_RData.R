@@ -6,25 +6,23 @@ if (.Platform$OS.type == "windows") {prefix = 'G:'} else {prefix = '/Volumes/Goo
 setwd(file.path(prefix, 'Shared drives/NIAAA_ASSIST/Data/'))
 # Load Kapoor expression data
 ################################################################################################
-## Getting the expression file from the kapoor's RData
-# load('coga-inia.wgcna.hub.genes.files.RData')
-# write.table(datExprOut, 'kapoor_expression_Apr5.txt', sep = '\t')
-
-## Export Kapoor's module assignment
-# gene_ids = colnames(datExprOut)
-# wgcna_modules = data.frame(id = gene_ids, cluster = moduleColors)
-# write.csv(wgcna_modules, './eda_derived/kapoor_wgcna_modules.csv', row.names = F)
+# ## Getting the expression file from the kapoor's RData
+# # load('coga-inia.wgcna.hub.genes.files.RData')
+# # write.table(datExprOut, 'kapoor_expression_Apr5.txt', sep = '\t')
 # 
-# ## Export Kapoor's TOM file
-# colnames(TOM) = colnames(adjacency)
-# rownames(TOM) = rownames(adjacency)
-# 
-# write.csv(TOM, 'kapoor_TOM_Apr5.txt')
+# ## Export Kapoor's module assignment
+# # gene_ids = colnames(datExprOut)
+# # wgcna_modules = data.frame(id = gene_ids, cluster = moduleColors)
+# # write.csv(wgcna_modules, './eda_derived/kapoor_wgcna_modules.csv', row.names = F)
+# # 
+# # ## Export Kapoor's TOM file
+# # colnames(TOM) = colnames(adjacency)
+# # rownames(TOM) = rownames(adjacency)
+# # write.csv(TOM, 'kapoor_TOM_Apr5.csv')
 ################################################################################################
 
 # Load Kapoor expression data
 datExpr = read.delim('kapoor_expression_Apr5.txt')
-
 # Calculate the adjacencies.
 adjacency = adjacency(datExpr, power = 14, type='signed')
 # Turn adjacency into topological overlap
@@ -44,18 +42,26 @@ table(dynamicMods)
 # Convert numeric lables into colors.
 dynamicColors = labels2colors(dynamicMods)
 table(dynamicColors)
-print(length(table(dynamicColors)))
 # Plot the dendrogram and colors underneath.
 pdf(file=paste0(directory,"network_dendrogram.pdf"), width = 14, height = 7)# Set graphical parameters.
 plotDendroAndColors(dendro=geneTree, colors=dynamicColors, groupLabels="35.99T", rowText=dynamicColors, cex.rowText = 0.5, dendroLabels = F, hang = 0.03, addGuide = TRUE, guideHang = 0.05, main = paste0("Gene dendrogram and module colors"))
 
+# For loop to merge modules at different heights
+merge_color_list = list()
+height_list = c(0.08,0.15,0.4,0.5)
+i = 1
+for (height in height_list) {
+  merge = mergeCloseModules(datExpr, dynamicColors, cutHeight = height, verbose = 3)
+  merge_color = merge$colors
+  print(length(table(merge_color)))
+  merge_color_list[[i]] = merge_color
+  module_df = data.frame(id = colnames(datExpr), wgcna_cluster = merge_color)
+  write.csv(module_df, paste0('./eda_derived/wgcna_modules_', 'height=', height, '.csv'))
+  i = i + 1
+}
 
-# Call an automatic merging function
-merge = mergeCloseModules(datExpr, dynamicColors, cutHeight = 0.1, verbose = 3)
-# The merged module colors
-length(table(merge$colors));
-head(merge$colors)
-
+# save files 
 save(datExpr, adjacency, TOM, dissTOM, geneTree, minModuleSize, detectCutHeight, 
      dynamicMods, dynamicColors, merge, file = 'Kapoor_network_analysis.RData')
 
+dev.off()

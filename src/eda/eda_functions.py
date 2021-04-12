@@ -412,6 +412,7 @@ def cluster_phenotype_corr(cluster_df, cluster_column, network_name, expression_
     sns.heatmap(clusters_corr, cmap='RdBu_r', annot = True,
                 annot_kws = {'fontsize':12}, vmin=-1, vmax=1, xticklabels = eigen_n_features.columns[1:]) 
     plt.xticks(rotation = 45, ha = 'right')
+    plt.yticks(rotation = 0)
     plt.ylabel('cluster id')
 #     plt.title('Trait cluster correlation')
     # second subplot to show count of significant traits in each cluster. "Significant" here means adj p value < 0.2
@@ -680,9 +681,8 @@ def gene_phenotype_corr(critical_genes, expression_meta_df, title):
     '''
     Plot correlation heatmap between critical genes and alcohol phenotypes
     '''
-    i = 1
-    phenotypes = ['BMI', 'Age', 'Brain_pH', 'Pack_yrs_1_pktperday_1_yr', 'AUDIT', 
-                  'Alcohol_intake_gmsperday', 'Total_drinking_yrs', 'SR']
+    i = 1    
+    phenotypes = ['AUDIT', 'Alcohol_intake_gmsperday', 'Total_drinking_yrs']
     for pheno in phenotypes:
         corr_list = []
 #         p_list = []
@@ -733,7 +733,7 @@ def gene_phenotype_corr(critical_genes, expression_meta_df, title):
 #     plt.subplots_adjust(wspace = 1)
 
     plt.title(title)
-    sns.heatmap(sort_corr, cmap='RdBu_r', vmin = -1, vmax=1, xticklabels = phenotypes, yticklabels = True)
+    sns.heatmap(sort_corr, cmap='RdBu_r', vmin = -0.5, vmax=0.5, xticklabels = phenotypes, yticklabels = True)
     plt.xticks(rotation = 45, ha = 'right')
     plt.ylabel('Gene Symbol')
     return genes_corr
@@ -768,7 +768,7 @@ def gene_set_phenotype_corr(gene_sets, network_names, expression_meta_df, file_n
             pca_geneset_expression = pca.fit_transform(geneset_expression)
             # originally I used pd.corr() to get pairwise correlation matrix but since I need a separate calculation for correlation p value
             # I just used pearsonr and collected the results in lists. Making a df here isn't necessary anymore. 
-            eigen_n_features = pd.DataFrame({'eigen': pca_cluster_expression.reshape(len(pca_cluster_expression), ),
+            eigen_n_features = pd.DataFrame({'eigen': pca_geneset_expression.reshape(len(pca_geneset_expression), ),
     #                                          'BMI': expression_meta_df['BMI'], 
     #                                          'RIN': expression_meta_df['RIN'],
     #                                          'Age': expression_meta_df['Age'], 'PM!': expression_meta_df['PM!'],
@@ -801,7 +801,7 @@ def gene_set_phenotype_corr(gene_sets, network_names, expression_meta_df, file_n
     clusters_corr = np.round(clusters_corr, 2)
 #     clusters_pvalue = clusters_pvalue.T.sort_index(ascending = False)
     
-    fig = plt.figure(figsize=(10, 8))
+    plt.figure(figsize=(10, 5))
     plt.rcParams.update({'font.size': 18})
 
 #     gs = gridspec.GridSpec(1, 2, width_ratios=[3, 1])  # set the subplot width ratio
@@ -826,7 +826,14 @@ def gene_set_phenotype_corr(gene_sets, network_names, expression_meta_df, file_n
 #                rotation = 0)
 #     plt.title('# significant traits')
 #     plt.subplots_adjust(top = 1, bottom = 0.1)
-    plt.tight_layout()
+    sns.heatmap(clusters_corr, cmap='RdBu_r', annot = True,
+                annot_kws = {'fontsize':12}, vmin=-1, vmax=1, xticklabels = eigen_n_features.columns[1:]) 
+    plt.xticks(rotation = 45, ha = 'right')
+    yticklabels = [network_names[index] for index in non_empty_set_index]
+    plt.yticks(np.arange(len(yticklabels))+0.5, labels=yticklabels, 
+               rotation = 0)
+    plt.ylabel('gene set id')
+    plt.tight_layout(rect=[0, 0.03, 1, 0.9])
     for index in empty_set_index:
         print(network_names[index], 'does not have critical genes in common between all 3 models')
     plt.savefig(os.path.join(Result.getPath(), f'gene_set_phenotype_corr_{file_name}.png'))
