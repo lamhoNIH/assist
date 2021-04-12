@@ -6,15 +6,14 @@ import tempfile
 import network_embedding
 from os import path, mkdir
 
-# Value for prop_docker_mem = 32GB
-# prop_docker_mem='34359738368'
+# Value for prop_docker_mem = 28GB
 def ade_entrypoint_v1(
-    in_provided_networks, in_differentially_expressed_genes, in_network_louvain_default, 
+    in_differentially_expressed_genes, in_network_louvain_default, in_provided_networks,
     out_network_embedding,
     prop_plot_path,
     prop_max_epoch,
     prop_learning_rate,
-    prop_docker_mem='42949672960',
+    prop_docker_mem='30064771072',
     prop_docker_cpu='4', 
     prop_docker_volume_1='/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST:/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST'
 ):
