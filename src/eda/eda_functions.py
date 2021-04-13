@@ -795,7 +795,7 @@ def gene_set_phenotype_corr(gene_sets, network_names, expression_meta_df, file_n
     clusters_corr = clusters_corr.T.sort_index(ascending = False)
     clusters_corr = np.round(clusters_corr, 2)
 #     clusters_pvalue = clusters_pvalue.T.sort_index(ascending = False)
-    fig = plt.figure(figsize=(10, 5))
+    plt.figure(figsize=(10, 5))
     plt.rcParams.update({'font.size': 18})
 #     gs = gridspec.GridSpec(1, 2, width_ratios=[3, 1])  # set the subplot width ratio
 #     # first subplot to show the correlation heatmap
