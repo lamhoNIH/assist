@@ -58,8 +58,10 @@ def ml_models(config_file):
         expression_meta_df = None
 
     if expression_meta_df is not None:
-        gene_set_phenotype_corr([intersect_genes], [emb_name], expression_meta_df, 'common genes across the 3 models')
-
+        if len(intersect_genes) != 0:  # run this step only if the number of the intersect gene is not 0
+            gene_set_phenotype_corr([intersect_genes], [emb_name], expression_meta_df, 'common genes across the 3 models')
+        else:
+            print('There is no overlapping critical genes between the 3 models.')
     # critical_gene_sets2 is different from critical_gene_sets in that it only has # of nearby DEGs to the critical genes and is a complete list. 
     # critical_gene_sets2 only has gene IDs and only has the top 10 genes
     critical_gene_sets2 = plot_nearby_impact_num(critical_gene_df, emb_name)
