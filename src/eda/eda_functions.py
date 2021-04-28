@@ -739,11 +739,6 @@ def gene_phenotype_corr(critical_genes, expression_meta_df, title):
     return genes_corr
     
 
-
-
-
-    
-    
 def gene_set_phenotype_corr(gene_sets, network_names, expression_meta_df, file_name):
     '''
     Plot correlation heatmap between critical gene sets and alcohol phenotypes
@@ -802,10 +797,8 @@ def gene_set_phenotype_corr(gene_sets, network_names, expression_meta_df, file_n
     clusters_corr = clusters_corr.T.sort_index(ascending = False)
     clusters_corr = np.round(clusters_corr, 2)
 #     clusters_pvalue = clusters_pvalue.T.sort_index(ascending = False)
-    
     plt.figure(figsize=(10, 5))
     plt.rcParams.update({'font.size': 18})
-
 #     gs = gridspec.GridSpec(1, 2, width_ratios=[3, 1])  # set the subplot width ratio
 #     # first subplot to show the correlation heatmap
 #     ax0 = plt.subplot(gs[0])
@@ -828,6 +821,7 @@ def gene_set_phenotype_corr(gene_sets, network_names, expression_meta_df, file_n
 #                rotation = 0)
 #     plt.title('# significant traits')
 #     plt.subplots_adjust(top = 1, bottom = 0.1)
+
     sns.heatmap(clusters_corr, cmap='RdBu_r', annot = True,
                 annot_kws = {'fontsize':12}, vmin=-1, vmax=1, xticklabels = eigen_n_features.columns[1:]) 
     plt.xticks(rotation = 45, ha = 'right')
