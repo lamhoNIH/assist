@@ -745,9 +745,11 @@ def gene_set_phenotype_corr(gene_sets, network_names, expression_meta_df, file_n
     (similar to cluster_phenotype_corr, cluster is replaced with a set of critical genes)
     '''
     i = 1
-    if len(gene_sets) == 0:
+    length = len(gene_sets)
+    empty_list = sum(1 for gene_set in gene_sets if len(gene_set) == 0)
+    if length == empty_list:
         print('There is no overlapping critical genes between the critical gene sets')
-        print(f'A suggested action is to change get_critical_gene_sets() parameter max_dist from 0.55 to a larger number like 1, 2 or 3') # Need to figure out a better way to pick the criteria
+        print(f'A suggested action is to change get_critical_gene_sets() parameters ratio and max_dist_ratio')
         return None
     
     empty_set_index = []
