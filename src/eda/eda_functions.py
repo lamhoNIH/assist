@@ -48,7 +48,10 @@ def plot_gene_cnt_each_cluster(cluster_dfs, cluster_column, network_names):
     plt.figure(figsize = (16,h*4))
     for i, cluster_df in enumerate(cluster_dfs):       
         plt.subplot(h, 3, i+1)
-        plt.bar(cluster_df[cluster_column].value_counts().index, cluster_df[cluster_column].value_counts().values)
+        count = cluster_df[cluster_column].value_counts().sort_index()
+        plt.bar(count.index, count.values)
+        if type(count.index[0]) == np.int64:
+            plt.xticks(list(np.arange(0,len(count.index),1)))        
         plt.ylabel('# genes')
         plt.xlabel('Cluster id')
         plt.title(network_names[i])
@@ -66,8 +69,12 @@ def plot_gene_cnt_each_cluster_v2(cluster_df, cluster_column, network_name, name
     network_names: names to show in the subplot titles
     '''
     plt.rcParams.update({'font.size': 18})
-    plt.figure(figsize = (6,4))
-    plt.bar(cluster_df[cluster_column].value_counts().index, cluster_df[cluster_column].value_counts().values)
+    count = cluster_df[cluster_column].value_counts().sort_index()
+#     plt.figure(figsize = (len(count.index)/2.5,4))
+    plt.figure(figsize = (8,6))
+    plt.bar(count.index, count.values)
+    if type(count.index[0]) == np.int64:
+        plt.xticks(list(np.arange(0,len(count.index),1)))
     plt.ylabel('# genes')
     plt.xlabel('Cluster id')
     plt.title(network_name)
