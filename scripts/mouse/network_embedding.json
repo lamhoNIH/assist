@@ -5,7 +5,7 @@
 		"network_louvain_default": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/pipeline/mouse/network_analysis/wgcna_modules.csv"
 	},
 	"outputs": {
-		"network_embedding": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/pipeline/mouse/network_embedding/embedded_ggvec.csv"
+		"network_dir": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/pipeline/mouse/network_embedding/"
 	},
 	"parameters": {
 		"plot_path": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/pipeline/mouse/network_embedding/artifacts",
