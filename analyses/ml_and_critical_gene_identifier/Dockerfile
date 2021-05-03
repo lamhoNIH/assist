@@ -4,7 +4,9 @@ RUN mkdir /assist
 
 COPY requirements.txt /assist
 COPY ml_and_cgi.py /assist
-COPY src /assist/src
+COPY src/preproc /assist/preproc
+COPY src/eda /assist/eda
+COPY src/models /assist/models
 COPY version.txt /assist
 COPY run.sh /assist
 RUN chmod +x /assist/run.sh

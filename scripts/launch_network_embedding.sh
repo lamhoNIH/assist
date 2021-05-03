@@ -13,7 +13,7 @@ else
 	exit
 fi
 
-MODULE="module_extraction"
+MODULE="network_embedding"
 CONFIG_PATH="pipeline/${DATASET}/${MODULE}"
 
 if [ ! -d "${DATA}/${CONFIG_PATH}" ] 
@@ -23,8 +23,6 @@ fi
 
 cp "${SCRIPT_DIR}/${DATASET}/${MODULE}".json "${DATA}/${CONFIG_PATH}/${MODULE}".json
 
-# Takes about 8 minutes to run on human data
 date
-# tried -m 28g, Docker host (28GB, Swap 4GB, Disk image size 160GB)
-docker run -m 28g --rm -e config_file="${DATA}/${CONFIG_PATH}/${MODULE}".json -v "${DATA}":"${DATA}" assist/${MODULE}:0.1.0
+docker run --rm -m 28g -e config_file="${DATA}/${CONFIG_PATH}/${MODULE}".json -v "${DATA}":"${DATA}" assist/${MODULE}:0.1.0
 date

@@ -3,39 +3,39 @@ import json
 import os
 import pandas as pd
 
-from src.preproc.input import Input
-from src.preproc.result import Result
+from preproc.result import Result
 
-Input('./Data')
+from eda.eda_functions import *
 
-from src.eda.eda_functions import *
-
-def diagnostic_correlation(config_file, archive_path):
-    data_folder = Input.getPath()
-    print("config_file: {} data_folder: {} archive_path: {}".format(config_file, data_folder, archive_path))
-    Result(archive_path, overwrite=False)
+def correlate_diagnostics(config_file):
+    print("config_file: {}".format(config_file))
 
     with open(config_file) as json_data:
         config_json = json.load(json_data)
 
-    computed_networks_df = pd.read_csv(os.path.join(data_folder, config_json["networks_of_coregulated_genes"]))
-    comm_df1 = pd.read_csv(os.path.join(data_folder, config_json["network_louvain_default"]))
-    comm_df2 = pd.read_csv(os.path.join(data_folder, config_json["network_louvain_agg1"]))
+    Result(config_json["parameters"]["plot_path"])
+    
+    gene_to_module_mapping_df = pd.read_csv(config_json["inputs"]["gene_to_module_mapping"])
+    comm_df1 = pd.read_csv(config_json["inputs"]["network_louvain_default"])
+    comm_df2 = pd.read_csv(config_json["inputs"]["network_louvain_agg1"])
 
     comm_names = ['wgcna', 'louvain 1', 'louvain 2']
-    comm_dfs = [computed_networks_df, comm_df1, comm_df2]
-    if config_json["differentially_expressed_genes"].endswith(".xlsx"):
-        deseq = pd.read_excel(os.path.join(data_folder, config_json["differentially_expressed_genes"]))
-    elif config_json["differentially_expressed_genes"].endswith(".csv"):
-        deseq = pd.read_csv(os.path.join(data_folder, config_json["differentially_expressed_genes"]))
+    comm_dfs = [gene_to_module_mapping_df, comm_df1, comm_df2]
+    split_tup = os.path.splitext(config_json["inputs"]["differentially_expressed_genes"])
+    if config_json["inputs"]["differentially_expressed_genes"].endswith(".xlsx"):
+        deseq = pd.read_excel(config_json["inputs"]["differentially_expressed_genes"])
+    elif config_json["inputs"]["differentially_expressed_genes"].endswith(".csv"):
+        deseq = pd.read_csv(config_json["inputs"]["differentially_expressed_genes"])
     else:
-        print(f'Unknown extension detected for {config_json["differentially_expressed_genes"]}')
-    if ("skip_diagnostics" not in config_json) or (config_json["skip_diagnostics"] is False):
+        print(f'Unknown extension {split_tup[1]} detected for {split_tup[0]}')
+        # Added to work with ADE
+        deseq = pd.read_csv(config_json["inputs"]["differentially_expressed_genes"])
+    if ("skip_diagnostics" not in config_json["parameters"]) or (json.loads(config_json["parameters"]["skip_diagnostics"].lower()) is False):
         expression_meta = True
     else:
         expression_meta = False
     if expression_meta:
-        expression_meta_df = pd.read_csv(os.path.join(data_folder, config_json["expression_with_metadata"]), low_memory = False)
+        expression_meta_df = pd.read_csv(config_json["inputs"]["expression_with_metadata"], low_memory = False)
     for i, cluster_df in enumerate(comm_dfs):
         cluster_DE_perc(cluster_df, 'louvain_label', comm_names[i], deseq)
         if expression_meta:
@@ -45,7 +45,6 @@ def diagnostic_correlation(config_file, archive_path):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--config_file", help="path to configuration file")
-    parser.add_argument("--archive_path", help="path to save results")
     args = parser.parse_args()
     
-    diagnostic_correlation(args.config_file, args.archive_path)
+    correlate_diagnostics(args.config_file)

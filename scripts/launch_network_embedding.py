@@ -20,15 +20,15 @@ print(f'{script_dir}')
 
 data = f"{prefix}/Shared drives/NIAAA_ASSIST/Data"
 dataset = sys.argv[1]
-module = "module_network_embedding"
+module = "network_embedding"
 
-output_path = f"pipeline/{dataset}/{module}"
+config_path = f"pipeline/{dataset}/{module}"
 
-if not exists(f"{data}/{output_path}"):
-    makedirs(f"{data}/{output_path}")
+if not exists(f"{data}/{config_path}"):
+    makedirs(f"{data}/{config_path}")
 
-copyfile(f"{script_dir}/{dataset}/{module}.json", f"{data}/{output_path}/config.json")
+copyfile(f"{script_dir}/{dataset}/{module}.json", f"{data}/{config_path}/{module}.json")
 
 print(f"{datetime.now()}")
-system(f'docker run --rm -m 28g -e config_file="Data/{output_path}/config.json" -e archive_path="Data/{output_path}" -e run_num="run1" -v "{data}":/assist/Data assist/{module}:0.1.0')
+system(f'docker run --rm -m 28g -e config_file="{data}/{config_path}/{module}.json" -v "{data}":"{data}" assist/{module}:0.1.0')
 print(f"{datetime.now()}")

@@ -1,14 +1,14 @@
 {
 	"inputs": {
-		"diagnostics": "Kapoor2019_coga.inia.detailed.pheno.04.12.17.csv",
-		"normalized_counts": "kapoor_expression.txt"
+		"diagnostics": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/Kapoor2019_coga.inia.detailed.pheno.04.12.17.csv",
+		"normalized_counts": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/kapoor_expression.txt"
 	},
 	"outputs": {
-		"expression_with_metadata": "expression_meta.csv",
-		"gene_to_module_mapping": "wgcna_modules.csv"
+		"expression_with_metadata": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/pipeline/human/network_analysis/expression_meta.csv",
+		"gene_to_module_mapping": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/pipeline/human/network_analysis/wgcna_modules.csv"
 	},
 	"parameters": {
-		"skip_tom": true,
-		"skip_preproc": false
+		"skip_tom": "true",
+		"skip_preproc": "false"
 	}
 }

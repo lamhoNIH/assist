@@ -1,6 +1,11 @@
 {
-	"computed_networks": "pipeline/mouse/network_analysis/wgcna_modules.csv",
-	"network_louvain_default": "pipeline/mouse/module_extraction/run3/network_louvain_default.csv",
-	"network_louvain_agg1": "pipeline/mouse/module_extraction/run3/network_louvain_agg1.csv",
-	"skip_network_cluster_stability": true
+	"inputs": {
+		"gene_to_module_mapping": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/pipeline/mouse/network_analysis/wgcna_modules.csv",
+		"network_louvain_default": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/pipeline/mouse/module_extraction/network_louvain_default.csv",
+		"network_louvain_agg1": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/pipeline/mouse/module_extraction/network_louvain_agg1.csv"
+	},
+	"parameters": {
+		"plot_path": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/pipeline/mouse/module_membership_analysis/artifacts",
+		"skip_network_cluster_stability": "true"
+	}
 }

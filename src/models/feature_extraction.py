@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from sklearn.metrics.pairwise import euclidean_distances as ed
 from collections import Counter
 from functools import reduce
-from ..preproc.result import Result
+from preproc.result import Result
 
 
 def get_min_max_center(coef):
