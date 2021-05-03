@@ -38,6 +38,6 @@ def network_embedding_fast(tom_df, max_epoch = 100, learning_rate = 0.1, negativ
     if output_dir:
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
-        emb_df.to_csv(f'{output_dir}/embedded_ggvec_epoch={max_epoch}_alpha={learning_rate}.csv')
+        emb_df.to_csv(f'{output_dir}/embedded_ggvec_epoch={max_epoch}_alpha={learning_rate}_sample={tol_samples}.csv')
         print('embedding data saved')
     return emb_df
