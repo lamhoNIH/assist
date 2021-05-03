@@ -32,10 +32,10 @@ def network_embedding_fast(tom_df, max_epoch = 100, learning_rate = 0.1, negativ
     print('fit_transform success')
     emb_df = pd.DataFrame(embeddings, index = G.names)
     del G # free up some space
-    if output_path:
-        emb_df.to_csv(output_path)
-        print('embedding data saved')
-    elif output_dir:
+#     if output_path:
+#         emb_df.to_csv(output_path)
+#         print('embedding data saved')
+    if output_dir:
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
         emb_df.to_csv(f'{output_dir}/embedded_ggvec_epoch={max_epoch}_alpha={learning_rate}.csv')

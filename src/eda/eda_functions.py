@@ -1,3 +1,5 @@
+import sys
+sys.path.append('../../src')
 import os
 import netcomp
 import pandas as pd
@@ -329,7 +331,8 @@ def plot_sig_perc(cluster_df, cluster_column, network_name, expression_meta_df, 
     cluster_sig_perc.index = clusters    
     cluster_sig_perc = cluster_sig_perc.sort_index(ascending = False)
     fig = plt.figure(figsize=(8, 8))
-    plt.rcParams.update({'font.size': 18})
+    sns.set(font_scale=1.5)
+    sns.set_style('white')
 #     gs = gridspec.GridSpec(1, 2, width_ratios=[2.5, 1])  # set the subplot width ratio
 #     # first subplot to show the correlation heatmap
 #     ax0 = plt.subplot(gs[0])
@@ -404,7 +407,8 @@ def cluster_phenotype_corr(cluster_df, cluster_column, network_name, expression_
 #     clusters_pvalue = clusters_pvalue.T.sort_index(ascending = False)
 
     fig = plt.figure(figsize=(8, 8))
-    plt.rcParams.update({'font.size': 18})
+    sns.set(font_scale=1.5)
+    sns.set_style('white')
     clusters_corr.columns = eigen_n_features.columns[1:]
 #     gs = gridspec.GridSpec(1, 2, width_ratios=[2, 1])  # set the subplot width ratio
 #     # first subplot to show the correlation heatmap
@@ -414,6 +418,7 @@ def cluster_phenotype_corr(cluster_df, cluster_column, network_name, expression_
     plt.xticks(rotation = 45, ha = 'right')
     plt.yticks(rotation = 0)
     plt.ylabel('cluster id')
+    plt.title(f'Trait cluster correlation for {network_name}')
 #     plt.title('Trait cluster correlation')
     # second subplot to show count of significant traits in each cluster. "Significant" here means adj p value < 0.2
 #     ax1 = plt.subplot(gs[1])
