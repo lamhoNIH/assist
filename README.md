@@ -12,7 +12,7 @@ This repo contains the source code of ASSIST analysis modules developed under th
 | Module Network Embedding |<brief description> |
 | ML and Critical Gene Identifier | <brief description> |
 
-The above analysis modules are inter-related as depicted in the conceptual workflow (https://github.com/netrias/assist/blob/documentation/figures/conceptual_workflow.png).
+The above analysis modules are inter-related as depicted in the [conceptual workflow](https://github.com/netrias/assist/blob/documentation/figures/conceptual_workflow.png).
 
 ## User Guide
 Below we describe how to set up and run the ASSIST analysis modules in the three different modes.
