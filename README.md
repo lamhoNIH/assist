@@ -17,7 +17,7 @@ This project contains the source code of ASSIST analysis modules developed under
 Below we describe how to set up and run the ASSIST analysis modules in the three different modes.
 
 ### How to set up the environment for Jupyter notebooks
-Jupyter notebooks for ASSIST analysis modules are included to allow researchers test out the analysis code using the Jupyter notebook interface.
+Jupyter notebooks for ASSIST analysis modules are included to allow researchers to test out the analysis code using the Jupyter notebook interface.
 
 ### How to launch containers for each analysis module
 
