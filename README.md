@@ -14,7 +14,7 @@ This repo contains the source code of ASSIST analysis modules developed under th
 
 The above analysis modules are inter-related as depicted in the conceptual workflow below.
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/12038408/117026434-ca74fa80-acc9-11eb-937c-ffaa7547ff34.png" width="700" height="700">
+  <img src="https://user-images.githubusercontent.com/12038408/117026434-ca74fa80-acc9-11eb-937c-ffaa7547ff34.png" width="700" height="650">
 </p>
 
 Module ```Critical Gene Validation``` (brief description) requires a 3rd party license and is thus not included in this repo.
