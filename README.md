@@ -13,7 +13,8 @@ This repo contains the source code of ASSIST analysis modules developed under th
 | ML and Critical Gene Identifier | <brief description> |
 
 The above analysis modules are inter-related as depicted in the conceptual workflow below.
-<img src="https://user-images.githubusercontent.com/12038408/117026434-ca74fa80-acc9-11eb-937c-ffaa7547ff34.png" width="600" height="600">
+<img src="https://user-images.githubusercontent.com/12038408/117026434-ca74fa80-acc9-11eb-937c-ffaa7547ff34.png" align="center" width="700" height="700">
+
 Module ```Critical Gene Validation``` (brief description) requires a 3rd party license and is thus not included in this repo.
 
 ## User Guide
