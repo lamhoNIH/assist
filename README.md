@@ -1,6 +1,6 @@
 # ASSIST (Alcoholism Solutions: Synthesizing Information to Support Treatments)
 
-This project contains the source code of ASSIST analysis modules developed under the Phase I of the ASSIST project. These modules can be run in Jupyter notebooks, Docker containers, as well as workflows managed by the ADE (Active Discovery Engine) with increasing support for provenance.
+This repo contains the source code of ASSIST analysis modules developed under the Phase I of the ASSIST project. These modules can be run in Jupyter notebooks, Docker containers, as well as workflows managed by the ADE (Active Discovery Engine) with increasing support for provenance.
 
 ### Description of analysis modules:
 | Analysis Module | Description |
