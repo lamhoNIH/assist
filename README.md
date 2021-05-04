@@ -15,14 +15,14 @@ This repo contains the source code of ASSIST analysis modules developed under th
 The above analysis modules are inter-related as depicted in the [conceptual workflow](https://github.com/netrias/assist/blob/documentation/figures/conceptual_workflow.png). Module ```Critical Gene Validation``` (brief description) requires a 3rd party license and is thus not included in this repo. 
 
 ## User Guide
-Below we describe how to set up and run the ASSIST analysis modules in the three different modes.
+Below we describe how to set up and run the ASSIST analysis modules in three different modes.
 
-### How to set up the environment for Jupyter notebooks
+### 1. How to set up the environment for Jupyter notebooks
 Jupyter notebooks for ASSIST analysis modules are included to allow researchers to test out the analysis code using the Jupyter notebook interface.
 
-### How to launch containers for each analysis module
+### 2. How to launch containers for each analysis module
 
-### How to run ASSIST modules in a workflow
+### 3. How to run ASSIST modules in a workflow using ADE
 
 #### Prepare ADE runtime environment
 
