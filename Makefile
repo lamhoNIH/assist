@@ -83,32 +83,7 @@ network-embedding-image:
 	cp -r src/embedding $(NETWORK_EMBEDDING_DIR)/src; \
 	cd $(NETWORK_EMBEDDING_DIR); \
 	find . -name '*.pyc' -delete; \
-	docker build -t ${NETWORK_EMBEDDING_TAG} .; \
-	rm version.txt; \
-	rm -r src
-
-module-subselection-eda-image:
-	python record_version_info.py > version.txt; \
-	cp version.txt $(MODULE_SUBSELECTION_EDA_DIR); \
-	mkdir $(MODULE_SUBSELECTION_EDA_DIR)/src; \
-	cp -r src/eda $(MODULE_SUBSELECTION_EDA_DIR)/src; \
-	cp -r src/preproc $(MODULE_SUBSELECTION_EDA_DIR)/src; \
-	cd $(MODULE_SUBSELECTION_EDA_DIR); \
-	find . -name '*.pyc' -delete; \
-	docker build -t ${MODULE_SUBSELECTION_EDA_TAG} .; \
-	rm version.txt; \
-	rm -r src
-
-module-subselection-embedding-image:
-	python record_version_info.py > version.txt; \
-	cp version.txt $(MODULE_SUBSELECTION_EMBEDDING_DIR); \
-	mkdir $(MODULE_SUBSELECTION_EMBEDDING_DIR)/src; \
-	cp -r src/eda $(MODULE_SUBSELECTION_EMBEDDING_DIR)/src; \
-	cp -r src/embedding $(MODULE_SUBSELECTION_EMBEDDING_DIR)/src; \
-	cp -r src/preproc $(MODULE_SUBSELECTION_EMBEDDING_DIR)/src; \
-	cd $(MODULE_SUBSELECTION_EMBEDDING_DIR); \
-	find . -name '*.pyc' -delete; \
-	docker build -t ${MODULE_SUBSELECTION_EMBEDDING_TAG} .; \
+	docker build --no-cache -t ${NETWORK_EMBEDDING_TAG} .; \
 	rm version.txt; \
 	rm -r src
 	

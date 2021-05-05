@@ -1,8 +1,6 @@
 import pandas as pd
 from sys import platform
 
-prefix = 'G:' if platform == 'win32' else '/Volumes/GoogleDrive'
-
 def get_expression_by_audit(expression_meta_df):
     expression_meta_df['audit_category'] = 0
     expression_meta_df.loc[expression_meta_df['AUDIT'] < 25, 'audit_category'] = 'under 25'

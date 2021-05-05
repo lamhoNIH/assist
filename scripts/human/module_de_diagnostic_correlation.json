@@ -1,12 +1,12 @@
 {
 	"inputs": {
-		"differentially_expressed_genes": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/deseq.alc.vs.control.age.rin.batch.gender.PMI.corrected.w.prot.coding.gene.name.xlsx",
-		"gene_to_module_mapping": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/pipeline/human/network_analysis/wgcna_modules.csv",
-		"expression_with_metadata": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/pipeline/human/network_analysis/expression_meta.csv",
-		"network_louvain_default": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/pipeline/human/module_extraction/network_louvain_default.csv",
-		"network_louvain_agg1": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/pipeline/human/module_extraction/network_louvain_agg1.csv"
+		"differentially_expressed_genes": "data/deseq.alc.vs.control.age.rin.batch.gender.PMI.corrected.w.prot.coding.gene.name.xlsx",
+		"gene_to_module_mapping": "data/pipeline/human/network_analysis/wgcna_modules.csv",
+		"expression_with_metadata": "data/pipeline/human/network_analysis/expression_meta.csv",
+		"network_louvain_default": "data/pipeline/human/module_extraction/network_louvain_default.csv",
+		"network_louvain_agg1": "data/pipeline/human/module_extraction/network_louvain_agg1.csv"
 	},
 	"parameters": {
-		"plot_path": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/pipeline/human/module_de_diagnostic_correlation/artifacts"
+		"plot_path": "data/pipeline/human/module_de_diagnostic_correlation/artifacts"
 	}
 }

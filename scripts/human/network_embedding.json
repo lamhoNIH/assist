@@ -1,14 +1,15 @@
 {
 	"inputs": {
-		"provided_networks": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/Kapoor_TOM.csv",
-		"differentially_expressed_genes": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/deseq.alc.vs.control.age.rin.batch.gender.PMI.corrected.w.prot.coding.gene.name.xlsx",
-		"network_louvain_default": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/pipeline/human/module_extraction/network_louvain_default.csv"
+		"provided_networks": "data/Kapoor_TOM.csv",
+		"differentially_expressed_genes": "data/deseq.alc.vs.control.age.rin.batch.gender.PMI.corrected.w.prot.coding.gene.name.xlsx",
+		"network_louvain_default": "data/pipeline/human/module_extraction/network_louvain_default.csv"
 	},
 	"outputs": {
-		"network_dir": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/pipeline/human/network_embedding/"
+		"network_dir": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/pipeline/human/network_embedding/",
+		"network_embedding": "data/pipeline/human/network_embedding/embedded_ggvec.csv"
 	},
 	"parameters": {
-		"plot_path": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/pipeline/human/network_embedding/artifacts",
+		"plot_path": "data/pipeline/human/network_embedding/artifacts",
 		"max_epoch": "100",
 		"learning_rate": "0.1"
 	}
