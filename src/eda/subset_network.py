@@ -7,8 +7,6 @@ from sys import platform
 from functools import reduce
 import numpy as np
 
-prefix = 'G:' if platform == 'win32' else '/Volumes/GoogleDrive'
-
 def subset_network(network_df, weight_min, weight_max, num_edges = None, subnetwork_dir = None):
     '''
     A function to subset a network using weight cutoff
