@@ -5,7 +5,8 @@
 		"network_louvain_default": "data/pipeline/human/module_extraction/network_louvain_default.csv"
 	},
 	"outputs": {
-		"network_dir": "data/pipeline/human/network_embedding/"
+		"network_dir": "data/pipeline/human/network_embedding/",
+		"network_embedding": "data/pipeline/human/network_embedding/embedded_ggvec.csv"
 	},
 	"parameters": {
 		"plot_path": "data/pipeline/human/network_embedding/artifacts",

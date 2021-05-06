@@ -28,7 +28,7 @@ print(f'{script_dir}')
 # ml_and_critical_gene_identifier 
 
 module_map = {
-    "network_analysis": ["10g", "0.1.0"], # ~4 minutes on human
+    "network_analysis": ["24g", "0.1.0"], # ~4 minutes on human
     "module_extraction": ["28g", "0.1.0"],
     "module_membership_analysis": ["16g", "0.1.0"],
     "module_de_diagnostic_correlation": ["10g", "0.1.0"],
