@@ -1,6 +1,6 @@
 {
 	"inputs": {
-		"embedding_file": "data/pipeline/mouse/network_embedding/embedded_ggvec.csv",
+		"embedding_file": "data/pipeline/mouse/network_embedding/embedding.csv",
 		"differentially_expressed_genes": "data/HDID_data/de_data.csv"
 	},
 	"outputs": {

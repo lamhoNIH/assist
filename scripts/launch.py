@@ -24,7 +24,7 @@ print(f'{script_dir}')
 # module_extraction: 2021-05-05 14:15:34.720554
 
 module_map = {
-    "network_analysis": ["10g", "0.1.0"], # ~4 minutes on human
+    "network_analysis": ["24g", "0.1.0"], # ~4 minutes on human
     "module_extraction": ["28g", "0.1.0"],
     "module_membership_analysis": ["16g", "0.1.0"],
     "module_de_diagnostic_correlation": ["10g", "0.1.0"],
