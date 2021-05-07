@@ -1,14 +1,15 @@
 {
 	"inputs": {
-		"provided_networks": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/pipeline/mouse/network_analysis/tom.csv",
-		"differentially_expressed_genes": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/HDID_data/de_data.csv",
-		"network_louvain_default": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/pipeline/mouse/network_analysis/wgcna_modules.csv"
+		"provided_networks": "data/pipeline/mouse/network_analysis/tom.csv",
+		"differentially_expressed_genes": "data/HDID_data/de_data.csv",
+		"network_louvain_default": "data/pipeline/mouse/network_analysis/wgcna_modules.csv"
 	},
 	"outputs": {
-		"network_dir": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/pipeline/mouse/network_embedding/"
+		"network_dir": "data/pipeline/mouse/network_embedding/",
+		"network_path": "data/pipeline/mouse/network_embedding/embedding.csv"
 	},
 	"parameters": {
-		"plot_path": "/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/pipeline/mouse/network_embedding/artifacts",
+		"plot_path": "data/pipeline/mouse/network_embedding/artifacts",
 		"max_epoch": "100",
 		"learning_rate": "0.1"
 	}
