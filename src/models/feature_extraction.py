@@ -1,9 +1,7 @@
 import pandas as pd
 import numpy as np
-from sys import platform
 from itertools import combinations
 import os
-import pickle
 import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.metrics.pairwise import euclidean_distances as ed
@@ -161,7 +159,7 @@ def calculate_distance_stats(distance_df_list):
     min_mean = np.min(distance_df_joined.mean())
     print('Max mean:', max_mean, 'Min mean:', min_mean)
 
-def get_max_dist(distance_dfs, ratio = 0.7):
+def get_max_dist(distance_dfs, ratio = 0.7, max_dist_ratio = 6*1e-5):
     '''
     A method to determine max_dist for critical gene identification
     '''
@@ -171,16 +169,16 @@ def get_max_dist(distance_dfs, ratio = 0.7):
         flatten_distance = distance_np.flatten()
         del distance_np
         # max_dist = np.sort(flatten_distance, axis = 0)[int(len(flatten_distance)*6*1e-6)] #8*1e-5 was determined by manual testing
-        max_dist = np.sort(flatten_distance, axis=0)[int(len(flatten_distance) * 6*1e-5)]
+        max_dist = np.sort(flatten_distance, axis=0)[int(len(flatten_distance) * max_dist_ratio)]
         i = 1
         while len(flatten_distance[flatten_distance < max_dist]) < len(distance)*ratio:
             i += 1
-            max_dist = np.sort(flatten_distance, axis=0)[int(len(flatten_distance) * i * 6*1e-5)]
+            max_dist = np.sort(flatten_distance, axis=0)[int(len(flatten_distance) * i * max_dist_ratio)]
         max_dist_list.append(max_dist)
 
     return max_dist_list
 
-def get_critical_gene_sets(processed_emb_df, top_dim_list, deseq, ratio = 0.7):
+def get_critical_gene_sets(processed_emb_df, top_dim_list, deseq, ratio = 0.7, max_dist_ratio = 6*1e-5):
     '''
     Input: processed embedding df used for ML and top_dim_list (set of 9 for 3 models x 3 repeats)
     ratio is what % of the genes need to be less than the max_dist for critical gene identification.
@@ -195,7 +193,7 @@ def get_critical_gene_sets(processed_emb_df, top_dim_list, deseq, ratio = 0.7):
         distance_dfs.append(get_pairwise_distances(process_emb_df))
     # return distance_dfs
     cutoff = deseq['abs_log2FC'].sort_values(ascending = False).reset_index(drop = True)[int(len(deseq) * 0.01)]
-    max_dist_list = get_max_dist(distance_dfs, ratio = ratio)
+    max_dist_list = get_max_dist(distance_dfs, ratio = ratio, max_dist_ratio = max_dist_ratio)
 #     calculate_distance_stats(distance_dfs)
     critical_gene_sets = list(map(get_critical_genes, distance_dfs, [cutoff]*len(distance_dfs), max_dist_list))
     return critical_gene_sets

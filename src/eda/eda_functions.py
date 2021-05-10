@@ -803,7 +803,7 @@ def plot_corr_kde(corr_df_list, corr_names):
     new_corr_df_list = []
     for corr_df, name in zip(corr_df_list, corr_names):
         corr_copy = np.abs(corr_df.copy())
-        corr_copy['type'] = name
+        corr_copy['sample'] = name
         new_corr_df_list.append(corr_copy)   
     p_values = []
     for col in ['AUDIT', 'Alcohol_intake_gmsperday', 'Total_drinking_yrs']:
@@ -816,12 +816,14 @@ def plot_corr_kde(corr_df_list, corr_names):
             round_p = round(ttest_ind(corr1, corr2)[1], 3)
             p_values.append(round_p)
     joined_corr = pd.concat(new_corr_df_list)                
-    melt_df = pd.melt(joined_corr, id_vars=['type'])
+    melt_df = pd.melt(joined_corr, id_vars=['sample'])
     sns.set(font_scale=1.5)
     sns.set_style('white')
-    g = sns.FacetGrid(melt_df, col='variable', hue = 'type', height = 4, aspect = 1.2)
+    g = sns.FacetGrid(melt_df, col='variable', hue = 'sample', height = 4, aspect = 1.2)
     g.map(sns.kdeplot, 'value')  
     g.set_axis_labels(x_var = 'Absolute correlation coefficient')
+    g.add_legend()
+    plt.setp(g._legend.get_title(), fontsize=20)
     axes = g.axes.flatten()
     for ax, p in zip(axes, p_values):
         title = ax.get_title()
