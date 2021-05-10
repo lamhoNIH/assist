@@ -83,7 +83,7 @@ def jaccard_average(top_dim_list, title):
     plt.ylim(0, 1)
     plt.ylabel('jaccard similarity')
     plt.title(title)
-    plt.savefig(os.path.join(Result.getPath(), f'jaccard_average_{title}.png'))
+    plt.savefig(os.path.join(Result.getPath(), f'jaccard_average_{title}.png'), bbox_inches='tight')
     plt.show()
     plt.close()
     
@@ -199,7 +199,7 @@ def get_critical_gene_sets(processed_emb_df, top_dim_list, deseq, ratio = 0.7, m
     return critical_gene_sets
 
 
-def get_critical_gene_df(critical_gene_set, subnetwork_name, output_dir):
+def get_critical_gene_df(critical_gene_set, network_name, output_path):
     '''
     Supply 9 sets of critical genes for 3 model x 3 repeats 
     Return a critical gene df with count in each model and each repeat 
@@ -219,9 +219,7 @@ def get_critical_gene_df(critical_gene_set, subnetwork_name, output_dir):
     critical_gene_dfs_merged['near_impact_cnt'] = critical_gene_dfs_merged.sum(axis = 1)
     critical_gene_dfs_merged = critical_gene_dfs_merged.sort_values(
         'near_impact_cnt', ascending = False).reset_index(drop = True)
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-    critical_gene_dfs_merged.to_csv(os.path.join(output_dir, f'{subnetwork_name}_critical_gene_df.csv'), index = 0)
+    critical_gene_dfs_merged.to_csv(output_path, index = 0)
     return critical_gene_dfs_merged
 
 def plot_nearby_impact_num(critical_gene_df, emb_name, top = 10):

@@ -47,7 +47,8 @@ def ml_models(config_file):
         print('Critical gene identification INCOMPLETE')
         print(f'{is_0_cnt} out of 9 models identified 0 critical genes. Try increasing ratio')
         exit(1)
-    critical_gene_df = get_critical_gene_df(gene_set, emb_name, Result.getPath())
+    cg_output = config_json['outputs']['critical_genes']
+    critical_gene_df = get_critical_gene_df(gene_set, emb_name, cg_output)
     intersect_genes = jaccard_critical_genes(critical_gene_df, f'Critical gene overlap between models')
     top_n_critical_genes = config_json['parameters']['top_n_critical_genes']
     critical_gene_set2 = plot_nearby_impact_num(critical_gene_df, emb_name, top = top_n_critical_genes)

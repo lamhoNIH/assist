@@ -650,7 +650,7 @@ def gene_phenotype_corr(critical_genes, expression_meta_df, title):
     sns.heatmap(sort_corr, cmap='RdBu_r', vmin = -0.5, vmax=0.5, xticklabels = phenotypes, yticklabels = True)
     plt.xticks(rotation = 45, ha = 'right')
     plt.ylabel('Gene')
-    plt.savefig(os.path.join(Result.getPath(), f'gene_phenotype_corr_for{title}.png'))
+    plt.savefig(os.path.join(Result.getPath(), f'gene_phenotype_corr_for_{title}.png'), bbox_inches='tight')
     plt.show()
     plt.close()
     return genes_corr
