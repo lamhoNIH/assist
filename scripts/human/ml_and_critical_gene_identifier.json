@@ -10,6 +10,8 @@
 	"parameters": {
 		"plot_path": "data/pipeline/human/ml_and_critical_gene_identifier/artifacts",
 		"top_n_coef": "0.5",
-		"ratio": "0.7"
+		"ratio": "0.7",
+		"top_n_critical_genes": 10,
+		"top_n_genes": 50
 	}
 }

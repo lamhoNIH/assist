@@ -228,7 +228,7 @@ def get_critical_gene_df(critical_gene_set, subnetwork_name, output_dir):
 
 def plot_nearby_impact_num(critical_gene_df, emb_name, top = 10):
     '''Plot count of nearby impact genes for each set of critical gene df'''
-    critical_df = critical_gene_df[['gene', 'near_impact_cnt']].loc[:10,]
+    critical_df = critical_gene_df[['gene', 'near_impact_cnt']].loc[:top,]
     critical_df.sort_values('near_impact_cnt', inplace = True)
     plt.rcParams.update({'font.size': 18})
     plt.rcParams['axes.titlepad'] = 15

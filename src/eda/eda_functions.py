@@ -9,14 +9,13 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import normalized_mutual_info_score as nmi
 from sklearn.decomposition import PCA
 from matplotlib import gridspec
-from scipy.stats import f_oneway
+from scipy.stats import f_oneway, ttest_ind
 from sknetwork.clustering import Louvain
 from statsmodels.stats.multitest import multipletests
 from scipy.stats import pearsonr
 from .process_phenotype import *
 from preproc.result import Result
 from sklearn.metrics.pairwise import euclidean_distances as ed
-
 
 def scale_free_validate(network_df, network_name):
     network_degree = network_df.sum()
@@ -632,60 +631,30 @@ def gene_phenotype_corr(critical_genes, expression_meta_df, title):
     phenotypes = ['AUDIT', 'Alcohol_intake_gmsperday', 'Total_drinking_yrs']
     for pheno in phenotypes:
         corr_list = []
-#         p_list = []
-#         corrected_p_list = []
         labels = []
         for gene in critical_genes:
             if gene in expression_meta_df.columns:
                 sub = expression_meta_df[[gene, pheno]]
                 sub = sub.dropna()
                 corr_list.append(pearsonr(sub[gene], sub[pheno])[0])
-#                 p_list.append(pearsonr(sub[gene], sub[pheno])[1])
-#         corrected_p_list = multipletests(p_list, method ='fdr_bh')[1] # correct for multiple tests
         if i == 1:
             genes_corr = pd.DataFrame({pheno: corr_list})
-#             genes_pvalue = pd.DataFrame({pheno: corrected_p_list})
             i += 1
-
         else:
             genes_corr[pheno] = corr_list
-#             genes_pvalue[pheno] = corrected_p_list
     genes_corr.index = critical_genes
     sort_corr = genes_corr.reindex(genes_corr.mean(axis = 1).sort_values().index) 
-    # sort index by index mean (not abs so the pos and neg correlation are divergent)
-#     genes_pvalue.index = critical_genes
     plt.rcParams.update({'font.size':14})
     plt.figure(figsize = (6, 11))
-#     gs = gridspec.GridSpec(1, 2, width_ratios=[2.5, 1])  # set the subplot width ratio
-#     # first subplot to show the correlation heatmap
-#     ax0 = plt.subplot(gs[0])
-# #     sns.heatmap(genes_corr.sort_index(), cmap='RdBu_r', annot = True,
-# #                 annot_kws = {'fontsize':12}, vmin=-1, vmax=1, xticklabels = phenotypes) 
-
-#     plt.xticks(rotation = 45, ha = 'right')
-#     plt.ylabel('Gene symbol')
-#     plt.title('Trait gene correlation')
-#     # second subplot to show count of significant traits in each cluster. "Significant" here means adj p value < 0.2
-#     ax1 = plt.subplot(gs[1])
-#     genes_pvalue = genes_pvalue
-#     sig_count = (genes_pvalue < 0.2).sum(axis = 1) # count num of traits with p-adj < 0.2 in each cluster
-#     sig_count = sig_count.sort_index(ascending = False)
-#     plt.barh(sig_count.index, sig_count.values) # horizontal bar plot
-#     plt.xlim(0,9) # there are 9 traits here so set the scale to between 0 and 9. change it if the # traits change
-#     plt.ylabel('Gene symbol')
-#     plt.xlabel('Trait count')
-#     plt.title('Number of correlated traits')
-#     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
-#     plt.show()
-#     plt.subplots_adjust(wspace = 1)
-
     plt.title(title)
     sns.heatmap(sort_corr, cmap='RdBu_r', vmin = -0.5, vmax=0.5, xticklabels = phenotypes, yticklabels = True)
     plt.xticks(rotation = 45, ha = 'right')
-    plt.ylabel('Gene Symbol')
+    plt.ylabel('Gene')
+    plt.savefig(os.path.join(Result.getPath(), f'gene_phenotype_corr_for{title}.png'))
+    plt.show()
+    plt.close()
     return genes_corr
     
-
 def gene_set_phenotype_corr(gene_sets, network_names, expression_meta_df, file_name):
     '''
     Plot correlation heatmap between critical gene sets and alcohol phenotypes
@@ -829,3 +798,36 @@ def plot_dist(summary_df, sample_name, trait, summary_type):
     plt.xlabel(xlabel)
     plt.ylabel('Events')
     plt.legend()
+    
+def plot_corr_kde(corr_df_list, corr_names):
+    new_corr_df_list = []
+    for corr_df, name in zip(corr_df_list, corr_names):
+        corr_copy = np.abs(corr_df.copy())
+        corr_copy['type'] = name
+        new_corr_df_list.append(corr_copy)   
+    p_values = []
+    for col in ['AUDIT', 'Alcohol_intake_gmsperday', 'Total_drinking_yrs']:
+        if len(new_corr_df_list) > 2:
+            round_p = round(f_oneway(*[corr_df[col] for corr_df in new_corr_df_list])[1], 3)
+            p_values.append(round_p)
+        else:
+            corr1 = new_corr_df_list[0][col]
+            corr2 = new_corr_df_list[1][col]
+            round_p = round(ttest_ind(corr1, corr2)[1], 3)
+            p_values.append(round_p)
+    joined_corr = pd.concat(new_corr_df_list)                
+    melt_df = pd.melt(joined_corr, id_vars=['type'])
+    sns.set(font_scale=1.5)
+    sns.set_style('white')
+    g = sns.FacetGrid(melt_df, col='variable', hue = 'type', height = 4, aspect = 1.2)
+    g.map(sns.kdeplot, 'value')  
+    g.set_axis_labels(x_var = 'Absolute correlation coefficient')
+    axes = g.axes.flatten()
+    for ax, p in zip(axes, p_values):
+        title = ax.get_title()
+        new_title = title.replace('variable = ', '')
+        new_title = f'{new_title} (p={p})' if p > 0 else f'{new_title} (p < 0.001)'
+        ax.set_title(new_title)
+    plt.savefig(os.path.join(Result.getPath(), 'alcohol trait correlation.png'))
+    plt.show()
+    plt.close()
