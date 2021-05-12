@@ -10,9 +10,10 @@ knitr::opts_chunk$set(echo = TRUE)
 library(WGCNA)
 ```
 ```{r load data}
-expression = read.table('data/kapoor_expression.txt', header = TRUE)
+if (Sys.info()["sysname"] == "Windows") {prefix = "G:"} else {prefix = "/Volumes/GoogleDrive"}
+expression = read.table(paste0(prefix,'/Shared drives/NIAAA_ASSIST/Data/kapoor_expression.txt'), header = TRUE)
 rownames(expression) = expression$id
 expression$id = NULL
 expression_t = t(expression)
-
-'''
+print(expression_t[1:5,1:5])
+```
