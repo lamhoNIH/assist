@@ -10,6 +10,8 @@
 		"plot_path": "data/pipeline/mouse/ml_and_critical_gene_identifier/artifacts",
 		"skip_diagnostics": "true",
 		"top_n_coef": "0.5",
-		"ratio": "0.7"
+		"ratio": "0.7",
+		"max_dist_ratio": 6e-5,
+		"top_n_critical_genes": 10
 	}
 }

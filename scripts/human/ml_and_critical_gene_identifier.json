@@ -1,15 +1,18 @@
 {
 	"inputs": {
-		"embedding_file": "data/pipeline/human/network_embedding/embedded_ggvec.csv",
+		"embedding_file": "data/pipeline/human/network_embedding/embedding.csv",
 		"expression_with_metadata": "data/pipeline/human/network_analysis/expression_meta.csv",
 		"differentially_expressed_genes": "data/deseq.alc.vs.control.age.rin.batch.gender.PMI.corrected.w.prot.coding.gene.name.xlsx"
 	},
 	"outputs": {
-		"critical_genes": "data/pipeline/human/ml_and_critical_gene_identifier/critical_gene_df.csv"
+		"critical_genes": "data/pipeline/human/ml_and_critical_gene_identifier/test_critical_gene_df.csv"
 	},
 	"parameters": {
 		"plot_path": "data/pipeline/human/ml_and_critical_gene_identifier/artifacts",
 		"top_n_coef": "0.5",
-		"ratio": "0.7"
+		"ratio": "0.7",
+		"max_dist_ratio": 6e-5,
+		"top_n_critical_genes": 10,
+		"top_n_genes": 50
 	}
 }
