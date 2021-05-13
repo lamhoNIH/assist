@@ -431,7 +431,7 @@ def cluster_nmi_v3(cluster_df1, cluster1_column, cluster_df2, cluster2_column):
     sub1_plus_sub2 = pd.merge(cluster_df1, cluster_df2, left_on = 'id', right_on = 'id', how = 'outer')
     max_cluster_num = max(sub1_plus_sub2[[cluster1_column, cluster2_column]].max())
     sub1_plus_sub2[cluster2_column].fillna(max_cluster_num+1, inplace = True) # for the nodes that were cut out, give them a new community number
-    return nmi(sub1_plus_sub2[cluster1_column], sub1_plus_sub2[cluster2_column])
+    return round(nmi(sub1_plus_sub2[cluster1_column], sub1_plus_sub2[cluster2_column]),3)
 
 def plot_cluster_nmi_comparison_v3(cluster1_name, cluster1, cluster1_column, cluster2_list, cluster2_column, comparison_names):
     '''plot cluster_nmi_v3() results'''
