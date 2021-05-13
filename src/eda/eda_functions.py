@@ -34,7 +34,7 @@ def scale_free_validate(network_df, network_name):
     plt.show() # This function needs plt.show() and plt.close() because other methods loop through the figures as subplots so they don't overlap. Each figure here is a whole plot
     plt.close()
     
-def plot_gene_cnt_each_cluster(cluster_dfs, cluster_column, network_names):
+def plot_gene_cnt_each_cluster(cluster_dfs, network_names):
     '''
     bar graphs to show # genes in each cluster
     cluster_dfs: a list of cluster dfs with id and cluster assignment
@@ -46,10 +46,10 @@ def plot_gene_cnt_each_cluster(cluster_dfs, cluster_column, network_names):
     plt.figure(figsize = (16,h*4))
     for i, cluster_df in enumerate(cluster_dfs):       
         plt.subplot(h, 3, i+1)
-        count = cluster_df[cluster_column].value_counts().sort_index()
+        count = cluster_df['cluster_id'].value_counts().sort_index()
         plt.bar(count.index, count.values)
-        if type(count.index[0]) == np.int64:
-            plt.xticks(list(np.arange(0,len(count.index),1)))        
+#         if type(count.index[0]) == np.int64:
+#             plt.xticks(list(np.arange(0,len(count.index),1)))        
         plt.ylabel('# genes')
         plt.xlabel('Cluster id')
         plt.title(network_names[i])
@@ -59,7 +59,7 @@ def plot_gene_cnt_each_cluster(cluster_dfs, cluster_column, network_names):
     plt.show()
     plt.close()
 
-def plot_gene_cnt_each_cluster_v2(cluster_df, cluster_column, network_name, name_spec = ''):
+def plot_gene_cnt_each_cluster_v2(cluster_df, network_name):
     '''
     bar graphs to show # genes in each cluster
     cluster_dfs: a list of cluster dfs with id and cluster assignment
@@ -67,7 +67,7 @@ def plot_gene_cnt_each_cluster_v2(cluster_df, cluster_column, network_name, name
     network_names: names to show in the subplot titles
     '''
     plt.rcParams.update({'font.size': 18})
-    count = cluster_df[cluster_column].value_counts().sort_index()
+    count = cluster_df['cluster_id'].value_counts().sort_index()
 #     plt.figure(figsize = (len(count.index)/2.5,4))
     plt.figure(figsize = (8,6))
     plt.bar(count.index, count.values)
@@ -77,21 +77,21 @@ def plot_gene_cnt_each_cluster_v2(cluster_df, cluster_column, network_name, name
     plt.xlabel('Cluster id')
     plt.title(network_name)
     plt.tight_layout()
-    plt.savefig(os.path.join(Result.getPath(), f"plot_gene_cnt_each_cluster{name_spec}.png"))
+    plt.savefig(os.path.join(Result.getPath(), f"plot_gene_cnt_each_cluster_{network_name}.png"))
     plt.show()
     plt.close()
 
 def run_kmeans(embedding_df, n_clusters):
     '''Run k means on embedding df'''
     kmeans = KMeans(n_clusters=n_clusters, random_state=0).fit_predict(embedding_df)
-    k_mean_df = pd.DataFrame({'id':embedding_df.index, 'kmean_label':kmeans})
+    k_mean_df = pd.DataFrame({'id':embedding_df.index, 'cluster_id':kmeans})
     return k_mean_df
 
 def run_louvain(adjacency_df, resolution = 1, n_aggregations = -1):
     # louvain communities
     louvain = Louvain(modularity = 'Newman', resolution = resolution, n_aggregations  = n_aggregations)
     labels = louvain.fit_transform(adjacency_df.values) # using networkx community requires converting the df to G first and the original network takes very long but this method can work on df 
-    louvain_df = pd.DataFrame({'id':adjacency_df.index, 'louvain_label':labels})
+    louvain_df = pd.DataFrame({'id':adjacency_df.index, 'cluster_id':labels})
     return louvain_df
 
 def run_louvain2(adjacency_np, ajacency_idx, resolution = 1, n_aggregations = -1):
@@ -99,7 +99,7 @@ def run_louvain2(adjacency_np, ajacency_idx, resolution = 1, n_aggregations = -1
     louvain = Louvain(modularity = 'Newman', resolution = resolution, n_aggregations  = n_aggregations)
     labels = louvain.fit_transform(adjacency_np) # using networkx community requires converting the df to G first and the original network takes very long but this method can work on df 
     del louvain
-    louvain_df = pd.DataFrame({'id':ajacency_idx, 'louvain_label':labels})
+    louvain_df = pd.DataFrame({'id':ajacency_idx, 'cluster_id':labels})
     return louvain_df
 
 def jaccard_similarity(list1, list2):
@@ -247,7 +247,7 @@ def get_module_sig_gene_perc(expression_meta_df, cluster_df, cluster_column, clu
             anova_sig_genes.append(gene)
     return round(100 * len(anova_sig_genes) / len(module_genes), 2)  # return the % of genes found significant by ANOVA
 
-def plot_sig_perc(cluster_df, cluster_column, network_name, expression_meta_df, output_sig_df = False):
+def plot_sig_perc(cluster_df, network_name, expression_meta_df, output_sig_df = False):
     '''
     A function to iterate through the clusters to get % significant genes in each clusters for each trait and show the results in a heatmap and barplot
     '''
@@ -262,9 +262,9 @@ def plot_sig_perc(cluster_df, cluster_column, network_name, expression_meta_df, 
 #                                 drinking_yr_subset, smoke_freq_subset]):
     for i, subset in enumerate([audit_subset, liver_class_subset, alc_perday_subset, drinking_yr_subset]):
         sig_gene_perc = []
-        clusters = cluster_df[cluster_column].unique()
+        clusters = cluster_df['cluster_id'].unique()
         for cluster in clusters:
-            sig_gene_perc.append(get_module_sig_gene_perc(subset, cluster_df, cluster_column, cluster, traits[i]))
+            sig_gene_perc.append(get_module_sig_gene_perc(subset, cluster_df, 'cluster_id', cluster, traits[i]))
         if i == 0:
             cluster_sig_perc = pd.DataFrame({traits[i]: sig_gene_perc})
         else:
@@ -301,19 +301,17 @@ def plot_sig_perc(cluster_df, cluster_column, network_name, expression_meta_df, 
     if output_sig_df == True:
         return cluster_sig_perc
 
-def cluster_phenotype_corr(cluster_df, cluster_column, network_name, expression_meta_df, output_corr_df = False):
+def cluster_phenotype_corr(cluster_df, network_name, expression_meta_df, output_corr_df = False):
     '''
     Plot correlation heatmap between modules/clusters and alcohol phenotypes
     '''
-    clusters = cluster_df[cluster_column].unique()
+    clusters = cluster_df['cluster_id'].unique()
     i = 1
     for cluster in clusters:
-        cluster_genes = cluster_df[cluster_df[cluster_column] == cluster]['id'].tolist()
+        cluster_genes = cluster_df[cluster_df['cluster_id'] == cluster]['id'].tolist()
         cluster_expression = expression_meta_df[cluster_genes].apply(pd.to_numeric)
         pca = PCA(n_components=1)
         pca_cluster_expression = pca.fit_transform(cluster_expression)
-        # originally I used pd.corr() to get pairwise correlation matrix but since I need a separate calculation for correlation p value
-        # I just used pearsonr and collected the results in lists. Making a df here isn't necessary anymore. 
         eigen_n_features = pd.DataFrame({'eigen': pca_cluster_expression.reshape(len(pca_cluster_expression), ),
 #                                          'BMI': expression_meta_df['BMI'], 
 #                                          'RIN': expression_meta_df['RIN'],
@@ -448,7 +446,7 @@ def plot_cluster_nmi_comparison_v3(cluster1_name, cluster1, cluster1_column, clu
     plt.show()
     plt.close()
     
-def cluster_DE_perc(cluster_df, cluster_column, network_name, deseq):
+def cluster_DE_perc(cluster_df, network_name, deseq):
     '''
     A function to plot 2 heatmaps to show % of differential genes in each cluster
     '''
@@ -461,8 +459,8 @@ def cluster_DE_perc(cluster_df, cluster_column, network_name, deseq):
     clusters = []
     up_impact_perc = []
     down_impact_perc = []
-    for cluster in cluster_df[cluster_column].unique():
-        cluster_genes = cluster_df[cluster_df[cluster_column] == cluster].id
+    for cluster in cluster_df['cluster_id'].unique():
+        cluster_genes = cluster_df[cluster_df['cluster_id'] == cluster].id
         num_up_in_module = (deseq[deseq.id.isin(cluster_genes)]['log2FoldChange'] > cutoff).sum()
         num_down_in_module = (deseq[deseq.id.isin(cluster_genes)]['log2FoldChange'] < -cutoff).sum()
 

@@ -37,7 +37,7 @@ if (is_mouse) {
 net_df = data.frame(net$colors) # convert to a df
 net_df = cbind(id = rownames(net_df), net_df) # change the index (node names) to a column
 rownames(net_df) = 1:nrow(net_df)
-colnames(net_df)[2] = 'louvain_label' # change column name
+colnames(net_df)[2] = 'wgcna_label' # change column name
 
 # change the file name below to wgcna_modules.csv during test
 # write network modules 

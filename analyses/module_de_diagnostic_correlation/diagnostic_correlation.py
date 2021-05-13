@@ -2,9 +2,7 @@ import argparse
 import json
 import os
 import pandas as pd
-
 from preproc.result import Result
-
 from eda.eda_functions import *
 
 def correlate_diagnostics(config_file):
@@ -36,11 +34,11 @@ def correlate_diagnostics(config_file):
         expression_meta = False
     if expression_meta:
         expression_meta_df = pd.read_csv(config_json["inputs"]["expression_with_metadata"], low_memory = False)
-    for i, cluster_df in enumerate(comm_dfs):
-        cluster_DE_perc(cluster_df, 'louvain_label', comm_names[i], deseq)
+    for module_df, name in zip(comm_dfs, comm_names):
+        cluster_DE_perc(module_df, name, deseq)
         if expression_meta:
-            plot_sig_perc(cluster_df, 'louvain_label', comm_names[i], expression_meta_df)
-            cluster_phenotype_corr(cluster_df, 'louvain_label', comm_names[i], expression_meta_df)
+            plot_sig_perc(module_df, name, expression_meta_df)
+            cluster_phenotype_corr(module_df, name, expression_meta_df)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
