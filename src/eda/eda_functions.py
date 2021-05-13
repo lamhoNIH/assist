@@ -174,7 +174,7 @@ def cluster_jaccard(cluster_df1, cluster_df2, cluster_column, comparison_names,
     plt.show()
     plt.close()
 
-def cluster_jaccard_v2(cluster_df1, cluster_df2, cluster1_column, cluster2_column, comparison_names, 
+def cluster_jaccard_v2(cluster_df1, cluster_df2, comparison_names, 
                        top=None, y_max = 1):
     '''
     plot jaccard pairwise comparison on the communities in 2 networks or the kmeans clusters in 2 network embeddings
@@ -190,10 +190,10 @@ def cluster_jaccard_v2(cluster_df1, cluster_df2, cluster1_column, cluster2_colum
     c2_list = []
     j_list = []
 
-    for c1 in cluster_df1[cluster1_column].unique():
-        for c2 in cluster_df2[cluster2_column].unique():
-            sub1 = cluster_df1[cluster_df1[cluster1_column] == c1].index
-            sub2 = cluster_df2[cluster_df2[cluster2_column] == c2].index
+    for c1 in cluster_df1['cluster_id'].unique():
+        for c2 in cluster_df2['cluster_id'].unique():
+            sub1 = cluster_df1[cluster_df1['cluster_id'] == c1].index
+            sub2 = cluster_df2[cluster_df2['cluster_id'] == c2].index
             c1_list.append(c1)
             c2_list.append(c2)
             j_list.append(jaccard_similarity(sub1, sub2))
@@ -424,12 +424,12 @@ def plot_cluster_nmi_comparison_v2(cluster1_list, cluster2_list, cluster1_names,
     plt.show()
     plt.close()    
 
-def cluster_nmi_v3(cluster_df1, cluster1_column, cluster_df2, cluster2_column):
+def cluster_nmi_v3(cluster_df1, cluster_df2):
     '''NMI to compare communities from the whole netowrk and the subnetwork or clusters from different network embeddings'''
-    sub1_plus_sub2 = pd.merge(cluster_df1, cluster_df2, left_on = 'id', right_on = 'id', how = 'outer')
-    max_cluster_num = max(sub1_plus_sub2[[cluster1_column, cluster2_column]].max())
-    sub1_plus_sub2[cluster2_column].fillna(max_cluster_num+1, inplace = True) # for the nodes that were cut out, give them a new community number
-    return round(nmi(sub1_plus_sub2[cluster1_column], sub1_plus_sub2[cluster2_column]),3)
+    sub1_plus_sub2 = pd.merge(cluster_df1, cluster_df2, left_on = 'id', right_on = 'id', how = 'outer', suffixes = ('_1','_2'))
+    max_cluster_num = max(sub1_plus_sub2[['cluster_id_1', 'cluster_id_2']].max())
+    sub1_plus_sub2['cluster_id_2'].fillna(max_cluster_num+1, inplace = True) # for the nodes that were cut out, give them a new community number
+    return round(nmi(sub1_plus_sub2['cluster_id_1'], sub1_plus_sub2['cluster_id_2']),3)
 
 def plot_cluster_nmi_comparison_v3(cluster1_name, cluster1, cluster1_column, cluster2_list, cluster2_column, comparison_names):
     '''plot cluster_nmi_v3() results'''
@@ -797,7 +797,7 @@ def plot_dist(summary_df, sample_name, trait, summary_type):
     plt.ylabel('Events')
     plt.legend()
     
-def plot_corr_kde(corr_df_list, corr_names):
+def plot_corr_kde(corr_df_list, corr_names, plotname):
     new_corr_df_list = []
     for corr_df, name in zip(corr_df_list, corr_names):
         corr_copy = np.abs(corr_df.copy())
@@ -828,6 +828,6 @@ def plot_corr_kde(corr_df_list, corr_names):
         new_title = title.replace('variable = ', '')
         new_title = f'{new_title} (p={p})' if p > 0 else f'{new_title} (p < 0.001)'
         ax.set_title(new_title)
-    plt.savefig(os.path.join(Result.getPath(), 'alcohol trait correlation.png'))
+    plt.savefig(os.path.join(Result.getPath(), f'alcohol trait correlation {plotname}.png'))
     plt.show()
     plt.close()
