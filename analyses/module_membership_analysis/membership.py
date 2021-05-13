@@ -24,7 +24,7 @@ def analyze_membership(config_file):
     if ("skip_network_cluster_stability" not in config_json["parameters"]) or (json.loads(config_json["parameters"]["skip_network_cluster_stability"].lower()) is False):
         expression_meta_df = pd.read_csv(config_json["inputs"]["expression_with_metadata"], low_memory = False)
         cluster_pair_wgcna_n_com1, network_cluster_stability1 = network_cluster_stability(gene_to_module_mapping_df, comm_df1, 'cluster_id', expression_meta_df)
-        for cluster in comm_df1.louvain_label.unique():
+        for cluster in comm_df1.cluster_id.unique():
             plot_random_vs_actual_z(gene_to_module_mapping_df, comm_df1, cluster_pair_wgcna_n_com1[cluster], cluster, 'cluster_id', network_cluster_stability1, 'wgcna vs louvain 1', expression_meta_df)
     
 if __name__ == '__main__':
