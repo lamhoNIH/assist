@@ -3,12 +3,11 @@ title: "This R markdown file shows the codes for the 'Network analysis' module"
 output: rmarkdown::github_document
 ---
 
-```{r Setting up and getting data}
+```{r Set up the environment}
 knitr::opts_chunk$set(echo = TRUE)
-```
-```{r, echo = FALSE}
 library(WGCNA)
 ```
+# Load expression data
 ```{r load data}
 if (Sys.info()["sysname"] == "Windows") {prefix = "G:"} else {prefix = "/Volumes/GoogleDrive"}
 expression = read.table(paste0(prefix,'/Shared drives/NIAAA_ASSIST/Data/kapoor_expression.txt'), header = TRUE)
@@ -16,4 +15,37 @@ rownames(expression) = expression$id
 expression$id = NULL
 expression_t = t(expression)
 print(expression_t[1:5,1:5])
+```
+# Construct network 
+```{r construct network}
+net = blockwiseModules(expression_t, power = 14, maxBlockSize = 30000,
+                       TOMType = "unsigned", minModuleSize = 100,
+                       reassignThreshold = 0, detectCutHeight = 0.99,
+                       numericLabels = TRUE, pamRespectsDendro = FALSE,
+                       saveTOMs = T,
+                       saveTOMFileBase = 'tom',
+                       verbose = 3, deepSplit = T)
+```
+# load tom data
+```{r load tom}
+tom_path = paste0(prefix,'/Shared drives/NIAAA_ASSIST/Data/pipeline/human/network_analysis/YC_Apr9_w_my_wgcna/tom-block.1.RData')
+load(tom_path)
+tom_df = as.matrix(TOM)
+```
+# Save TOM file
+```{r save tom}
+# add the gene IDs to the tom file
+colnames(tom_df) = colnames(expression_t)
+rownames(tom_df) = colnames(expression_t)
+# write tom file
+write.csv(tom_df, file = paste0(prefix,'/Shared drives/NIAAA_ASSIST/Data/pipeline/human/network_analysis/YC_Apr9_w_my_wgcna/tom.csv'))
+```
+# save module assignment df
+```{r save wgcna module assignment}
+net_df = data.frame(net$colors) # convert to a df
+net_df = cbind(id = rownames(net_df), net_df) # change the index (node names) to a column
+rownames(net_df) = 1:nrow(net_df)
+colnames(net_df)[2] = 'wgcna_label' # change column name
+# write network modules 
+write.csv(net_df, paste0(prefix,'/Shared drives/NIAAA_ASSIST/Data/pipeline/human/network_analysis/YC_Apr9_w_my_wgcna/wgcna_modules.csv'), row.names = F)
 ```
