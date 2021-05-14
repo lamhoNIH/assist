@@ -2,7 +2,8 @@
 	"inputs": {
 		"provided_networks": "data/Kapoor_TOM.csv",
 		"differentially_expressed_genes": "data/deseq.alc.vs.control.age.rin.batch.gender.PMI.corrected.w.prot.coding.gene.name.xlsx",
-		"network_louvain_default": "data/pipeline/human/module_extraction/network_louvain_default.csv"
+		"network_louvain_default": "data/pipeline/human/module_extraction/network_louvain_default.csv",
+		"expression_with_metadata": "data/pipeline/human/network_analysis/expression_meta.csv"
 	},
 	"outputs": {
 		"network_path": "data/pipeline/human/network_embedding/embedding.csv"

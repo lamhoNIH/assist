@@ -46,9 +46,11 @@ def run_embedding(config_file):
     plot_gene_cnt_each_cluster_v2(kmeans, emb_name)
     cluster_jaccard_v2(comm_df, kmeans, ['Network', emb_name])
     # run cluster gene and phenotype correlation
-    network_cluster_corr = cluster_phenotype_corr(comm_df, 'network', expression_meta, output_corr_df=True)
-    embedding_cluster_corr = cluster_phenotype_corr(kmeans, 'embedding', expression_meta, output_corr_df=True)
-    plot_corr_kde([network_cluster_corr, embedding_cluster_corr], ['test1', 'test2'], 'network vs embedding')
+    if 'expression_with_metadata' in config_json["inputs"]:
+        expression_meta_df = pd.read_csv(config_json["inputs"]["expression_with_metadata"], low_memory = False)
+        network_cluster_corr = cluster_phenotype_corr(comm_df, 'network', expression_meta_df, output_corr_df=True)
+        embedding_cluster_corr = cluster_phenotype_corr(kmeans, 'embedding', expression_meta_df, output_corr_df=True)
+        plot_corr_kde([network_cluster_corr, embedding_cluster_corr], ['network', 'embedding'], 'network vs embedding')
     # run NMI
     print('NMI between network modules and embedding clusters is', cluster_nmi_v3(comm_df, kmeans))
 if __name__ == '__main__':

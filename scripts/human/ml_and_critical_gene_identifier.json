@@ -5,7 +5,7 @@
 		"differentially_expressed_genes": "data/deseq.alc.vs.control.age.rin.batch.gender.PMI.corrected.w.prot.coding.gene.name.xlsx"
 	},
 	"outputs": {
-		"critical_genes": "data/pipeline/human/ml_and_critical_gene_identifier/test_critical_gene_df.csv"
+		"critical_genes": "data/pipeline/human/ml_and_critical_gene_identifier/critical_gene_df.csv"
 	},
 	"parameters": {
 		"plot_path": "data/pipeline/human/ml_and_critical_gene_identifier/artifacts",

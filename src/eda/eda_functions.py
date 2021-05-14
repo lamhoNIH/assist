@@ -821,6 +821,7 @@ def plot_corr_kde(corr_df_list, corr_names, plotname):
     g.map(sns.kdeplot, 'value')  
     g.set_axis_labels(x_var = 'Absolute correlation coefficient')
     g.add_legend()
+    g._legend.set_title('')
     plt.setp(g._legend.get_title(), fontsize=20)
     axes = g.axes.flatten()
     for ax, p in zip(axes, p_values):

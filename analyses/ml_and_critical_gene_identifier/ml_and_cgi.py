@@ -61,7 +61,7 @@ def ml_models(config_file):
         top_n_genes = config_json['parameters']['top_n_genes']
         cg_corr = gene_phenotype_corr(critical_gene_df.gene[:top_n_genes], expression_meta_df, 'Critical genes')
         deg_corr = gene_phenotype_corr(deseq.id[:top_n_genes], expression_meta_df, 'DEG')
-        plot_corr_kde([cg_corr, deg_corr], ['cg', 'deg'])
+        plot_corr_kde([cg_corr, deg_corr], ['CG', 'DEG'], 'CG vs DEG')
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--config_file", help="path to configuration file")
