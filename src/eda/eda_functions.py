@@ -278,10 +278,10 @@ def plot_sig_perc(cluster_df, network_name, expression_meta_df, output_sig_df = 
 #     # first subplot to show the correlation heatmap
 #     ax0 = plt.subplot(gs[0])
     sns.heatmap(cluster_sig_perc, cmap='Reds',
-                vmin=0, vmax=100) 
+                vmin=0, vmax=15) 
     plt.xticks(rotation = 45, ha = 'right')
     plt.ylabel('cluster id')
-    plt.title('% significant genes by cluster')
+#     plt.title('% significant genes by cluster')
 #     # second subplot to show count of significant traits in each cluster. "Significant" here means adj p value < 0.2
 #     ax1 = plt.subplot(gs[1])
 #     sig_count = cluster_sig_perc[cluster_sig_perc > 5].count(axis = 1).values # count num of traits with significant gene % > 5 in each cluster
