@@ -56,12 +56,25 @@ def ml_models(config_file):
         expression_meta_df = pd.read_csv(config_json["inputs"]["expression_with_metadata"], low_memory = False)
     else:
         expression_meta_df = None
+    if 'get_neighbor_genes' in config_json['parameters']:
+        if config_json['parameters']['get_neighbor_genes'] == True:
+            tom_df = pd.read_csv(config_json["inputs"]["provided_networks"], index_col = 0)
+            within_n = config_json['parameters']['within_n']
+            neighbor_gene_df = get_network_neighbor_genes(tom_df, deseq, len(critical_gene_df), within_n = within_n)
+            neighbor_gene_df.to_csv(config_json['outputs']['neighbor_genes'], index = 0)
     # Plot correlation of top critical genes with alcohol traits
-    if expression_meta_df is not None:
-        top_n_genes = config_json['parameters']['top_n_genes']
-        cg_corr = gene_phenotype_corr(critical_gene_df.gene[:top_n_genes], expression_meta_df, 'Critical genes')
-        deg_corr = gene_phenotype_corr(deseq.id[:top_n_genes], expression_meta_df, 'DEG')
-        plot_corr_kde([cg_corr, deg_corr], ['CG', 'DEG'], 'CG vs DEG')
+        if expression_meta_df is not None:
+            top_n_genes = config_json['parameters']['top_n_genes']
+            cg_corr = gene_phenotype_corr(critical_gene_df.gene[:top_n_genes], expression_meta_df, 'Critical genes')
+            deg_corr = gene_phenotype_corr(deseq.id[:top_n_genes], expression_meta_df, 'DEG')
+            neighbor_corr = gene_phenotype_corr(critical_gene_df.gene[:top_n_genes], expression_meta_df, 'Neighbor genes')
+            plot_corr_kde([cg_corr, deg_corr, neighbor_corr], ['CG', 'Neighbor', 'DEG'], 'CG, neighbor & DEG')
+    else:
+        if expression_meta_df is not None:
+            top_n_genes = config_json['parameters']['top_n_genes']
+            cg_corr = gene_phenotype_corr(critical_gene_df.gene[:top_n_genes], expression_meta_df, 'Critical genes')
+            deg_corr = gene_phenotype_corr(deseq.id[:top_n_genes], expression_meta_df, 'DEG')
+            plot_corr_kde([cg_corr, deg_corr], ['CG', 'DEG'], 'CG vs DEG')
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--config_file", help="path to configuration file")

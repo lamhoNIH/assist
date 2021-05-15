@@ -265,3 +265,32 @@ def jaccard_critical_genes(critical_gene_df, network_name):
     gene_sets = [set(critical_gene_df[['gene',col]].sort_values(col, ascending = False)[:10]['gene']) for col in cols_to_permute]
     intersect_genes = set.intersection(*gene_sets)
     return intersect_genes
+
+def join_subnetwork_w_deseq(subnetwork, deseq):
+    if 'abs_log2FC' not in deseq.columns:
+        deseq['abs_log2FC'] = abs(deseq['log2FoldChange'])
+    subnetwork_w_DE = pd.merge(subnetwork, deseq[['id','abs_log2FC']], left_index = True, right_on = 'id')
+    subnetwork_w_DE.index = subnetwork_w_DE['id']
+    return subnetwork_w_DE
+
+def get_network_neighbor_genes(tom, deseq, aimed_number, within_n = 10):
+    tom_w_deseq = join_subnetwork_w_deseq(tom, deseq)
+    upper_cutoff = 1
+    lower_cutoff = 0.000001
+    neighbor_cnt = 0
+    while (neighbor_cnt < aimed_number-within_n) or (neighbor_cnt > aimed_number+within_n):
+        neighbor_gene_dict = {}
+        cutoff = (upper_cutoff + lower_cutoff)/2
+        neighbor_cnt = 0
+        for col in tom_w_deseq.columns[:-2]:
+            subset = tom_w_deseq[(tom_w_deseq[col].between(cutoff, 0.99)) & (tom_w_deseq['abs_log2FC'] > 0.099)][col]
+            if len(subset) > 0:
+                neighbor_cnt += 1
+                neighbor_gene_dict[col] = len(subset)
+        if neighbor_cnt > aimed_number:
+            lower_cutoff = cutoff
+        if neighbor_cnt < aimed_number:
+            upper_cutoff = cutoff
+    sorted_neighbor_genes = sorted(neighbor_gene_dict.items(), key=lambda kv: kv[1], reverse = True)
+    neighbor_gene_df = pd.DataFrame(sorted_neighbor_genes, columns = ['gene', 'near_DEG_cnt'])   
+    return neighbor_gene_df
