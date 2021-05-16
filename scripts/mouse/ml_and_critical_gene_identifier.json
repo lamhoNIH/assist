@@ -8,10 +8,10 @@
 	},
 	"parameters": {
 		"plot_path": "data/pipeline/mouse/ml_and_critical_gene_identifier/artifacts",
-		"skip_diagnostics": "true",
 		"top_n_coef": "0.5",
-		"ratio": "0.7",
-		"max_dist_ratio": 6e-5,
+		"models_to_find_cg": ["LR", "RF", "XGB"],
+		"aimed_cg_num": 500,
+		"aim_within_n": 15,
 		"top_n_critical_genes": 10
 	}
 }

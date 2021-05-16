@@ -36,19 +36,13 @@ def ml_models(config_file):
                                        return_top_dim=True)
     plot_ml_w_top_dim(processed_emb_df, top_dim)
     jaccard_average(top_dim, f'Important dim overlap between models')
-    ratio = float(config_json['parameters']['ratio'])
-    max_dist_ratio = config_json['parameters']['max_dist_ratio']
-    gene_set = get_critical_gene_sets(processed_emb_df, top_dim, deseq, ratio = ratio, max_dist_ratio = max_dist_ratio)
-    is_0_cnt = 0
-    for i in range(len(gene_set)):
-        if len(gene_set[i][0]) == 0:
-            is_0_cnt += 1
-    if is_0_cnt > 0:
-        print('Critical gene identification INCOMPLETE')
-        print(f'{is_0_cnt} out of 9 models identified 0 critical genes. Try increasing ratio')
-        exit(1)
+
     cg_output = config_json['outputs']['critical_genes']
-    critical_gene_df = get_critical_gene_df(gene_set, emb_name, cg_output)
+    aimed_cg_num = config_json['parameters']['aimed_cg_num']
+    aim_within_n = config_json['parameters']['aim_within_n']
+    models_to_find_cg = config_json['parameters']['models_to_find_cg']
+    critical_gene_df = get_critical_gene_df(processed_emb_df, top_dim, deseq=deseq, output_path=cg_output,
+                                            aimed_number=aimed_cg_num, within_n=aim_within_n, models=models_to_find_cg)
     intersect_genes = jaccard_critical_genes(critical_gene_df, f'Critical gene overlap between models')
     top_n_critical_genes = config_json['parameters']['top_n_critical_genes']
     critical_gene_set2 = plot_nearby_impact_num(critical_gene_df, emb_name, top = top_n_critical_genes)
@@ -59,21 +53,20 @@ def ml_models(config_file):
     if 'get_neighbor_genes' in config_json['parameters']:
         if config_json['parameters']['get_neighbor_genes'] == True:
             tom_df = pd.read_csv(config_json["inputs"]["provided_networks"], index_col = 0)
-            within_n = config_json['parameters']['within_n']
-            neighbor_gene_df = get_network_neighbor_genes(tom_df, deseq, len(critical_gene_df), within_n = within_n)
+            neighbor_gene_df = get_network_neighbor_genes(tom_df, deseq, len(critical_gene_df), within_n = aim_within_n)
             neighbor_gene_df.to_csv(config_json['outputs']['neighbor_genes'], index = 0)
     # Plot correlation of top critical genes with alcohol traits
         if expression_meta_df is not None:
-            top_n_genes = config_json['parameters']['top_n_genes']
-            cg_corr = gene_phenotype_corr(critical_gene_df.gene[:top_n_genes], expression_meta_df, 'Critical genes')
-            deg_corr = gene_phenotype_corr(deseq.id[:top_n_genes], expression_meta_df, 'DEG')
-            neighbor_corr = gene_phenotype_corr(critical_gene_df.gene[:top_n_genes], expression_meta_df, 'Neighbor genes')
+            top_n_genes_for_comparison = config_json['parameters']['top_n_genes_for_comparison']
+            cg_corr = gene_phenotype_corr(critical_gene_df.gene[:top_n_genes_for_comparison], expression_meta_df, 'Critical genes')
+            deg_corr = gene_phenotype_corr(deseq.id[:top_n_genes_for_comparison], expression_meta_df, 'DEG')
+            neighbor_corr = gene_phenotype_corr(critical_gene_df.gene[:top_n_genes_for_comparison], expression_meta_df, 'Neighbor genes')
             plot_corr_kde([cg_corr, deg_corr, neighbor_corr], ['CG', 'Neighbor', 'DEG'], 'CG, neighbor & DEG')
     else:
         if expression_meta_df is not None:
-            top_n_genes = config_json['parameters']['top_n_genes']
-            cg_corr = gene_phenotype_corr(critical_gene_df.gene[:top_n_genes], expression_meta_df, 'Critical genes')
-            deg_corr = gene_phenotype_corr(deseq.id[:top_n_genes], expression_meta_df, 'DEG')
+            top_n_genes_for_comparison = config_json['parameters']['top_n_genes_for_comparison']
+            cg_corr = gene_phenotype_corr(critical_gene_df.gene[:top_n_genes_for_comparison], expression_meta_df, 'Critical genes')
+            deg_corr = gene_phenotype_corr(deseq.id[:top_n_genes_for_comparison], expression_meta_df, 'DEG')
             plot_corr_kde([cg_corr, deg_corr], ['CG', 'DEG'], 'CG vs DEG')
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

@@ -215,7 +215,6 @@ def get_critical_genes(pairwise_distance_df_list, cutoff, aimed_number, within_n
     cg_cnt = 0
     while (cg_cnt < aimed_number-within_n) or (cg_cnt > aimed_number+within_n): # while loop to determine if the max_dist goes up or down
         max_dist = (lower_max_dist + upper_max_dist)/2
-        print('max_dist',max_dist)
         cg_dict_list = []
         for pairwise_distance_df in pairwise_distance_df_list:
             critical_gene_list = []
@@ -237,7 +236,6 @@ def get_critical_genes(pairwise_distance_df_list, cutoff, aimed_number, within_n
                 left,right,on=['gene'],how='outer'), critical_gene_dfs)
             critical_gene_dfs_merged.fillna(0, inplace = True)
         cg_cnt = len(critical_gene_dfs_merged)
-        print('cg_cnt',cg_cnt)
         if cg_cnt > aimed_number:
             upper_max_dist = max_dist
         if cg_cnt < aimed_number:
@@ -246,7 +244,6 @@ def get_critical_genes(pairwise_distance_df_list, cutoff, aimed_number, within_n
     critical_gene_dfs_merged['near_impact_cnt'] = critical_gene_dfs_merged.sum(axis = 1)
     critical_gene_dfs_merged = critical_gene_dfs_merged.sort_values(
         'near_impact_cnt', ascending = False).reset_index(drop = True)
-#     critical_gene_dfs_merged.to_csv(output_path, index = 0)
     return critical_gene_dfs_merged
 
 def plot_nearby_impact_num(critical_gene_df, emb_name, top = 10):
