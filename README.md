@@ -5,12 +5,12 @@ This repo contains the source code of ASSIST analysis modules developed under th
 ### Description of analysis modules:
 | Analysis Module | Description |
 |-------|-------------|
-| Network Analysis | <brief description> |
-| Module Extraction | <brief description> |
-| Module Membership Analysis | <brief description> |
-| Module DE/Diagnostic Correlation | <brief description> |
-| Module Network Embedding |<brief description> |
-| ML and Critical Gene Identifier | <brief description> |
+| Network Analysis | Network construction from expression data and prepping network + phenotypic trait file |
+| Module Extraction | Network module detection by Louvain Algorithm |
+| Module Membership Analysis | Genes count per module and module assignment stability check |
+| Module DE/Diagnostic Correlation | Biological relevance of network module check |
+| Module Network Embedding | Conversion of network to machine learning-friendly matrix representation |
+| ML and Critical Gene Identifier | Machine learning to extract features for critical gene identification |
 
 The above analysis modules are inter-related as depicted in the conceptual workflow below.
 <p align="center">
