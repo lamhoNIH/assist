@@ -17,7 +17,7 @@ The above analysis modules are inter-related as depicted in the conceptual workf
   <img src="https://user-images.githubusercontent.com/12038408/117026434-ca74fa80-acc9-11eb-937c-ffaa7547ff34.png" width="700" height="650">
 </p>
 
-Module ```Critical Gene Validation``` (brief description) requires a 3rd party license and is thus not included in this repo.
+Module ```Critical Gene Validation``` requires a 3rd party license and is thus not included in this repo.
 
 ## User Guide
 Below we describe how to set up and run the ASSIST analysis modules in three different modes.
