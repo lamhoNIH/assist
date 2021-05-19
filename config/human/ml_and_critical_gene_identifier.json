@@ -2,7 +2,7 @@
 	"inputs": {
 		"provided_networks": "data/Kapoor_TOM.csv",
 		"embedding_file": "data/pipeline/human/network_embedding/embedding.csv",
-		"expression_with_metadata": "data/pipeline/human/network_analysis/expression_meta.csv",
+		"expression_with_metadata": "data/pipeline/human/module_de_diagnostic_correlation/expression_meta.csv",
 		"differentially_expressed_genes": "data/deseq.alc.vs.control.age.rin.batch.gender.PMI.corrected.w.prot.coding.gene.name.xlsx"
 	},
 	"outputs": {

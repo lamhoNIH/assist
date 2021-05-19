@@ -6,9 +6,5 @@
 	"outputs": {
 		"expression_with_metadata": "data/pipeline/human/network_analysis/expression_meta.csv",
 		"gene_to_module_mapping": "data/pipeline/human/network_analysis/wgcna_modules.csv"
-	},
-	"parameters": {
-		"skip_tom": "true",
-		"skip_preproc": "false"
 	}
 }
