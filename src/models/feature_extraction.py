@@ -1,9 +1,7 @@
 import pandas as pd
 import numpy as np
-from sys import platform
 from itertools import combinations
 import os
-import pickle
 import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.metrics.pairwise import euclidean_distances as ed
@@ -85,7 +83,7 @@ def jaccard_average(top_dim_list, title):
     plt.ylim(0, 1)
     plt.ylabel('jaccard similarity')
     plt.title(title)
-    plt.savefig(os.path.join(Result.getPath(), f'jaccard_average_{title}.png'))
+    plt.savefig(os.path.join(Result.getPath(), f'jaccard_average_{title}.png'), bbox_inches='tight')
     plt.show()
     plt.close()
     
@@ -161,7 +159,7 @@ def calculate_distance_stats(distance_df_list):
     min_mean = np.min(distance_df_joined.mean())
     print('Max mean:', max_mean, 'Min mean:', min_mean)
 
-def get_max_dist(distance_dfs, ratio = 0.7):
+def get_max_dist(distance_dfs, ratio = 0.7, max_dist_ratio = 6*1e-5):
     '''
     A method to determine max_dist for critical gene identification
     '''
@@ -171,16 +169,16 @@ def get_max_dist(distance_dfs, ratio = 0.7):
         flatten_distance = distance_np.flatten()
         del distance_np
         # max_dist = np.sort(flatten_distance, axis = 0)[int(len(flatten_distance)*6*1e-6)] #8*1e-5 was determined by manual testing
-        max_dist = np.sort(flatten_distance, axis=0)[int(len(flatten_distance) * 6*1e-5)]
+        max_dist = np.sort(flatten_distance, axis=0)[int(len(flatten_distance) * max_dist_ratio)]
         i = 1
         while len(flatten_distance[flatten_distance < max_dist]) < len(distance)*ratio:
             i += 1
-            max_dist = np.sort(flatten_distance, axis=0)[int(len(flatten_distance) * i * 6*1e-5)]
+            max_dist = np.sort(flatten_distance, axis=0)[int(len(flatten_distance) * i * max_dist_ratio)]
         max_dist_list.append(max_dist)
 
     return max_dist_list
 
-def get_critical_gene_sets(processed_emb_df, top_dim_list, deseq, ratio = 0.7):
+def get_critical_gene_sets(processed_emb_df, top_dim_list, deseq, ratio = 0.7, max_dist_ratio = 6*1e-5):
     '''
     Input: processed embedding df used for ML and top_dim_list (set of 9 for 3 models x 3 repeats)
     ratio is what % of the genes need to be less than the max_dist for critical gene identification.
@@ -195,13 +193,13 @@ def get_critical_gene_sets(processed_emb_df, top_dim_list, deseq, ratio = 0.7):
         distance_dfs.append(get_pairwise_distances(process_emb_df))
     # return distance_dfs
     cutoff = deseq['abs_log2FC'].sort_values(ascending = False).reset_index(drop = True)[int(len(deseq) * 0.01)]
-    max_dist_list = get_max_dist(distance_dfs, ratio = ratio)
+    max_dist_list = get_max_dist(distance_dfs, ratio = ratio, max_dist_ratio = max_dist_ratio)
 #     calculate_distance_stats(distance_dfs)
     critical_gene_sets = list(map(get_critical_genes, distance_dfs, [cutoff]*len(distance_dfs), max_dist_list))
     return critical_gene_sets
 
 
-def get_critical_gene_df(critical_gene_set, subnetwork_name, output_dir):
+def get_critical_gene_df(critical_gene_set, network_name, output_path):
     '''
     Supply 9 sets of critical genes for 3 model x 3 repeats 
     Return a critical gene df with count in each model and each repeat 
@@ -221,14 +219,12 @@ def get_critical_gene_df(critical_gene_set, subnetwork_name, output_dir):
     critical_gene_dfs_merged['near_impact_cnt'] = critical_gene_dfs_merged.sum(axis = 1)
     critical_gene_dfs_merged = critical_gene_dfs_merged.sort_values(
         'near_impact_cnt', ascending = False).reset_index(drop = True)
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-    critical_gene_dfs_merged.to_csv(os.path.join(output_dir, f'{subnetwork_name}_critical_gene_df.csv'), index = 0)
+    critical_gene_dfs_merged.to_csv(output_path, index = 0)
     return critical_gene_dfs_merged
 
 def plot_nearby_impact_num(critical_gene_df, emb_name, top = 10):
     '''Plot count of nearby impact genes for each set of critical gene df'''
-    critical_df = critical_gene_df[['gene', 'near_impact_cnt']].loc[:10,]
+    critical_df = critical_gene_df[['gene', 'near_impact_cnt']].loc[:top,]
     critical_df.sort_values('near_impact_cnt', inplace = True)
     plt.rcParams.update({'font.size': 18})
     plt.rcParams['axes.titlepad'] = 15
