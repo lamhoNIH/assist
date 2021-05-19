@@ -16,8 +16,8 @@ def correlate_diagnostics(config_file):
     if 'diagnostics' in config_json["inputs"]:
         meta = pd.read_csv(config_json["inputs"]["diagnostics"])
         expression = pd.read_csv(config_json["inputs"]["normalized_counts"], sep = '\t', index_col = 0)
-        expression_meta = pd.merge(expression.T, meta, left_index = True, right_on = 'IID')
-        expression_meta.to_csv(os.path.join(config_json["outputs"]["expression_with_metadata"]), index = 0)
+        expression_meta_df = pd.merge(expression, meta, left_index = True, right_on = 'IID')
+        expression_meta_df.to_csv(os.path.join(config_json["outputs"]["expression_with_metadata"]), index = 0)
 
     gene_to_module_mapping_df = pd.read_csv(config_json["inputs"]["gene_to_module_mapping"])
     comm_df1 = pd.read_csv(config_json["inputs"]["network_louvain_default"])

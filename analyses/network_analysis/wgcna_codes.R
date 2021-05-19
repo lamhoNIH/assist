@@ -16,7 +16,7 @@ net = blockwiseModules(expression_t, power = 14, maxBlockSize = 30000,
                        TOMType = "unsigned", minModuleSize = 100,
                        reassignThreshold = 0, detectCutHeight = 0.99,
                        numericLabels = TRUE, pamRespectsDendro = FALSE,
-                       saveTOMs = saveTOMs,
+                       saveTOMs = T,
                        saveTOMFileBase = tom_data,
                        verbose = 3, deepSplit = T)
 
