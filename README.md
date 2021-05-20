@@ -48,9 +48,7 @@ Note that for the Kapoor data used in our analysis (aka the human data), the ```
 | Input | Description |
 |-------|-------------|
 | PFC_HDID_norm_exp.txt ```M``` | normalized counts from RNA-seq or microarray |
-<p align="center">
-  <img src="https://github.com/netrias/assist/blob/documentation/figures/mouse%20normalized%20counts.JPG?raw=true" width="300" height="250">
-</p>
+
 | Output | Description |
 |-------|-------------|
 | tom.csv ```M``` | TOM co-expression network |
