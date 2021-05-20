@@ -5,7 +5,7 @@ This repo contains the source code of ASSIST analysis modules developed under th
 ### Description of analysis modules:
 | Analysis Module | Description |
 |-------|-------------|
-| Network Analysis | Network construction from expression data and prepping network + phenotypic trait file |
+| Network Analysis | Network construction by WGCNA |
 | Module Extraction | Network module detection by Louvain Algorithm |
 | Module Membership Analysis | Genes count per module and module assignment stability check |
 | Module DE/Diagnostic Correlation | Biological relevance of network module check |
@@ -41,6 +41,14 @@ Jupyter notebooks for ASSIST analysis modules are included to allow researchers 
 For each of the analysis modules below, include detailed description on input data (file name, file content, columns the module cares about), what the analysis does about the input data, and what the output the module generates. This can include snapshots of sample dataframes and plots.
 
 **Network Analysis**
+| Input | Description |
+|-------|-------------|
+| PFC_HDID_norm_exp.txt | normalized counts from RNA-seq or microarray |
+
+| Output | Description |
+|-------|-------------|
+| tom.csv | TOM co-expression network |
+| wgcna_modules | gene module assignment by wgcna hierarchical clustering |
 
 **Module Extraction**
 
