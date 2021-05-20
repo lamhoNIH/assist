@@ -43,6 +43,7 @@ For each of the analysis modules below, include detailed description on input da
 ## For all the input/output data below, ```H``` means it's for the human example data. ```M``` means it's for the mouse example data.
 
 **Network Analysis**
+
 Note that for the Kapoor data used in our analysis (aka the human data), the ```Network Analysis``` module was skipped as the TOM network and the WGCNA module assignment were already published so the example for this module below is for the HDID mouse data. 
 | Input | Description |
 |-------|-------------|
@@ -51,7 +52,7 @@ Note that for the Kapoor data used in our analysis (aka the human data), the ```
 | Output | Description |
 |-------|-------------|
 | tom.csv ```M``` | TOM co-expression network |
-| wgcna_modules ```M``` | gene module assignment by wgcna hierarchical clustering |
+| wgcna_modules.csv ```M``` | gene module assignment by WGCNA hierarchical clustering |
 
 **Module Extraction**
 | Input | Description |
@@ -66,13 +67,13 @@ Note that for the Kapoor data used in our analysis (aka the human data), the ```
 **Module Membership Analysis**
 | Input | Description |
 |-------|-------------|
-| kapoor_wgcna_modules.csv ```H``` or wgcna_modules.csv ```M``` | gene module assignment by wgcna hierarchical clustering |
+| kapoor_wgcna_modules.csv ```H``` or wgcna_modules.csv ```M``` | gene module assignment by WGCNA hierarchical clustering |
 | network_louvain_default.csv ```H``` ```M``` | gene module assignment by Louvain algorithm using its default setting |
 | network_louvain_agg1.csv ```H``` ```M``` | gene module assignment by Louvain algorithm using a different setting |
 
 | Output | Description |
 |-------|-------------|
-| plot_gene_cnt_each_cluster_wgcna.png ```H``` ```M``` | number of gene per module for wgcna module assignment |
+| plot_gene_cnt_each_cluster_wgcna.png ```H``` ```M``` | number of gene per module for WGCNA module assignment |
 | plot_gene_cnt_each_cluster_louvain 1.png ```H``` ```M``` | number of gene per module for Louvain module assignment # 1 |
 | plot_gene_cnt_each_cluster_louvain 2.png ```H``` ```M``` | number of gene per module for Louvain module assignment # 2|
 
@@ -81,7 +82,7 @@ Note that for the Kapoor data used in our analysis (aka the human data), the ```
 |-------|-------------|
 | deseq.alc.vs.control.age.rin.batch.gender.PMI. corrected.w.prot.coding.gene.name.xlsx ```H``` or de_data.csv ```M``` | differential expression analysis |
 | kapoor_expression_Apr5.txt ```H``` |  normalized counts from RNA-seq or microarray |
-| kapoor_wgcna_modules.csv ```H``` or wgcna_modules.csv ```M``` | gene module assignment by wgcna hierarchical clustering |
+| kapoor_wgcna_modules.csv ```H``` or wgcna_modules.csv ```M``` | gene module assignment by WGCNA hierarchical clustering |
 | network_louvain_default.csv ```H``` ```M``` | gene module assignment by Louvain algorithm using its default setting |
 | network_louvain_agg1.csv ```H``` ```M``` | gene module assignment by Louvain algorithm using a different setting |
 
@@ -104,7 +105,7 @@ Note that for the Kapoor data used in our analysis (aka the human data), the ```
 |-------|-------------|
 | embedding.csv ```H``` ```M``` | network embedding |
 | plot_gene_cnt_each_cluster_Network.png ```H``` ```M``` | number of gene per network module (same as the output in ```Module Membership Analysis```) |
-| plot_gene_cnt_each_cluster_epoch=5_alpha=0.1.png ```H``` ```M``` | number of gene per cluster for wgcna module assignment (compare it with plot_gene_cnt_each_cluster_Network.png) |
+| plot_gene_cnt_each_cluster_epoch=5_alpha=0.1.png ```H``` ```M``` | number of gene per cluster for WGCNA module assignment (compare it with plot_gene_cnt_each_cluster_Network.png) |
 | cluster_DE_perc_network.png ```H``` ```M``` | DEG distribution across modules (same as the output in ```Module DE/Diagnostic Correlation```) |
 | cluster_DE_perc_epoch=5_alpha=0.1 embedding.png ```H``` ```M``` | DEG distribution across embedding clusters (compare it with cluster_DE_perc_network.png) |
 | cluster_phenotype_corr_network.png ```H``` ```M``` |  module eigengene and alcohol trait correlation (same as the output in ```Module DE/Diagnostic Correlation```) |
