@@ -2,17 +2,17 @@
 
 This repo contains the source code of ASSIST analysis modules developed under the Phase I of the ASSIST project. These modules can be run in Jupyter notebooks, Docker containers, as well as workflows managed by the ADE (Active Discovery Engine) with increasing support for provenance.
 
-### Description of analysis modules:
-| Analysis Module | Description |
-|-------|-------------|
-| Network Analysis | Network construction by WGCNA |
-| Module Extraction | Network module detection by Louvain Algorithm |
-| Module Membership Analysis | Genes count per module and module assignment stability check |
-| Module DE/Diagnostic Correlation | Biological relevance of network module check |
-| Module Network Embedding | Conversion of network to machine learning-friendly matrix representation |
-| ML and Critical Gene Identifier | Machine learning to extract features for critical gene identification |
+### Description of the analysis modules:
+|#| Analysis Module | Description |
+|-|-------|-------------|
+|1| Network Analysis | Network construction by WGCNA |
+|2| Module Extraction | Network module detection by Louvain Algorithm |
+|3| Module Membership Analysis | Genes count per module and module assignment stability check |
+|4| Module DE/Diagnostic Correlation | Biological relevance of network module check |
+|5| Module Network Embedding | Conversion of network to machine learning-friendly matrix representation |
+|6| ML and Critical Gene Identifier | Machine learning to extract features for critical gene identification |
 
-The above analysis modules are inter-related as depicted in the conceptual workflow below.
+The analysis workflow follows the order of the modules and the modules are inter-related as depicted in the conceptual workflow below.
 <p align="center">
   <img src="https://user-images.githubusercontent.com/12038408/117026434-ca74fa80-acc9-11eb-937c-ffaa7547ff34.png" width="700" height="650">
 </p>
