@@ -35,7 +35,7 @@ def ml_models(config_file):
     top_dim = plot_feature_importances(model_weights, top_n_coef=float(config_json["parameters"]["top_n_coef"]), print_num_dim=False, plot_heatmap=False,
                                        return_top_dim=True)
     plot_ml_w_top_dim(processed_emb_df, top_dim)
-    jaccard_average(top_dim, f'Important dim overlap between models')
+    jaccard_average(top_dim, f'Important dim overlap within model repeats')
 
     cg_output = config_json['outputs']['critical_genes']
     aimed_cg_num = config_json['parameters']['aimed_cg_num']

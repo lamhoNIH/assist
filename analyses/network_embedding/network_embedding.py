@@ -34,7 +34,7 @@ def run_embedding(config_file):
         # Added for ADE integration
         deseq = pd.read_csv(config_json["inputs"]["differentially_expressed_genes"])
     # load data to run eda
-    comm_df = pd.read_csv(config_json["inputs"]["network_louvain_default"])
+    comm_df = pd.read_csv(config_json["inputs"]["chosen_module_assignment"])
     k = len(comm_df['cluster_id'].unique())
     kmeans = run_kmeans(emb_df, k)
     emb_name = f'epoch={max_epoch}_alpha={learning_rate}'
