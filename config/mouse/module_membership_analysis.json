@@ -5,7 +5,6 @@
 		"network_louvain_agg1": "data/pipeline/mouse/module_extraction/network_louvain_agg1.csv"
 	},
 	"parameters": {
-		"plot_path": "data/pipeline/mouse/module_membership_analysis/artifacts",
-		"skip_network_cluster_stability": "true"
+		"plot_path": "data/pipeline/mouse/module_membership_analysis/artifacts"
 	}
 }

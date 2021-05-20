@@ -5,9 +5,5 @@
 	"outputs": {
 		"provided_networks": "data/pipeline/mouse/network_analysis/tom.csv",
 		"gene_to_module_mapping": "data/pipeline/mouse/network_analysis/wgcna_modules.csv"
-	},
-	"parameters": {
-		"skip_tom": "false",
-		"skip_preproc": "true"
 	}
 }

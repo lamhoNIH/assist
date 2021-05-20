@@ -21,7 +21,7 @@ def run_embedding(config_file):
     # Read tom file directly and then embed. Skip the saving edgelist step
     emb_df = network_embedding_fast(config_json["inputs"]["provided_networks"],
                                     max_epoch=max_epoch, learning_rate=learning_rate,
-                                    output_path=config_json["outputs"]["network_path"])
+                                    output_path=config_json["outputs"]["embedding_path"])
     print('after embedding', memory_profiler.memory_usage()[0])
 
     # Plot DEG % in each cluster

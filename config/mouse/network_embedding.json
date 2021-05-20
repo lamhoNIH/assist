@@ -5,7 +5,7 @@
 		"network_louvain_default": "data/pipeline/mouse/network_analysis/wgcna_modules.csv"
 	},
 	"outputs": {
-		"network_path": "data/pipeline/mouse/network_embedding/embedding.csv"
+		"embedding_path": "data/pipeline/mouse/network_embedding/embedding.csv"
 	},
 	"parameters": {
 		"plot_path": "data/pipeline/mouse/network_embedding/artifacts",
