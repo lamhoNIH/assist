@@ -79,7 +79,7 @@ Note that for the Kapoor data used in our analysis (aka the human data), the ```
 **Module DE/Diagnostic Correlation**
 | Input | Description |
 |-------|-------------|
-| deseq.alc.vs.control.age.rin.batch.gender.PMI.corrected.w.prot.coding.gene.name.xlsx ```H``` or de_data.csv ```M``` | differential expression analysis |
+| deseq.alc.vs.control.age.rin.batch.gender.PMI. corrected.w.prot.coding.gene.name.xlsx ```H``` or de_data.csv ```M``` | differential expression analysis |
 | kapoor_expression_Apr5.txt ```H``` |  normalized counts from RNA-seq or microarray |
 | kapoor_wgcna_modules.csv ```H``` or wgcna_modules.csv ```M``` | gene module assignment by wgcna hierarchical clustering |
 | network_louvain_default.csv ```H``` ```M``` | gene module assignment by Louvain algorithm using its default setting |
@@ -96,7 +96,7 @@ Note that for the Kapoor data used in our analysis (aka the human data), the ```
 | Input | Description |
 |-------|-------------|
 | Kapoor_TOM.csv ```H``` or tom.csv ```M``` | TOM co-expression network |
-| deseq.alc.vs.control.age.rin.batch.gender.PMI.corrected.w.prot.coding.gene.name.xlsx ```H``` or de_data.csv ```M``` | differential expression analysis |
+| deseq.alc.vs.control.age.rin.batch.gender.PMI. corrected.w.prot.coding.gene.name.xlsx ```H``` or de_data.csv ```M``` | differential expression analysis |
 | network_louvain_default.csv ```H``` or wgcna_modules.csv ```M``` | gene module assignment chosen to compare with embedding clusters (user's choice) |
 | expression_meta.csv ```H``` | normalized expression data joined with subjects' metadata |
 
@@ -118,7 +118,7 @@ Note that for the Kapoor data used in our analysis (aka the human data), the ```
 | Kapoor_TOM.csv ```H``` | TOM co-expression network |
 | embedding.csv ```H``` ```M``` | network embedding |
 | expression_meta.csv ```H``` | normalized expression data joined with subjects' metadata |
-| deseq.alc.vs.control.age.rin.batch.gender.PMI.corrected.w.prot.coding.gene.name.xlsx ```H``` or de_data.csv ```M``` | differential expression analysis |
+| deseq.alc.vs.control.age.rin.batch.gender.PMI. corrected.w.prot.coding.gene.name.xlsx ```H``` or de_data.csv ```M``` | differential expression analysis |
 
 | Output | Description |
 |-------|-------------|
