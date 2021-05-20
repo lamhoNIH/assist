@@ -16,7 +16,10 @@ def ml_models(config_file):
         config_json = json.load(json_data)
 
     Result(config_json["parameters"]["plot_path"])
-
+    if 'get_neighbor_genes' in config_json['parameters']:
+        if "provided_networks" not in config_json["inputs"]:
+            print('To get neighbor genes, tom network must be provided.')
+            exit(2)
     emb_df = pd.read_csv(config_json["inputs"]["embedding_file"], index_col = 0)
     emb_name = '_'.join(os.path.basename(config_json["inputs"]["embedding_file"]).split('_')[2:])[:-4]
     
