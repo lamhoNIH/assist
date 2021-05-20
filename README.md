@@ -42,19 +42,21 @@ For each of the analysis modules below, include detailed description on input da
 
 ## For all the input/output data below, ```H``` means it's for the human example data. ```M``` means it's for the mouse example data.
 
-**Network Analysis**
+**1. Network Analysis**
 
 Note that for the Kapoor data used in our analysis (aka the human data), the ```Network Analysis``` module was skipped as the TOM network and the WGCNA module assignment were already published so the example for this module below is for the HDID mouse data. 
 | Input | Description |
 |-------|-------------|
 | PFC_HDID_norm_exp.txt ```M``` | normalized counts from RNA-seq or microarray |
-
+<p align="center">
+  <img src="https://github.com/netrias/assist/blob/documentation/figures/mouse%20normalized%20counts.JPG?raw=true" width="300" height="250">
+</p>
 | Output | Description |
 |-------|-------------|
 | tom.csv ```M``` | TOM co-expression network |
 | wgcna_modules.csv ```M``` | gene module assignment by WGCNA hierarchical clustering |
 
-**Module Extraction**
+**2. Module Extraction**
 | Input | Description |
 |-------|-------------|
 | Kapoor_TOM.csv ```H``` or tom.csv ```M``` | TOM co-expression network |
@@ -64,7 +66,7 @@ Note that for the Kapoor data used in our analysis (aka the human data), the ```
 | network_louvain_default.csv ```H``` ```M``` | gene module assignment by Louvain algorithm using its default setting |
 | network_louvain_agg1.csv ```H``` ```M``` | gene module assignment by Louvain algorithm using a different setting |
 
-**Module Membership Analysis**
+**3. Module Membership Analysis**
 | Input | Description |
 |-------|-------------|
 | kapoor_wgcna_modules.csv ```H``` or wgcna_modules.csv ```M``` | gene module assignment by WGCNA hierarchical clustering |
@@ -77,7 +79,7 @@ Note that for the Kapoor data used in our analysis (aka the human data), the ```
 | plot_gene_cnt_each_cluster_louvain 1.png ```H``` ```M``` | number of gene per module for Louvain module assignment # 1 |
 | plot_gene_cnt_each_cluster_louvain 2.png ```H``` ```M``` | number of gene per module for Louvain module assignment # 2|
 
-**Module DE/Diagnostic Correlation**
+**4. Module DE/Diagnostic Correlation**
 | Input | Description |
 |-------|-------------|
 | deseq.alc.vs.control.age.rin.batch.gender.PMI. corrected.w.prot.coding.gene.name.xlsx ```H``` or de_data.csv ```M``` | differential expression analysis |
@@ -93,7 +95,7 @@ Note that for the Kapoor data used in our analysis (aka the human data), the ```
 | plot_sig_perc_xx.png ```H``` ```M``` | % genes in the module that are significant for different alcohol trait group |
 | cluster_phenotype_corr_xx.png ```H``` ```M``` | module eigengene and alcohol trait correlation |
 
-**Module Network Embedding**
+**5. Module Network Embedding**
 | Input | Description |
 |-------|-------------|
 | Kapoor_TOM.csv ```H``` or tom.csv ```M``` | TOM co-expression network |
@@ -113,7 +115,7 @@ Note that for the Kapoor data used in our analysis (aka the human data), the ```
 | alcohol trait correlation network vs embedding.png ```H``` ```M``` | distribution plot to compare cluster_phenotype_corr_network.png and cluster_phenotype_corr_embedding.png |
 | cluster_jaccard_Network vs epoch=5_alpha=0.1.png ```H``` ```M``` | pairwise jaccard comparison to determine network module and embedding cluster similarity |
 
-**ML and Critical Gene Identifier**
+**6. ML and Critical Gene Identifier**
 | Input | Description |
 |-------|-------------|
 | Kapoor_TOM.csv ```H``` | TOM co-expression network |
