@@ -207,59 +207,52 @@ Note that for the Kapoor data used in our analysis (aka the human data), the ```
     <tbody>
         <tr>
 	        <tr>
-			    <td rowspan=2><sub>Input</sub></td>
+			    <td rowspan=7><sub>Input</sub></td>
 		        <td><sub>deseq.alc.vs.control.age.rin.batch.gender.PMI. corrected.w.prot.coding.gene.name.xlsx</sub></td>
 		        <td><sub>differential expression analysis</sub></td>
 			    <td><sub>:heavy_check_mark:</sub></td>
 			    <td><sub></sub></td>
 	        </tr>
-            <tr>
+	        <tr>
 		        <td><sub>de_data.csv</sub></td>
 		        <td><sub>differential expression analysis</sub></td>
 			    <td><sub></sub></td>
 			    <td><sub>:heavy_check_mark:</sub></td>
 	        </tr>
-	    <tr>
+	        <tr>
 		        <td><sub>kapoor_expression_Apr5.txt</sub></td>
 		        <td><sub>normalized counts from RNA-seq or microarray</sub></td>
 			    <td><sub>:heavy_check_mark:</sub></td>
 			    <td><sub></sub></td>
 	        </tr>
-	    <tr>
-		        <td><sub>Kapoor2019_coga.inia.detailed.pheno.04.12.17.csv</sub></td>
-		        <td><sub>subjects' alcohol metadata</sub></td>
-			    <td><sub>:heavy_check_mark:</sub></td>
-			    <td><sub></sub></td>
-	        </tr>
-	    
-	    <tr>
+            <tr>
 		        <td><sub>kapoor_wgcna_modules.csv</sub></td>
 		        <td><sub>gene module assignment by WGCNA hierarchical clustering</sub></td>
 			    <td><sub>:heavy_check_mark:</sub></td>
 			    <td><sub></sub></td>
-	        </tr>	    
-	    <tr>
+	        </tr>
+            <tr>
 		        <td><sub>wgcna_modules.csv</sub></td>
 		        <td><sub>gene module assignment by WGCNA hierarchical clustering</sub></td>
 			    <td><sub></sub></td>
 			    <td><sub>:heavy_check_mark:</sub></td>
 	        </tr>
-	    <tr>
+            <tr>
 		        <td><sub>network_louvain_default.csv</sub></td>
 		        <td><sub>gene module assignment by Louvain algorithm using its default setting</sub></td>
-			    <td><sub></sub>:heavy_check_mark:</td>
+			    <td><sub>:heavy_check_mark:</sub></td>
 			    <td><sub>:heavy_check_mark:</sub></td>
 	        </tr>
-	    <tr>
+            <tr>
 		        <td><sub>network_louvain_agg1.csv</sub></td>
 		        <td><sub>gene module assignment by Louvain algorithm using a different setting</sub></td>
 			    <td><sub>:heavy_check_mark:</sub></td>
 			    <td><sub>:heavy_check_mark:</sub></td>
-	        </tr> 
+	        </tr>
         </tr>
         <tr>
 	        <tr>
-			    <td rowspan=2><sub>Output</sub></td>
+			    <td rowspan=4><sub>Output</sub></td>
 		        <td><sub>expression_meta.csv</sub></td>
 		        <td><sub>normalized expression data joined with subjects' metadata</sub></td>
 			    <td><sub>:heavy_check_mark:</sub></td>
@@ -271,17 +264,17 @@ Note that for the Kapoor data used in our analysis (aka the human data), the ```
 			    <td><sub>:heavy_check_mark:</sub></td>
 			    <td><sub>:heavy_check_mark:</sub></td>
 	        </tr>
-		<tr>
+	        <tr>
 		        <td><sub>plot_sig_perc_xx.png</sub></td>
 		        <td><sub>% genes in the module that are significant for different alcohol trait group</sub></td>
 			    <td><sub>:heavy_check_mark:</sub></td>
-			    <td><sub></sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
 	        </tr>
-		<tr>
+	        <tr>
 		        <td><sub>cluster_phenotype_corr_xx.png</sub></td>
 		        <td><sub>module eigengene and alcohol trait correlation</sub></td>
 			    <td><sub>:heavy_check_mark:</sub></td>
-			    <td><sub></sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
 	        </tr>
         </tr>
     </tbody>
