@@ -241,13 +241,19 @@ Note that for the Kapoor data used in our analysis (aka the human data), the ```
 		        <td><sub>network_louvain_default.csv</sub></td>
 		        <td><sub>gene module assignment by Louvain algorithm using its default setting</sub></td>
 			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub></sub></td>
+	        </tr>
+	    <tr>
+		        <td><sub>Kapoor2019_coga.inia.detailed.pheno.04.12.17.csv</sub></td>
+		        <td><sub>subjects' alcohol metadata</sub></td>
 			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub></sub></td>
 	        </tr>
             <tr>
 		        <td><sub>network_louvain_agg1.csv</sub></td>
 		        <td><sub>gene module assignment by Louvain algorithm using a different setting</sub></td>
 			    <td><sub>:heavy_check_mark:</sub></td>
-			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub></sub></td>
 	        </tr>
         </tr>
         <tr>
