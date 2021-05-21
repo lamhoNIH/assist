@@ -46,97 +46,461 @@ For each of the analysis modules below, include detailed description on input da
 
 Note that for the Kapoor data used in our analysis (aka the human data), the ```Network Analysis``` module was skipped as the TOM network and the WGCNA module assignment were already published so the example for this module below is for the HDID mouse data. 
 
-    | Input | Description |
-    |:------|:------------|
-    | PFC_HDID_norm_exp.txt ```M``` | normalized counts from RNA-seq or microarray |
-
-    | Output | Description |
-    |:------|:------------|
-    | tom.csv ```M``` | TOM co-expression network |
-    | wgcna_modules.csv ```M``` | gene module assignment by WGCNA hierarchical clustering |
+<table>
+    <thead>
+        <tr>
+            <th></th>
+	    <th><sub>File</sub></th>
+            <th><sub>Description</sub></th>
+	    <th><sub>Human</sub></th>
+	    <th><sub>Mouse</sub></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+		    <td><sub>Input</sub></td>
+	        <td><sub>PFC_HDID_norm_exp.txt</sub></td>
+	        <td><sub>normalized counts from RNA-seq or microarray</sub></td>
+		    <td><sub</sub></td>
+		    <td><sub>:heavy_check_mark:</sub></td>
+        </tr>
+        <tr>
+	        <tr>
+			    <td rowspan=2><sub>Output</sub></td>
+		        <td><sub>tom.csv</sub></td>
+		        <td><sub>TOM co-expression network</sub></td>
+			    <td><sub></sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+	        <tr>
+		        <td><sub>wgcna_modules.csv</sub></td>
+		        <td><sub>gene module assignment by WGCNA hierarchical clustering</sub></td>
+			    <td><sub></sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+        </tr>
+    </tbody>
+</table>
 
 **2. Module Extraction**
 
-    | Input | Description |
-    |:------|:------------|
-    | Kapoor_TOM.csv ```H``` or tom.csv ```M``` | TOM co-expression network |
-
-    | Output | Description |
-    |:------|:------------|
-    | network_louvain_default.csv ```H``` ```M``` | gene module assignment by Louvain algorithm using its default setting |
-    | network_louvain_agg1.csv ```H``` ```M``` | gene module assignment by Louvain algorithm using a different setting |
+<table>
+    <thead>
+        <tr>
+	        <th></th>
+		    <th><sub>File</sub></th>
+	        <th><sub>Description</sub></th>
+		    <th><sub>Human</sub></th>
+		    <th><sub>Mouse</sub></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+	        <tr>
+			    <td rowspan=2><sub>Input</sub></td>
+		        <td><sub>Kapoor_TOM.csv</sub></td>
+		        <td><sub>TOM co-expression network</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub></sub></td>
+	        </tr>
+            <tr>
+		        <td><sub>tom.csv</sub></td>
+		        <td><sub>TOM co-expression network</sub></td>
+			    <td><sub></sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+        </tr>
+        <tr>
+	        <tr>
+			    <td rowspan=2><sub>Output</sub></td>
+		        <td><sub>network_louvain_default.csv</sub></td>
+		        <td><sub>gene module assignment by Louvain algorithm using its default setting</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+	        <tr>
+		        <td><sub>network_louvain_agg1.csv</sub></td>
+		        <td><sub>gene module assignment by Louvain algorithm using a different setting</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+        </tr>
+</table>
 
 **3. Module Membership Analysis**
 
-	| Input | Description |
-	|-------|-------------|
-	| kapoor_wgcna_modules.csv ```H``` or wgcna_modules.csv ```M``` | gene module assignment by WGCNA hierarchical clustering |
-	| network_louvain_default.csv ```H``` ```M``` | gene module assignment by Louvain algorithm using its default setting |
-	| network_louvain_agg1.csv ```H``` ```M``` | gene module assignment by Louvain algorithm using a different setting |
-
-	| Output | Description |
-	|-------|-------------|
-	| plot_gene_cnt_each_cluster_wgcna.png ```H``` ```M``` | number of gene per module for WGCNA module assignment |
-	| plot_gene_cnt_each_cluster_louvain 1.png ```H``` ```M``` | number of gene per module for Louvain module assignment # 1 |
-	| plot_gene_cnt_each_cluster_louvain 2.png ```H``` ```M``` | number of gene per module for Louvain module assignment # 2|
+<table>
+    <thead>
+        <tr>
+	        <th></th>
+		    <th><sub>File</sub></th>
+	        <th><sub>Description</sub></th>
+		    <th><sub>Human</sub></th>
+		    <th><sub>Mouse</sub></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+	        <tr>
+			    <td rowspan=4><sub>Input</sub></td>
+		        <td><sub>kapoor_wgcna_modules.csv</sub></td>
+		        <td><sub>gene module assignment by WGCNA hierarchical clustering</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub></sub></td>
+	        </tr>
+            <tr>
+		        <td><sub>wgcna_modules.csv</sub></td>
+		        <td><sub>gene module assignment by WGCNA hierarchical clustering</sub></td>
+			    <td><sub></sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+            <tr>
+		        <td><sub>network_louvain_default.csv</sub></td>
+		        <td><sub>gene module assignment by Louvain algorithm using its default setting</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+            <tr>
+		        <td><sub>network_louvain_agg1.csv</sub></td>
+		        <td><sub>gene module assignment by Louvain algorithm using a different setting</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+        </tr>
+        <tr>
+	        <tr>
+			    <td rowspan=3><sub>Output</sub></td>
+		        <td><sub>plot_gene_cnt_each_cluster_wgcna.png</sub></td>
+		        <td><sub>number of gene per module for WGCNA module assignment</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+	        <tr>
+		        <td><sub>plot_gene_cnt_each_cluster_louvain 1.png</sub></td>
+		        <td><sub>number of gene per module for Louvain module assignment # 1</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+	        <tr>
+		        <td><sub>plot_gene_cnt_each_cluster_louvain 2.png</sub></td>
+		        <td><sub>number of gene per module for Louvain module assignment # 2</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+        </tr>
+    </tbody>
+</table>
 
 **4. Module DE/Diagnostic Correlation**
 
-	| Input | Description |
-	|-------|-------------|
-	| deseq.alc.vs.control.age.rin.batch.gender.PMI. corrected.w.prot.coding.gene.name.xlsx ```H``` or de_data.csv ```M``` | differential expression analysis |
-	| kapoor_expression_Apr5.txt ```H``` |  normalized counts from RNA-seq or microarray |
-	| kapoor_wgcna_modules.csv ```H``` or wgcna_modules.csv ```M``` | gene module assignment by WGCNA hierarchical clustering |
-	| network_louvain_default.csv ```H``` ```M``` | gene module assignment by Louvain algorithm using its default setting |
-	| network_louvain_agg1.csv ```H``` ```M``` | gene module assignment by Louvain algorithm using a different setting |
-	
-	| Output | Description |
-	|-------|-------------|
-	| expression_meta.csv ```H``` | normalized expression data joined with subjects' metadata |
-	| cluster_DE_perc_xx.png ```H``` ```M``` | DEG distribution across modules |
-	| plot_sig_perc_xx.png ```H``` ```M``` | % genes in the module that are significant for different alcohol trait group |
-	| cluster_phenotype_corr_xx.png ```H``` ```M``` | module eigengene and alcohol trait correlation |
+<table>
+    <thead>
+        <tr>
+	        <th></th>
+		    <th><sub>File</sub></th>
+	        <th><sub>Description</sub></th>
+		    <th><sub>Human</sub></th>
+		    <th><sub>Mouse</sub></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+	        <tr>
+			    <td rowspan=7><sub>Input</sub></td>
+		        <td><sub>deseq.alc.vs.control.age.rin.batch.gender.PMI. corrected.w.prot.coding.gene.name.xlsx</sub></td>
+		        <td><sub>differential expression analysis</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub></sub></td>
+	        </tr>
+	        <tr>
+		        <td><sub>de_data.csv</sub></td>
+		        <td><sub>differential expression analysis</sub></td>
+			    <td><sub></sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+	        <tr>
+		        <td><sub>kapoor_expression_Apr5.txt</sub></td>
+		        <td><sub>normalized counts from RNA-seq or microarray</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub></sub></td>
+	        </tr>
+            <tr>
+		        <td><sub>kapoor_wgcna_modules.csv</sub></td>
+		        <td><sub>gene module assignment by WGCNA hierarchical clustering</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub></sub></td>
+	        </tr>
+            <tr>
+		        <td><sub>wgcna_modules.csv</sub></td>
+		        <td><sub>gene module assignment by WGCNA hierarchical clustering</sub></td>
+			    <td><sub></sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+            <tr>
+		        <td><sub>network_louvain_default.csv</sub></td>
+		        <td><sub>gene module assignment by Louvain algorithm using its default setting</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+            <tr>
+		        <td><sub>network_louvain_agg1.csv</sub></td>
+		        <td><sub>gene module assignment by Louvain algorithm using a different setting</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+        </tr>
+        <tr>
+	        <tr>
+			    <td rowspan=4><sub>Output</sub></td>
+		        <td><sub>expression_meta.csv</sub></td>
+		        <td><sub>normalized expression data joined with subjects' metadata</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub></sub></td>
+	        </tr>
+	        <tr>
+		        <td><sub>cluster_DE_perc_xx.png</sub></td>
+		        <td><sub>DEG distribution across modules</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+	        <tr>
+		        <td><sub>plot_sig_perc_xx.png</sub></td>
+		        <td><sub>% genes in the module that are significant for different alcohol trait group</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+	        <tr>
+		        <td><sub>cluster_phenotype_corr_xx.png</sub></td>
+		        <td><sub>module eigengene and alcohol trait correlation</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+        </tr>
+    </tbody>
+</table>
 
 **5. Module Network Embedding**
 
-	| Input | Description |
-	|-------|-------------|
-	| Kapoor_TOM.csv ```H``` or tom.csv ```M``` | TOM co-expression network |
-	| deseq.alc.vs.control.age.rin.batch.gender.PMI. corrected.w.prot.coding.gene.name.xlsx ```H``` or de_data.csv ```M``` | differential expression analysis |
-	| network_louvain_default.csv ```H``` or wgcna_modules.csv ```M``` | gene module assignment chosen to compare with embedding clusters (user's choice) |
-	| expression_meta.csv ```H``` | normalized expression data joined with subjects' metadata |
-	
-	| Output | Description |
-	|-------|-------------|
-	| embedding.csv ```H``` ```M``` | network embedding |
-	| plot_gene_cnt_each_cluster_Network.png ```H``` ```M``` | number of gene per network module (same as the output in ```Module Membership Analysis```) |
-	| plot_gene_cnt_each_cluster_epoch=5_alpha=0.1.png ```H``` ```M``` | number of gene per cluster for WGCNA module assignment (compare it with plot_gene_cnt_each_cluster_Network.png) |
-	| cluster_DE_perc_network.png ```H``` ```M``` | DEG distribution across modules (same as the output in ```Module DE/Diagnostic Correlation```) |
-	| cluster_DE_perc_epoch=5_alpha=0.1 embedding.png ```H``` ```M``` | DEG distribution across embedding clusters (compare it with cluster_DE_perc_network.png) |
-	| cluster_phenotype_corr_network.png ```H``` ```M``` |  module eigengene and alcohol trait correlation (same as the output in ```Module DE/Diagnostic Correlation```) |
-	| cluster_phenotype_corr_embedding.png ```H``` ```M``` | cluster eigengene and alcohol trait correlation (compare it with cluster_phenotype_corr_network.png) |
-	| alcohol trait correlation network vs embedding.png ```H``` ```M``` | distribution plot to compare cluster_phenotype_corr_network.png and cluster_phenotype_corr_embedding.png |
-	| cluster_jaccard_Network vs epoch=5_alpha=0.1.png ```H``` ```M``` | pairwise jaccard comparison to determine network module and embedding cluster similarity |
+<table>
+    <thead>
+        <tr>
+	        <th></th>
+		    <th><sub>File</sub></th>
+	        <th><sub>Description</sub></th>
+		    <th><sub>Human</sub></th>
+		    <th><sub>Mouse</sub></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+	        <tr>
+			    <td rowspan=7><sub>Input</sub></td>
+		        <td><sub>Kapoor_TOM.csv</sub></td>
+		        <td><sub>TOM co-expression network</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub></sub></td>
+	        </tr>
+	        <tr>
+		        <td><sub>tom.csv</sub></td>
+		        <td><sub>TOM co-expression network</sub></td>
+			    <td><sub></sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+	        <tr>
+		        <td><sub>deseq.alc.vs.control.age.rin.batch.gender.PMI. corrected.w.prot.coding.gene.name.xlsx</sub></td>
+		        <td><sub>differential expression analysis</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub></sub></td>
+	        </tr>
+            <tr>
+		        <td><sub>de_data.csv</sub></td>
+		        <td><sub>differential expression analysis</sub></td>
+			    <td><sub></sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+            <tr>
+		        <td><sub>network_louvain_default.csv</sub></td>
+		        <td><sub>gene module assignment chosen to compare with embedding clusters (user's choice)</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub></sub></td>
+	        </tr>
+            <tr>
+		        <td><sub>wgcna_modules.csv</sub></td>
+		        <td><sub>gene module assignment chosen to compare with embedding clusters (user's choice)</sub></td>
+			    <td><sub></sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+            <tr>
+		        <td><sub>expression_meta.csv</sub></td>
+		        <td><sub>normalized expression data joined with subjects' metadata</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub></sub></td>
+	        </tr>
+        </tr>
+        <tr>
+	        <tr>
+			    <td rowspan=9><sub>Output</sub></td>
+		        <td><sub>embedding.csv</sub></td>
+		        <td><sub>network embedding</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+	        <tr>
+		        <td><sub>plot_gene_cnt_each_cluster_Network.png</sub></td>
+		        <td><sub>number of gene per network module (same as the output in ```Module Membership Analysis```</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+	        <tr>
+		        <td><sub>plot_gene_cnt_each_cluster_epoch=5_alpha=0.1.png</sub></td>
+		        <td><sub>number of gene per cluster for WGCNA module assignment (compare it with plot_gene_cnt_each_cluster_Network.png)</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+	        <tr>
+		        <td><sub>cluster_DE_perc_network.png</sub></td>
+		        <td><sub>DEG distribution across modules (same as the output in ```Module DE/Diagnostic Correlation```</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+	        <tr>
+		        <td><sub>cluster_DE_perc_epoch=5_alpha=0.1 embedding.png</sub></td>
+		        <td><sub>DEG distribution across embedding clusters (compare it with cluster_DE_perc_network.png)</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+	        <tr>
+		        <td><sub>cluster_phenotype_corr_network.png</sub></td>
+		        <td><sub>module eigengene and alcohol trait correlation (same as the output in ```Module DE/Diagnostic Correlation```</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+	        <tr>
+		        <td><sub>cluster_phenotype_corr_embedding.png</sub></td>
+		        <td><sub>cluster eigengene and alcohol trait correlation (compare it with cluster_phenotype_corr_network.png)</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+	        <tr>
+		        <td><sub>alcohol trait correlation network vs embedding.png</sub></td>
+		        <td><sub>distribution plot to compare cluster_phenotype_corr_network.png and cluster_phenotype_corr_embedding.png</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+	        <tr>
+		        <td><sub>cluster_jaccard_Network vs epoch=5_alpha=0.1.png</sub></td>
+		        <td><sub>pairwise jaccard comparison to determine network module and embedding cluster similarity</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+        </tr>
+    </tbody>
+</table>
 
 **6. ML and Critical Gene Identifier**
 
-	| Input | Description |
-	|-------|-------------|
-	| Kapoor_TOM.csv ```H``` | TOM co-expression network |
-	| embedding.csv ```H``` ```M``` | network embedding |
-	| expression_meta.csv ```H``` | normalized expression data joined with subjects' metadata |
-	| deseq.alc.vs.control.age.rin.batch.gender.PMI. corrected.w.prot.coding.gene.name.xlsx ```H``` or de_data.csv ```M``` | differential expression analysis |
-	
-	| Output | Description |
-	|-------|-------------|
-	| critical_genes.csv ```H``` ```M``` | candidate genes identified by ASSIST |
-	| neighbor_genes.csv ```H``` ```M``` | closest DEG neighbors in the co-expression network |
-	| run_ml_.png ```H``` ```M``` | machine learning accuracy |
-	| run_ml_top_dims.png ```H``` ```M``` | machine learning accuracy using only the most important dimensions |
-	| gene_phenotype_corr_for_xx.png ```H``` | critical gene/DEG/neighbor gene correlation with alcohol traits |
-	| alcohol trait correlation CG, neighbor & DEG.png ```H``` | distribution plot to compare gene_phenotype_corr_for_xx.png |
-	| jaccard_average_Important dim overlap within model repeats.png ```H``` ```M``` | the important dimensions overlap between the repeats of each model |
-	| jaccard_critical_genes_Critical gene overlap between models.png ```H``` ```M``` | critical gene overlap between each two models |
-	| plot_nearby_impact_num_.png ```H``` ```M``` | top 10 critical genes |
+<table>
+    <thead>
+        <tr>
+	        <th></th>
+		    <th><sub>File</sub></th>
+	        <th><sub>Description</sub></th>
+		    <th><sub>Human</sub></th>
+		    <th><sub>Mouse</sub></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+	        <tr>
+			    <td rowspan=5><sub>Input</sub></td>
+		        <td><sub>Kapoor_TOM.csv</sub></td>
+		        <td><sub>TOM co-expression network</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub></sub></td>
+	        </tr>
+	        <tr>
+		        <td><sub>embedding.csv</sub></td>
+		        <td><sub>network embedding</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+	        <tr>
+		        <td><sub>expression_meta.csv</sub></td>
+		        <td><sub>normalized expression data joined with subjects' metadata</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub></sub></td>
+	        </tr>
+            <tr>
+		        <td><sub>deseq.alc.vs.control.age.rin.batch.gender.PMI. corrected.w.prot.coding.gene.name.xlsx</sub></td>
+		        <td><sub>differential expression analysis</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub></sub></td>
+	        </tr>
+            <tr>
+		        <td><sub>de_data.csv</sub></td>
+		        <td><sub>differential expression analysis</sub></td>
+			    <td><sub></sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+        </tr>
+        <tr>
+	        <tr>
+			    <td rowspan=9><sub>Output</sub></td>
+		        <td><sub>critical_genes.csv</sub></td>
+		        <td><sub>candidate genes identified by ASSIST</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+	        <tr>
+		        <td><sub>neighbor_genes.csv</sub></td>
+		        <td><sub>closest DEG neighbors in the co-expression network</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+	        <tr>
+		        <td><sub>run_ml_.pngg</sub></td>
+		        <td><sub>machine learning accuracy</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+	        <tr>
+		        <td><sub>run_ml_top_dims.png</sub></td>
+		        <td><sub>machine learning accuracy using only the most important dimensions</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+	        <tr>
+		        <td><sub>gene_phenotype_corr_for_xx.png</sub></td>
+		        <td><sub>critical gene/DEG/neighbor gene correlation with alcohol traits</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub></sub></td>
+	        </tr>
+	        <tr>
+		        <td><sub>alcohol trait correlation CG, neighbor & DEG.png</sub></td>
+		        <td><sub>distribution plot to compare gene_phenotype_corr_for_xx.png</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub></sub></td>
+	        </tr>
+	        <tr>
+		        <td><sub>jaccard_average_Important dim overlap within model repeats.png</sub></td>
+		        <td><sub>the important dimensions overlap between the repeats of each model</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+	        <tr>
+		        <td><sub>jaccard_critical_genes_Critical gene overlap between models.png</sub></td>
+		        <td><sub>critical gene overlap between each two models</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+	        <tr>
+		        <td><sub>plot_nearby_impact_num_.png</sub></td>
+		        <td><sub>top 10 critical genes</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+	        </tr>
+        </tr>
+    </tbody>
+</table>
 
 
