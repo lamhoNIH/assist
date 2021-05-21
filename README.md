@@ -207,7 +207,7 @@ Note that for the Kapoor data used in our analysis (aka the human data), the ```
     <tbody>
         <tr>
 	        <tr>
-			    <td rowspan=7><sub>Input</sub></td>
+			    <td rowspan=8><sub>Input</sub></td>
 		        <td><sub>deseq.alc.vs.control.age.rin.batch.gender.PMI. corrected.w.prot.coding.gene.name.xlsx</sub></td>
 		        <td><sub>differential expression analysis</sub></td>
 			    <td><sub>:heavy_check_mark:</sub></td>
