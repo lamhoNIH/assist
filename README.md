@@ -258,7 +258,7 @@ Note that for the Kapoor data used in our analysis (aka the human data), the ```
         </tr>
         <tr>
 	        <tr>
-			    <td rowspan=4><sub>Output</sub></td>
+			    <td rowspan=3><sub>Output</sub></td>
 		        <td><sub>expression_meta.csv</sub></td>
 		        <td><sub>normalized expression data joined with subjects' metadata</sub></td>
 			    <td><sub>:heavy_check_mark:</sub></td>
