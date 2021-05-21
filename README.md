@@ -40,7 +40,8 @@ Jupyter notebooks for ASSIST analysis modules are included to allow researchers 
 
 For each of the analysis modules below, include detailed description on input data (file name, file content, columns the module cares about), what the analysis does about the input data, and what the output the module generates. This can include snapshots of sample dataframes and plots.
 
-## For all the input/output data below, ```H``` means it's for the human example data. ```M``` means it's for the mouse example data.
+## For all the input/output data below, ```Human``` means it's for the human example data (Kapoor et al 2019). ```Mouse``` means it's for the mouse example data (Ferguson et al 2019).
+The difference is because the two example datasets (Kapoor and HDID) we used had difference in the availability of the data. For example, ```TOM co-expression network``` and ```gene module assignment by WGCNA hierarchical clustering``` for the human data were provided to us but not available for the mouse data so the ```Network Analysis``` had to be run to construct these two files for the mouse. ```subjects' alcohol metadata``` was only available for the human data so all the analyses that involve diagnostics were skipped for the mouse data. 
 
 **1. Network Analysis**
 
@@ -221,6 +222,12 @@ Note that for the Kapoor data used in our analysis (aka the human data), the ```
 	        <tr>
 		        <td><sub>kapoor_expression_Apr5.txt</sub></td>
 		        <td><sub>normalized counts from RNA-seq or microarray</sub></td>
+			    <td><sub>:heavy_check_mark:</sub></td>
+			    <td><sub></sub></td>
+	        </tr>
+	    	<tr>
+		        <td><sub>Kapoor2019_coga.inia.detailed.pheno.04.12.17.csv</sub></td>
+		        <td><sub>subjects' alcohol metadata</sub></td>
 			    <td><sub>:heavy_check_mark:</sub></td>
 			    <td><sub></sub></td>
 	        </tr>
