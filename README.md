@@ -284,6 +284,7 @@ Note that for the Kapoor data used in our analysis (aka the human data), the ```
 			    <td><sub></sub></td>
 	        </tr>
         </tr>
+    </tbody>
 </table>
 
 **5. Module Network Embedding**
