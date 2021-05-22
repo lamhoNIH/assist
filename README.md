@@ -243,13 +243,13 @@ Note that for the Kapoor data used in our analysis (aka the human data), the ```
         <td><sub>network_louvain_default.csv</sub></td>
         <td><sub>gene module assignment by Louvain algorithm using its default setting</sub></td>
         <td><sub>:heavy_check_mark:</sub></td>
-        <td><sub></sub></td>
+        <td><sub>:heavy_check_mark:</sub></td>
       </tr>
       <tr>
         <td><sub>network_louvain_agg1.csv</sub></td>
         <td><sub>gene module assignment by Louvain algorithm using a different setting</sub></td>
         <td><sub>:heavy_check_mark:</sub></td>
-        <td><sub></sub></td>
+        <td><sub>:heavy_check_mark:</sub></td>
       </tr>
     </tbody>
     <tbody>
@@ -270,13 +270,13 @@ Note that for the Kapoor data used in our analysis (aka the human data), the ```
         <td><sub>plot_sig_perc_xx.png</sub></td>
         <td><sub>% genes in the module that are significant for different alcohol trait group</sub></td>
         <td><sub>:heavy_check_mark:</sub></td>
-        <td><sub>:heavy_check_mark:</sub></td>
+        <td><sub></sub></td>
       </tr>
       <tr>
         <td><sub>cluster_phenotype_corr_xx.png</sub></td>
         <td><sub>module eigengene and alcohol trait correlation</sub></td>
         <td><sub>:heavy_check_mark:</sub></td>
-        <td><sub>:heavy_check_mark:</sub></td>
+        <td><sub></sub></td>
       </tr>
     </tbody>
 </table>
@@ -365,7 +365,7 @@ Note that for the Kapoor data used in our analysis (aka the human data), the ```
         <td><sub>:heavy_check_mark:</sub></td>
       </tr>
       <tr>
-        <td><sub>cluster_DE_perc_epoch=5_alpha=0.1 embedding.png</sub></td>
+        <td><sub>cluster_DE_perc_epoch=100_alpha=0.1 embedding.png</sub></td>
         <td><sub>DEG distribution across embedding clusters (compare it with cluster_DE_perc_network.png)</sub></td>
         <td><sub>:heavy_check_mark:</sub></td>
         <td><sub>:heavy_check_mark:</sub></td>
@@ -374,22 +374,22 @@ Note that for the Kapoor data used in our analysis (aka the human data), the ```
         <td><sub>cluster_phenotype_corr_network.png</sub></td>
         <td><sub>module eigengene and alcohol trait correlation (same as the output in <code>Module DE/Diagnostic Correlation</code></sub></td>
         <td><sub>:heavy_check_mark:</sub></td>
-        <td><sub>:heavy_check_mark:</sub></td>
+        <td><sub></sub></td>
       </tr>
       <tr>
         <td><sub>cluster_phenotype_corr_embedding.png</sub></td>
         <td><sub>cluster eigengene and alcohol trait correlation (compare it with cluster_phenotype_corr_network.png)</sub></td>
         <td><sub>:heavy_check_mark:</sub></td>
-        <td><sub>:heavy_check_mark:</sub></td>
+        <td><sub></sub></td>
       </tr>
       <tr>
         <td><sub>alcohol trait correlation network vs embedding.png</sub></td>
         <td><sub>distribution plot to compare cluster_phenotype_corr_network.png and cluster_phenotype_corr_embedding.png</sub></td>
         <td><sub>:heavy_check_mark:</sub></td>
-        <td><sub>:heavy_check_mark:</sub></td>
+        <td><sub></sub></td>
       </tr>
       <tr>
-        <td><sub>cluster_jaccard_Network vs epoch=5_alpha=0.1.png</sub></td>
+        <td><sub>cluster_jaccard_Network vs epoch=100_alpha=0.1.png</sub></td>
         <td><sub>pairwise jaccard comparison to determine network module and embedding cluster similarity</sub></td>
         <td><sub>:heavy_check_mark:</sub></td>
         <td><sub>:heavy_check_mark:</sub></td>
