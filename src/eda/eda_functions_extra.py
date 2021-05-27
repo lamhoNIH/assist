@@ -362,5 +362,7 @@ def plot_dist(summary_df, sample_name, trait, summary_type):
         xlabel = ''
     plt.xlabel(xlabel)
     plt.ylabel('Events')
-    plt.legend()
+    leg = plt.legend(loc='center left', bbox_to_anchor=(0.6, 0.75))
+    leg.get_frame().set_alpha(None)
+
 
