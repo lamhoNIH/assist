@@ -488,25 +488,31 @@ def gene_phenotype_corr(critical_genes, expression_meta_df, title):
     phenotypes = ['AUDIT', 'Alcohol_intake_gmsperday', 'Total_drinking_yrs']
     for pheno in phenotypes:
         corr_list = []
+#         p_list = []
         labels = []
         for gene in critical_genes:
             if gene in expression_meta_df.columns:
                 sub = expression_meta_df[[gene, pheno]]
                 sub = sub.dropna()
                 corr_list.append(pearsonr(sub[gene], sub[pheno])[0])
+#                 p_list.append(pearsonr(sub[gene], sub[pheno])[1])
         if i == 1:
             genes_corr = pd.DataFrame({pheno: corr_list})
+#             corr_p = pd.DataFrame({pheno: p_list})
             i += 1
         else:
             genes_corr[pheno] = corr_list
+#             corr_p[pheno] = p_list
     genes_corr.index = critical_genes
+#     corr_p.index = critical_genes
     sort_corr = genes_corr.reindex(genes_corr.mean(axis = 1).sort_values().index) 
+#     sort_p = corr_p.reindex(genes_corr.mean(axis = 1).sort_values().index)
     plt.rcParams.update({'font.size':14})
     plt.figure(figsize = (6, 11))
-    plt.title(title)
+    plt.title(title, fontsize = 26)
     sns.heatmap(sort_corr, cmap='RdBu_r', vmin = -0.5, vmax=0.5, xticklabels = phenotypes, yticklabels = True)
-    plt.xticks(rotation = 45, ha = 'right')
-    plt.ylabel('Gene')
+    plt.xticks(rotation = 45, ha = 'right', fontsize = 26)
+    plt.ylabel('Gene symbol', fontsize = 26)
     plt.savefig(os.path.join(Result.getPath(), f'gene_phenotype_corr_for_{title}.png'), bbox_inches='tight')
     plt.show()
     plt.close()
