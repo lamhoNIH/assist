@@ -1,0 +1,18 @@
+{
+	"inputs": {
+		"embedding_file": "data/pipeline/mouse/network_embedding/embedding.csv",
+		"differentially_expressed_genes": "data/HDID_data/de_data.csv"
+	},
+	"outputs": {
+		"critical_genes": "data/pipeline/mouse/ml_and_critical_gene_identifier/critical_gene_df.csv"
+	},
+	"parameters": {
+		"plot_path": "data/pipeline/mouse/ml_and_critical_gene_identifier/artifacts",
+		"skip_diagnostics": "true",
+		"top_n_coef": "0.5",
+		"models_to_find_cg": ["LR", "RF", "XGB"],
+		"aimed_cg_num": 500,
+		"aim_within_n": 15,
+		"top_n_critical_genes": 10
+	}
+}

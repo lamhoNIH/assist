@@ -15,10 +15,10 @@ print(f'{script_dir}')
 module_map = {
     "network_analysis": ["24g", "0.1.0"], # ~3 to 4 minutes on human, 12 to 19 minutes on mouse
     "module_extraction": ["28g", "0.1.0"], # ~15 minutes on human, 6 minutes on mouse
-    "module_membership_analysis": ["16g", "0.1.0"], # ~14 minutes on human, 3 minutes on mouse
+    "module_membership_analysis": ["16g", "0.1.0"], # < 1 minutes on human, 3 minutes on mouse
     "module_de_diagnostic_correlation": ["10g", "0.1.0"], # ~17 minutes on human, 8 minutes on mouse
     "network_embedding": ["28g", "0.1.0"], # ~ 2.5 hrs on human, 1 hr on mouse
-	"ml_and_critical_gene_identifier": ["16g", "0.1.0"] # ~11 to 15 minutes on human, 6 minutes on mouse
+	"ml_and_critical_gene_identifier": ["18g", "0.1.0"] # ~11 to 15 minutes on human, 6 minutes on mouse
 }
 
 if len(sys.argv) < 3:
@@ -44,7 +44,7 @@ config_path = f"pipeline/{dataset}/{module}"
 if not exists(f"{data}/{config_path}"):
     makedirs(f"{data}/{config_path}")
 
-copyfile(f"{script_dir}/{dataset}/{module}.json", f"{data}/{config_path}/{module}.json")
+copyfile(f"{script_dir}/../config/{dataset}/{module}.json", f"{data}/{config_path}/{module}.json")
 
 memory = module_map[module][0]
 tag = module_map[module][1]

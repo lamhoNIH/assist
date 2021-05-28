@@ -178,7 +178,8 @@ def get_max_dist(distance_dfs, ratio = 0.7, max_dist_ratio = 6*1e-5):
 
     return max_dist_list
 
-def get_critical_gene_sets(processed_emb_df, top_dim_list, deseq, ratio = 0.7, max_dist_ratio = 6*1e-5):
+def get_critical_gene_df(processed_emb_df, top_dim_list, deseq, output_path, aimed_number = 500, within_n = 10, 
+                         models = ['LR', 'RF', 'XGB']):
     '''
     Input: processed embedding df used for ML and top_dim_list (set of 9 for 3 models x 3 repeats)
     ratio is what % of the genes need to be less than the max_dist for critical gene identification.
@@ -191,35 +192,58 @@ def get_critical_gene_sets(processed_emb_df, top_dim_list, deseq, ratio = 0.7, m
     distance_dfs = []
     for process_emb_df in process_emb_df_subset:
         distance_dfs.append(get_pairwise_distances(process_emb_df))
-    # return distance_dfs
     cutoff = deseq['abs_log2FC'].sort_values(ascending = False).reset_index(drop = True)[int(len(deseq) * 0.01)]
-    max_dist_list = get_max_dist(distance_dfs, ratio = ratio, max_dist_ratio = max_dist_ratio)
-#     calculate_distance_stats(distance_dfs)
-    critical_gene_sets = list(map(get_critical_genes, distance_dfs, [cutoff]*len(distance_dfs), max_dist_list))
-    return critical_gene_sets
+    indices = [3*['LR','RF','XGB'].index(model) for model in models]
+    distance_dfs_to_use = []
+    for index in indices:
+        distance_dfs_to_use += distance_dfs[index:index+3]
+    critical_gene_df = get_critical_genes(distance_dfs_to_use, cutoff, aimed_number = aimed_number, within_n = within_n, models = models)
+    critical_gene_df.to_csv(output_path, index = 0)
+    return critical_gene_df
 
-
-def get_critical_gene_df(critical_gene_set, network_name, output_path):
+def get_critical_genes(pairwise_distance_df_list, cutoff, aimed_number, within_n = 10, models = ['LR', 'RF', 'XGB']):
     '''
-    Supply 9 sets of critical genes for 3 model x 3 repeats 
-    Return a critical gene df with count in each model and each repeat 
-    with the sum of how many the critical gene shows up near an impact gene
+    Find critical genes that are close to impact genes
+    critical_gene_dict: # impact genes a critical gene is close to
+    gene_pair_dict: pair the impact gene with their critical genes (based on distance) in a dictionary
+    pairwise_distance_df: pairwise distance between the genes and sorted with abs_log2FC from high to low
+    return critical_gene_dict: critical gene as keys, number of impact genes it's close to as the values
+    gene_pair_dict: impact genes as keys and their corresponding critical genes as values
     '''
-    models = ['LR','RF','XGB']
-    critical_gene_dfs = []
-    for j in range(0, 9, 3):
-        l = int(j/3)
-        for i in range(3):
-            temp = pd.DataFrame(critical_gene_set[i+j][0], columns = ['gene', f'{models[l]}_repeat{i+1}'])
-            critical_gene_dfs.append(temp)
-        critical_gene_dfs_merged = reduce(lambda left,right:pd.merge(
-            left,right,on=['gene'],how='outer'), critical_gene_dfs)
-        critical_gene_dfs_merged.fillna(0, inplace = True)
-
+    upper_max_dist = 1
+    lower_max_dist = 0.0001
+    cg_cnt = 0
+    while (cg_cnt < aimed_number-within_n) or (cg_cnt > aimed_number+within_n): # while loop to determine if the max_dist goes up or down
+        max_dist = (lower_max_dist + upper_max_dist)/2
+        cg_dict_list = []
+        for pairwise_distance_df in pairwise_distance_df_list:
+            critical_gene_list = []
+            size = len(pairwise_distance_df[pairwise_distance_df.abs_log2FC > cutoff]) # cutoff of abs_log2FC > 0.2 as impact gene
+            for i in range(size):
+                subset_distance = pairwise_distance_df.iloc[i,:-2].sort_values()
+                critical_gene_list += list(subset_distance[subset_distance.between(0.01,max_dist)].index)
+            critical_gene_dict = Counter(critical_gene_list)
+            critical_gene_dict = sorted(critical_gene_dict.items(), key=lambda x: x[1], reverse=True)
+            cg_dict_list.append(critical_gene_dict)    
+        # determine the number of critical genes found
+        critical_gene_dfs = []
+        for j in range(0, len(cg_dict_list), 3):
+            l = int(j/3)
+            for i in range(3):
+                temp = pd.DataFrame(cg_dict_list[i+j], columns = ['gene', f'{models[l]}_repeat{i+1}'])
+                critical_gene_dfs.append(temp)
+            critical_gene_dfs_merged = reduce(lambda left,right:pd.merge(
+                left,right,on=['gene'],how='outer'), critical_gene_dfs)
+            critical_gene_dfs_merged.fillna(0, inplace = True)
+        cg_cnt = len(critical_gene_dfs_merged)
+        if cg_cnt > aimed_number:
+            upper_max_dist = max_dist
+        if cg_cnt < aimed_number:
+            lower_max_dist = max_dist
+    # once the # of critical genes satisfy the rule, can prepare to save
     critical_gene_dfs_merged['near_impact_cnt'] = critical_gene_dfs_merged.sum(axis = 1)
     critical_gene_dfs_merged = critical_gene_dfs_merged.sort_values(
         'near_impact_cnt', ascending = False).reset_index(drop = True)
-    critical_gene_dfs_merged.to_csv(output_path, index = 0)
     return critical_gene_dfs_merged
 
 def plot_nearby_impact_num(critical_gene_df, emb_name, top = 10):
@@ -242,26 +266,61 @@ def jaccard_critical_genes(critical_gene_df, network_name):
     '''
     jaccard similarity between top 10 critical genes identified by each model
     '''
-    critical_gene_df['lr'] = critical_gene_df['LR_repeat1'] + critical_gene_df['LR_repeat2'] + critical_gene_df['LR_repeat3']
-    critical_gene_df['rf'] = critical_gene_df['RF_repeat1'] + critical_gene_df['RF_repeat2'] + critical_gene_df['RF_repeat3']
-    critical_gene_df['xgb'] = critical_gene_df['XGB_repeat1'] + critical_gene_df['XGB_repeat2'] + critical_gene_df['XGB_repeat3']
-    cols_to_permute = ['lr', 'rf', 'xgb']
+    cols_to_permute = []
+    cg_df_copy = critical_gene_df.copy()
+    for i in range(1, len(cg_df_copy.columns)-1, 3):
+        model_name = cg_df_copy.columns[i].split('_')[0]
+        cg_df_copy[model_name] = cg_df_copy[f'{model_name}_repeat1'] + cg_df_copy[f'{model_name}_repeat2'] + cg_df_copy[f'{model_name}_repeat3']
+        cols_to_permute.append(model_name)
     jaccard_list = []
     model_names = []
     for col1, col2 in combinations(cols_to_permute, 2):
-        top10_1 = critical_gene_df.sort_values(col1, ascending = False)['gene'][:10]
-        top10_2 = critical_gene_df.sort_values(col2, ascending = False)['gene'][:10]
+        top10_1 = cg_df_copy.sort_values(col1, ascending = False)['gene'][:10]
+        top10_2 = cg_df_copy.sort_values(col2, ascending = False)['gene'][:10]
         jaccard_list.append(jaccard_similarity(top10_1, top10_2))
         model_names.append(f'{col1} vs {col2}')
-    plt.rcParams.update({'font.size': 18})    
-    plt.bar(model_names, jaccard_list)
-    plt.title(network_name)
-    plt.ylabel('jaccard similarity')
-    plt.ylim(0, 1)
-    plt.savefig(os.path.join(Result.getPath(), f'jaccard_critical_genes_{network_name}.png'))
-    plt.show()
-    plt.close()
     
-    gene_sets = [set(critical_gene_df[['gene',col]].sort_values(col, ascending = False)[:10]['gene']) for col in cols_to_permute]
+    if len(jaccard_list) == 1:
+        print(f'critical gene overlap between models {model_names} is {round(jaccard_list[0], 3)}')
+    else:
+        plt.rcParams.update({'font.size': 18})    
+        plt.bar(model_names, jaccard_list)
+        plt.title(network_name)
+        plt.ylabel('jaccard similarity')
+        plt.ylim(0, 1)
+        plt.savefig(os.path.join(Result.getPath(), f'jaccard_critical_genes_{network_name}.png'))
+        plt.show()
+        plt.close()
+    
+    gene_sets = [set(cg_df_copy[['gene',col]].sort_values(col, ascending = False)[:10]['gene']) for col in cols_to_permute]
     intersect_genes = set.intersection(*gene_sets)
     return intersect_genes
+
+def join_subnetwork_w_deseq(subnetwork, deseq):
+    if 'abs_log2FC' not in deseq.columns:
+        deseq['abs_log2FC'] = abs(deseq['log2FoldChange'])
+    subnetwork_w_DE = pd.merge(subnetwork, deseq[['id','abs_log2FC']], left_index = True, right_on = 'id')
+    subnetwork_w_DE.index = subnetwork_w_DE['id']
+    return subnetwork_w_DE
+
+def get_network_neighbor_genes(tom, deseq, aimed_number, within_n = 10):
+    tom_w_deseq = join_subnetwork_w_deseq(tom, deseq)
+    upper_cutoff = 1
+    lower_cutoff = 0.000001
+    neighbor_cnt = 0
+    while (neighbor_cnt < aimed_number-within_n) or (neighbor_cnt > aimed_number+within_n):
+        neighbor_gene_dict = {}
+        cutoff = (upper_cutoff + lower_cutoff)/2
+        neighbor_cnt = 0
+        for col in tom_w_deseq.columns[:-2]:
+            subset = tom_w_deseq[(tom_w_deseq[col].between(cutoff, 0.99)) & (tom_w_deseq['abs_log2FC'] > 0.099)][col]
+            if len(subset) > 0:
+                neighbor_cnt += 1
+                neighbor_gene_dict[col] = len(subset)
+        if neighbor_cnt > aimed_number:
+            lower_cutoff = cutoff
+        if neighbor_cnt < aimed_number:
+            upper_cutoff = cutoff
+    sorted_neighbor_genes = sorted(neighbor_gene_dict.items(), key=lambda kv: kv[1], reverse = True)
+    neighbor_gene_df = pd.DataFrame(sorted_neighbor_genes, columns = ['gene', 'near_DEG_cnt'])   
+    return neighbor_gene_df

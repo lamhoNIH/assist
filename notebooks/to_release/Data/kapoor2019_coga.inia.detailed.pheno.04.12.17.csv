@@ -1,0 +1,144 @@
+SUNumber,IID,RNAsequencedby,Frozentissue,BMI,RIN,Age,Gender,Ethnicity,Alc_status,Classification,DSMIV_LF_added,DSMIV,DSMV,PM!,Brain_pH,COD_category,Agonal_phase,Liver_class,Smoking_frequency,Pack_yrs_1_pktperday_1_yr,AUDIT,Alcohol_intake_gmsperday,Total_drinking_yrs,Depression,Anxiety,SR
+214,X214,INIA,Left,35,7,48,Female,European,Alcoholic,Alcohol Use Disorder,Abuse,C: Substance Abuse (alcohol),Mild,32,6.26,Toxicity,Rapid,Steatosis,99 - Not reported,NA,186,266,23,Yes,No,1
+460,X460,INIA,Right,22,7.4,49,Female,European,Control,Control,Control,NA,NA,15,6.93,Cardiac,Rapid,Normal,99 - Not reported,NA,NA,NA,NA,No,No,2
+584,X584,INIA,Right,22,7.3,52,Female,European,Alcoholic,Alcohol Use Disorder,Abuse,C: Substance Abuse (alcohol),Moderate,23,6.44,Respiratory,Rapid,Normal,01 - Everyday/7days per week,42,42,102,27,Yes,No,3
+551,X551,INIA,Right,41,7.6,51,Female,European,Control,Control,Control,NA,NA,37.5,6.92,Cardiac,Intermediate,Steatosis,99 - Not reported,NA,0,0,NA,No,No,4
+530,X530,INIA,Right,23,7.6,56,Female,European,Alcoholic,Alcohol Use Disorder,Abuse,C: Substance Abuse (alcohol),Mild,38,6.54,Toxicity,Rapid,Normal,01 - Everyday/7days per week,38,56,136,31,Yes,No,5
+571,X571,INIA,Right,35,6.2,52,Female,Pacific Islander,Control,Control,Control,NA,NA,43,6.33,Cardiac,Rapid,Steatosis,01 - Everyday/7days per week,6,11,16,20,No,No,6
+327,X327,INIA,Left,22,7.2,59,Female,European,Alcoholic,Alcohol Use Disorder,Abuse,C: Substance Abuse (alcohol),Mild,20,6.63,Cardiac,Intermediate,Congestion,11 - Never  in the past year,NA,140,280,34,Yes,No,7
+723,X723,INIA,Left,29,7.7,56,Female,European,Control,Control,Control,NA,NA,28,6.34,Cardiac,Intermediate,Normal,01 - Everyday/7days per week,20,24,34,39,No,No,8
+637,X637,INIA,Left,15,7.3,61,Female,European,Alcoholic,Alcohol Use Disorder,Dependence,B: Substance Dependence (Alcohol),Severe,49,6.75,Respiratory,Intermediate,Steatosis,01 - Everyday/7days per week,80,108,262,36,Yes,No,9
+656,X656,INIA,Right,30,6.3,62,Female,European,Control,Control,Control,NA,NA,35,6.06,Cardiac,Rapid,Steatosis,12 - Never in my life,NA,7,14,37,No,No,10
+620,X620,INIA,Right,33,6.9,62,Female,European,Alcoholic,Alcohol Use Disorder,Dependence,B: Substance Dependence,Severe,36.5,6.78,Cardiac,Intermediate,Congestion,01 - Everyday/7days per week,17,70,150,37,Yes,No,11
+567,X567,INIA,Right,21,7.8,63,Female,European,Control,Control,Control,NA,NA,42,7.02,Cardiac,Rapid,Normal,01 - Everyday/7days per week,44,0,0,NA,No,No,12
+302,X302,INIA,Left,34,6.1,73,Female,European,Alcoholic,Alcohol Use Disorder,Abuse,C. Substance Abuse (alcohol),Mild,60,6.68,Cardiac,Rapid,Congestion,99 - Not reported,NA,70,170,48,No,No,13
+646,X646,INIA,Right,27,6.6,63,Female,European,Control,Control,Control,NA,NA,50,6.46,Cardiac,Intermediate,Normal,12 - Never in my life,NA,7,9.7,38,No,No,14
+628,X628,INIA,Right,29,7.1,41,Male,European,Alcoholic,Alcohol Use Disorder,Abuse,C: Substance Abuse (alcohol),Moderate,38.5,6.55,Toxicity,Intermediate,Steatosis,01 - Everyday/7days per week,23,28,56,16,Yes,No,15
+727,X727,INIA,Right,35,6.8,40,Male,European,Control,Control,Control,NA,NA,27,6.79,Cardiac/Respiratory,Intermediate,Steatosis,12 - Never in my life,NA,4,8,16,No,No,16
+351,X351,INIA,Left,24,6.9,42,Male,European,Alcoholic,Alcohol Use Disorder,Abuse,C: Substance Abuse (alcohol),Moderate,41,6.5,Toxicity,Intermediate,Steatosis,12 - Never in my life,NA,84,168,24,Yes,No,17
+741,X741,INIA,Right,37,6.9,40,Male,European,Control,Control,Control,NA,NA,59,6.93,Vascular,Rapid,Normal,11 - Never  in the past year,2,2.8,4,23,No,No,18
+641,X641,INIA,Right,28,7.3,43,Male,European,Alcoholic,Alcohol Use Disorder,Dependence,B: Substance Dependence (alcohol),Severe,33,6.57,Unknown,Rapid,Normal,01 - Everyday/7days per week,25,140,280,18,Yes,No,19
+570,X570,INIA,Left,40,7.2,47,Male,European,Control,Control,Control,NA,NA,38,6.74,Cardiac,Rapid,Steatosis,01 - Everyday/7days per week,54,8,12,22,No,No,20
+719,X719,INIA,Left,25,6.5,44,Male,European,Alcoholic,Alcohol Use Disorder,Dependence,B: Substance Dependence (alcohol),Severe,59,6.87,Cardiac,Intermediate,Steatosis,01 - Everyday/7days per week,28,154,308,26,Yes,Yes,21
+713,X713,INIA,Left,29,7.4,47,Male,European,Control,Control,Control,NA,NA,27,6.66,Cardiac,Rapid,Steatosis,01 - Everyday/7days per week,31,17,24,29,No,No,22
+654,X654,INIA,Left,26,6.9,49,Male,European,Alcoholic,Alcohol Use Disorder,Dependence,B: Substance Dependence (alcohol),Severe,44,6.41,Cardiac,Rapid,Normal,01 - Everyday/7days per week,50,42,84,33,No,Yes,23
+582,X582,INIA,Right,28,6.4,50,Male,European,Control,Control,Control,NA,NA,30,6.37,Cardiac,Rapid,Normal,01 - Everyday/7days per week,32,NA,NA,NA,No,No,24
+670,X670,INIA,Right,33,7.1,49,Male,European,Alcoholic,Alcohol Use Disorder,Dependence,B: Substance Dependence (alcohol),Severe,16,6.19,Cardiac,Rapid,Steatosis,01 - Everyday/7days per week,22,24,48,35,Yes,Yes,25
+728,X728,INIA,Right,21,7.7,49,Male,Middle Eastern,Control,Control,Control,NA,NA,38,6.92,Cardiac,Intermediate,Normal,01 - Everyday/7days per week,29,0,0,NA,No,No,26
+287,X287,INIA,Left,24,8,50,Male,European,Alcoholic,Alcohol Use Disorder,Dependence,B: Substance Dependence (alcohol),Moderate,17,6.3,Cardiac,Rapid,Steatosis,99 - Not reported,NA,105,210,32,No,No,27
+635,X635,INIA,Left,29,7.8,50,Male,European,Control,Control,Control,NA,NA,40,6.87,Cardiac,Rapid,Congestion,01 - Everyday/7days per week,22,1,2,25,No,No,28
+554,X554,INIA,Left,24,7.4,54,Male,European,Alcoholic,Alcohol Use Disorder,Abuse,C: Substance Abuse (alcohol),Mild,27,6.16,Cardiac,Rapid,Congestion,01 - Everyday/7days per week,36,84,168,29,Yes,Yes,29
+600,X600,INIA,Left,29,8.1,55,Male,European,Control,Control,Control,NA,NA,12,6.39,Cardiac,Rapid,Steatosis,12 - Never in my life,NA,7,14,30,No,No,30
+586,X586,INIA,Right,30,8.1,55,Male,European,Alcoholic,Alcohol Use Disorder,Dependence,B: Substance Dependence (alcohol),Severe,17,6.85,Respiratory,Rapid,Steatosis,12 - Never in my life,NA,84,168,30,Yes,No,31
+636,X636,INIA,Right,28,7.6,54,Male,European,Control,Control,Control,NA,NA,28,6.38,Cardiac,Rapid,Steatosis,01 - Everyday/7days per week,13,3,4.8,29,No,No,32
+253,X253,INIA,Left,41,7.5,56,Male,European,Alcoholic,Alcohol Use Disorder,Dependence,B: Substance Dependence,Severe,22,6.52,Cardiac,Rapid,Steatosis,99 - Not reported,38,56,80,31,No,No,33
+667,X667,INIA,Right,30,8,57,Male,European,Control,Control,Control,NA,NA,18,6.39,Cardiac,Rapid,Steatosis,01 - Everyday/7days per week,18,1,14,37,No,No,34
+522,X522,INIA,Left,24,7.9,58,Male,European,Alcoholic,Alcohol Use Disorder,Abuse,C: Substance Abuse (alcohol),Mild,21.5,6.65,Infection,Intermediate,Cirrhosis,01 - Everyday/7days per week,32,42,84,38,No,No,35
+681,X681,INIA,Right,38,6.9,59,Male,European,Control,Control,Control,NA,NA,29,6.61,Respiratory,Rapid,Steatosis,11 - Never  in the past year,7,1,14,42,No,No,36
+622,X622,INIA,Right,20,7.6,58,Male,European,Alcoholic,Alcohol Use Disorder,Abuse,C: Substance Abuse (alcohol),Moderate,44.5,6.47,Cardiac,Rapid,Steatosis,01 - Everyday/7days per week,54,55,110,43,No,No,37
+639,X639,INIA,Right,31,6.4,58,Male,European,Control,Control,Control,NA,NA,28,5.92,Cardiac,Rapid,Steatosis,01 - Everyday/7days per week,33,0,0,NA,No,No,38
+252,X252,INIA,Left,42,7.6,59,Male,European,Alcoholic,Alcohol Use Disorder,Abuse,C: Substance Abuse (alcohol),Mild,24,6.57,Cardiac,Rapid,Steatosis,12 - Never in my life,NA,70,150,34,No,No,39
+700,X700,INIA,Left,40,7.2,59,Male,European,Control,Control,Control,NA,Mild,15,6.54,Cardiac,Rapid,Steatosis,12 - Never in my life,NA,28,56,34,No,No,40
+597,X597,INIA,Right,25,6.6,59,Male,European,Alcoholic,Alcohol Use Disorder,Abuse,C: Substance Abuse (alcohol),Mild,35,6.57,Cardiac,Intermediate,Congestion,01 - Everyday/7days per week,61,42,84,34,No,No,41
+672,X672,INIA,Right,35,7.5,59,Male,European,Control,Control,Control,NA,NA,28,6.77,Cardiac,Intermediate,Steatosis,01 - Everyday/7days per week,30,42,59,39,Yes,Yes,42
+643,X643,INIA,Left,25,7.8,61,Male,European,Alcoholic,Alcohol Use Disorder,Dependence,B: Substance Dependence (alcohol),Severe,59,6.57,Cardiac,Intermediate,Steatosis,01 - Everyday/7days per week,18,284,513,43,Yes,Yes,43
+720,X720,INIA,Left,30,7.5,61,Male,European,Control,Control,Control,NA,NA,22,6.41,Cardiac,Rapid,Steatosis,01 - Everyday/7days per week,44,1,17,43,No,No,44
+717,X717,INIA,Right,27,7,62,Male,European,Alcoholic,Alcohol Use Disorder,Abuse,C: Substance Abuse (alcohol),Severe,30.5,6.79,Cardiac/Respiratory,Intermediate,Steatosis,01 - Everyday/7days per week,19,63,141,42,Yes,No,45
+442.1,X442.1,INIA,Right,30,5.9,63,Male,European,Control,Control,Control,NA,NA,24,6.94,Cardiac,Rapid,Steatosis,01 - Everyday/7days per week,22,NA,NA,NA,No,No,46
+709,X709,INIA,Right,19,7.6,63,Male,European,Alcoholic,Alcohol Use Disorder,Abuse,C: Substance Abuse (alcohol),Moderate,28,6.89,Respiratory,Rapid,Steatosis,01 - Everyday/7days per week,46,35,70,44,No,No,47
+729,X729,INIA,Left,34,7.2,61,Male,European,Control,Control,Control,NA,NA,30,6.69,Cardiac,Intermediate,Steatosis,12 - Never in my life,NA,7,14,46,No,No,48
+572,X572,INIA,Right,20,7.9,64,Male,European,Alcoholic,Alcohol Use Disorder,Dependence,B: Substance Dependence (alcohol),Severe,39,6.76,Toxicity,Intermediate,Mild_Steatosis,01 - Everyday/7days per week,92,84,254,39,No,No,49
+749,X749,INIA,Left,36,6.8,64,Male,European,Control,Control,Control,NA,NA,30,6.82,Cardiac,Intermediate,Congestion,01 - Everyday/7days per week,45,17,34,49,No,No,50
+558,X558,INIA,Right,27,7.3,65,Male,European,Alcoholic,Alcohol Use Disorder,Abuse,C: Substance Abuse (alcohol),Mild,14.5,6.79,Cardiac,Rapid,Congestion,11 - Never  in the past year,13,28,68,40,Yes,No,51
+416,X416,INIA,Right,19,5.9,69,Male,Asian,Control,Control,Control,NA,NA,13.5,6.74,Cardiac,Rapid,NA,12 - Never in my life,NA,0,0,NA,No,No,52
+625,X625,INIA,Left,20,7.1,65,Male,European,Alcoholic,Alcohol Use Disorder,Dependence,B: Substance Dependence (alcohol),Severe,72,6.88,Stroke,Intermediate,Steatosis,01 - Everyday/7days per week,50,35,70,40,Yes,Yes,53
+663,X663,INIA,Right,32,7.5,67,Male,Pacific Islander,Control,Control,Control,NA,NA,25,6.7,Cardiac,Rapid,Congestion,01 - Everyday/7days per week,37,1,2,42,No,No,54
+243,X243,INIA,Left,29,5.8,70,Male,European,Alcoholic,Alcohol Use Disorder,Abuse,C: Substance Abuse (alcohol),Mild,33.5,6.24,Respiratory,Long term,Steatosis,01 - Everyday/7days per week,52,84,444,55,No,No,55
+451,X451,INIA,Right,28,7.2,73,Male,European,Control,Control,Control,NA,NA,48,6.8,Cardiac,Intermediate,NA,01 - Everyday/7days per week,25,1,2,48,Yes,Yes,56
+512,X512,INIA,Left,27,7,73,Male,European,Alcoholic,Alcohol Use Disorder,Dependence,B: Substance Dependence (alcohol),Severe,43.5,6.59,Cardiac,Rapid,Congestion,12 - Never in my life,NA,49,119,18,Yes,No,57
+463,X463,INIA,Left,24,6,73,Male,European,Control,Control,Control,Control,NA,51,6.82,Cardiac,Long term,NA,01 - Everyday/7days per week,50,42,63,48,No,No,58
+547,X547,INIA,Right,21,8.1,73,Male,European,Alcoholic,Alcohol Use Disorder,Abuse,C: Substance Abuse (alcohol),Severe,19,6.84,Infection,Rapid,Steatosis,01 - Everyday/7days per week,112,56,112,48,No,No,59
+688,X688,INIA,Right,NA,6.5,73,Male,European,Control,Control,Control,NA,NA,9,6.52,Cancer,Long term,NA,12 - Never in my life,NA,10,14,48,No,No,60
+105,X105,COGA,Left,31,8.3,55,Male,European,Control,Control,Control,NA,NA,7.5,6.9,Cardiac,Rapid,Steatosis,99 - Not reported,NA,NA,NA,NA,NA,NA,61
+146,X146,COGA,Left,23,6.6,74,Male,European,Control,Control,Control,NA,NA,16.5,6.25,Respiratory/Toxicity,Intermediate,NA,99 - Not reported,NA,NA,NA,NA,NA,NA,62
+150,X150,COGA,Left,30,8,26,Male,European,Control,Control,Control,NA,NA,36,6.65,Respiratory/Toxicity,Intermediate,Congestion,99 - Not reported,NA,NA,NA,NA,NA,NA,63
+153,X153,COGA,Left,NA,7.2,37,Male,European,Control,Control,Control,NA,NA,21,6.64,Cardiac,Rapid,Steatosis,99 - Not reported,NA,NA,NA,NA,NA,NA,64
+180,X180,COGA,Left,20,8.6,34,Male,European,Alcoholic,Alcohol Use Disorder,Abuse,C: Substance Abuse (alcohol),Mild,8.5,6.61,Hanging,Rapid,Steatosis,01 - Everyday/7days per week,16,91,221,9,Yes,No,65
+182,X182,COGA,Left,21,6.1,66,Male,European,Alcoholic,Alcohol Use Disorder,Abuse,C: Substance Abuse (alcohol),Mild,11.5,6.14,Respiratory,Intermediate,Normal,01 - Everyday/7days per week,50,70,100,41,No,No,66
+185,X185,COGA,Right,NA,5.8,70,Male,European,Alcoholic,Alcohol Use Disorder,Abuse,C: Substance Abuse (alcohol),Mild,32,6.05,Infection/ Hepatic,Long term,Cirrhosis,99 - Not reported,NA,56,80,45,No,No,67
+190,X190,COGA,Left,25,7,68,Male,European,Control,Control,Control,NA,NA,17,6.59,Hanging,Intermediate,Congestion,12 - Never in my life,NA,1,2,40,No,No,68
+192,X192,COGA,Left,29,7.2,54,Male,European,Alcoholic,Alcohol Use Disorder,Abuse,C: Substance Abuse (alcohol),Moderate,17,6.41,Trauma,Intermediate,Steatosis,99 - Not reported,36,56,80,29,No,No,69
+193,X193,COGA,Left,22,6.9,27,Female,European,Alcoholic,Alcohol Use Disorder,Abuse,C: Substance Abuse (alcohol),Moderate,36,6.31,Toxicity,Intermediate,Steatosis,99 - Not reported,NA,420,600,5,Yes,Yes,70
+204,X204,COGA,Left,18,7.9,46,Female,European,Alcoholic,Alcohol Use Disorder,Dependence,B: Substance Dependence,Severe,27,6.5,Respiratory,Rapid,Steatosis,99 - Not reported,NA,120,171,26,Yes,Yes,71
+209,X209,COGA,Right,32,4.8,37,Male,European,Control,Control,Control,NA,NA,11,5.3,Respiratory,Intermediate,Mild_Steatosis,99 - Not reported,NA,NA,NA,0,No,No,72
+211,X211,COGA,Right,30,7.6,50,Male,European,Control,Control,Control,NA,NA,29,6.68,Cardiac,Rapid,Normal,12 - Never in my life,NA,1,2,25,No,No,73
+212,X212,COGA,Left,23,5.2,50,Male,European,Alcoholic,Alcohol Use Disorder,Dependence,B: Substance Dependence,Severe,24,6.59,Hepatic/Blood loss,Rapid,Cirrhosis,01 - Everyday/7days per week,16,105,150,20,Yes,Yes,74
+217,X217,COGA,Left,24,7.2,79,Male,European,Alcoholic,Alcohol Use Disorder: AD pathology,Abuse,C: Substance Abuse (alcohol),Mild,48,6.34,Cardiac,Rapid,Congestion,99 - Not reported,NA,35,80,54,No,No,75
+218,X218,COGA,Left,22,5.1,73,Male,European,Alcoholic,Alcohol Use Disorder,Abuse,C: Substance Abuse (alcohol),Mild,24,6.3,Hepatic,Long term,Cirrhosis,12 - Never in my life,NA,103,147,48,No,No,76
+225,X225,COGA,Right,19,5.5,56,Male,European,Control,Control,Control,NA,NA,24,6.53,Cardiac,Rapid,Mild_Steatosis,99 - Not reported,31,NA,NA,NA,No,No,77
+227,X227,COGA,Left,30,5.8,61,Male,European,Control,Control,Control,NA,NA,24,6.52,Cardiac,Rapid,Congestion,11 - Never  in the past year,NA,NA,NA,NA,No,No,78
+228,X228,COGA,Right,27,7.9,59,Male,European,Control,Control,Control,NA,NA,20,6.56,Cardiac,Rapid,Normal,01 - Everyday/7days per week,41,NA,NA,NA,No,No,79
+232,X232,COGA,Right,29,9.2,48,Male,European,Control,Control,Control,NA,NA,17,6.71,Cardiac,Rapid,Normal,12 - Never in my life,NA,9,28,23,No,No,80
+234,X234,COGA,Left,21,7.3,39,Male,European,Alcoholic,Alcohol Use Disorder,Dependence,B: Substance Dependence (alcohol),Severe,24,6.56,Cardiac,Rapid,Steatosis,01 - Everyday/7days per week,21,56,80,14,Yes,No,81
+236,X236,COGA,Right,24,9,43,Male,European,Control,Control,Control,NA,NA,13,6.43,Cardiac,Rapid,Normal,11 - Never  in the past year,30,NA,NA,NA,No,No,82
+239,X239,COGA,Right,46,7.1,37,Male,European,Control,Control,Control,NA,NA,24,6.37,Cardiac,Rapid,Steatosis,99 - Not reported,NA,NA,NA,NA,No,No,83
+245,X245,COGA,Left,30,6.1,56,Male,European,Alcoholic,Alcohol Use Disorder,Abuse,C: Substance Abuse (alcohol),Mild,45,6.51,Blood Loss,Rapid,Steatosis,99 - Not reported,NA,150,300,31,Yes,No,84
+246,X246,COGA,Left,25,4.5,51,Male,European,Control,Control,Control,NA,NA,20,5.88,Cardiac,Rapid,Congestion,99 - Not reported,NA,NA,NA,NA,No,No,85
+256,X256,COGA,Left,39,5.2,37,Male,European,Alcoholic,Alcohol Use Disorder,Dependence,B: Substance Dependence (alcohol),Severe,17,6.33,Toxicity,Intermediate,Cirrhosis,99 - Not reported,NA,40,80,12,No,No,86
+257,X257,COGA,Left,30,7.9,58,Male,European,Control,Control,Control,NA,NA,12,6.46,Cardiac,Rapid,Mild_Steatosis,99 - Not reported,NA,NA,NA,NA,No,No,87
+259,X259,COGA,Right,18,5.7,56,Male,European,Alcoholic,Alcohol Use Disorder,Abuse,C: Substance Abuse (alcohol),Moderate,15,6.66,Cardiac,Rapid,Steatosis,99 - Not reported,NA,56,80,31,No,No,88
+270,X270,COGA,Left,29,5.8,60,Female,European,Control,Control,Control,NA,NA,21,6.8,Cardiac,Intermediate,Steatosis,99 - Not reported,NA,28,40,35,No,No,89
+277.1,X277.1,COGA,Left,26,5,50,Male,European,Control,Control,Control,NA,NA,19,6.26,Cardiac,Rapid,Congestion,11 - Never  in the past year,NA,6,12,25,No,No,90
+278,X278,COGA,Left,NA,6.7,74,Male,European,Control,Control,Control,NA,NA,10,6.22,Respiratory,Long term,Congestion,12 - Never in my life,NA,NA,NA,NA,No,No,91
+282,X282,COGA,Left,NA,6.8,82,Male,European,Control,Control,Control,NA,NA,36,6.24,Cardiac,Intermediate,NA,12 - Never in my life,NA,NA,NA,NA,No,No,92
+285,X285,COGA,Left,18,5.7,67,Female,European,Alcoholic,Alcohol Use Disorder,Abuse,C: Substance Abuse (alcohol),Mild,68,6.3,Trauma,Rapid,Cirrhosis,12 - Never in my life,NA,70,140,42,No,No,93
+286,X286,COGA,Left,19,5.7,25,Male,European,Alcoholic,Alcohol Use Disorder,Abuse,C. Substance Abuse (alcohol),Mild,43.5,6.7,Toxicity,Intermediate,Steatosis,99 - Not reported,NA,84,168,9,Yes,No,94
+295,X295,COGA,Left,22,6.8,34,Male,European,Control,Control,Control,NA,NA,20.5,6.73,Respiratory,Rapid,Normal,99 - Not reported,4,19,29,9,No,No,95
+299,X299,COGA,Right**,27,7.3,56,Female,European,Control,Control,Control,NA,NA,23,6.65,Respiratory,Intermediate,Normal,11 - Never  in the past year,NA,NA,NA,NA,No,No,96
+301,X301,COGA,Left,26,8,53,Male,European,Control,Control,Control,NA,NA,16,6.84,Cardiac,Rapid,Normal,12 - Never in my life,NA,7,10,28,No,No,97
+303,X303,COGA,Left,22,5.5,67,Male,European,Alcoholic,Alcohol Use Disorder,Dependence,B: Substance Dependence (alcohol),Severe,48,6.4,Respiratory/Toxicity,Intermediate,Steatosis,01 - Everyday/7days per week,75,70,195,42,No,No,98
+305,X305,COGA,Left,57,8,22,Female,European,Control,Boderline Personality Disorder,Control - BPD,Borderline personality disorder with antisocial traits.  Depression secondary.,NA,31,6.69,Toxicity,Intermediate,Steatosis,99 - Not reported,NA,NA,NA,NA,No,No,99
+312,X312,COGA,Right,28,4.8,82,Male,European,Control,Control,Control,NA,NA,23.5,6.4,Infection,Long term,Congestion,99 - Not reported,NA,35,50,47,No,No,100
+313,X313,COGA,Left,27,5.7,70,Male,European,Alcoholic,Alcohol Use Disorder,Abuse,C. Substance Abuse (alcohol),Mild,62,6.82,Cardiac,Rapid,Congestion,99 - Not reported,NA,77,110,45,Yes,Yes,101
+315,X315,COGA,Left,20,5.1,52,Male,European,Alcoholic,Alcohol Use Disorder,Dependence,B: Substance Dependence (alcohol),Severe,45.5,6.78,Respiratory,Rapid,Steatosis,01 - Everyday/7days per week,34,39,530,27,No,No,102
+326,X326,COGA,Left,20,8.5,61,Male,European,Alcoholic,Alcohol Use Disorder,Abuse,C: Substance Abuse (alcohol),Mild,21,6.93,Cardiac,Rapid,Cirrhosis,01 - Everyday/7days per week,11,126,306,36,No,No,103
+329,X329,COGA,Right,24,7.3,48,Male,European,Control,Control,Control,NA,NA,24,6.73,Cardiac,Rapid,Congestion,04 - 1 to 2 days per week,4,1,2,23,No,No,104
+330,X330,COGA,Right,20,6.8,53,Male,European,Alcoholic,Alcohol Use Disorder,Abuse,C: Substance Abuse (alcohol),Moderate,60,6.75,Respiratory,Rapid,Congestion,99 - Not reported,NA,392,784,28,Yes,Yes,105
+332,X332,COGA,Left,22,8,41,Male,European,Alcoholic,Alcohol Use Disorder,Dependence,B: Substance Dependence,Severe,54,6.7,Neurological,Rapid,Congestion,99 - Not reported,NA,210,300,16,Yes,Yes,106
+335,X335,COGA,Left,28,7.6,44,Male,European,Control,Control,Control,NA,NA,50,6.6,Cardiac,Rapid,Normal,11 - Never  in the past year,11,2,4,19,No,No,107
+337,X337,COGA,Left,23,5.5,62,Female,European,Alcoholic,Alcohol Use Disorder,Abuse,C: Substance Abuse (alcohol),Mild,22,6.74,Toxicity,Intermediate,Steatosis,12 - Never in my life,NA,70,140,34,No,No,108
+339,X339,COGA,Right,28,5.6,56,Male,European,Control,Control,Control,NA,NA,37,6.76,Cardiac,Intermediate,Normal,01 - Everyday/7days per week,47,NA,NA,NA,No,No,109
+349,X349,COGA,Left,27,6.4,43,Male,European,Control,Control,Control,NA,NA,66,6.2,Respiratory/Toxicity,Rapid,Steatosis,99 - Not reported,NA,NA,NA,NA,No,No,110
+353,X353,COGA,Left,28,7.3,63,Male,European,Control,Control,Control,NA,NA,72,6.9,Cardiac,Intermediate,Steatosis,11 - Never  in the past year,NA,NA,NA,NA,No,No,111
+366,X366,COGA,Right,22,5.9,69,Male,European,Control,Control,Control,NA,NA,16,6.6,Cardiac,Intermediate,Normal,01 - Everyday/7days per week,51,14,27,44,No,No,112
+367,X367,COGA,Left,36,5.8,57,Male,European,Control,Control,Control,NA,NA,18,6.6,Cardiac,Rapid,Steatosis,11 - Never  in the past year,14,6,8,32,No,No,113
+395,X395,COGA,Left,29,5.7,60,Male,European,Control,Control,Control,NA,NA,28,6.8,Cardiac,Rapid,Steatosis,12 - Never in my life,NA,NA,NA,NA,No,No,114
+398,X398,COGA,Right,27,7.2,54,Male,Asian,Control,Control,Control,NA,NA,29,6.8,Cardiac,Rapid,Steatosis,12 - Never in my life,NA,NA,NA,NA,No,No,115
+401,X401,COGA,Left,23,6,60,Male,European,Alcoholic,Alcohol Use Disorder,Dependence,B: Substance Dependence (alcohol),Severe,51,6.7,Hepatic,Long term,Cirrhosis,12 - Never in my life,NA,84,172,30,Yes,No,116
+402,X402,COGA,Right,NA,5.4,75,Female,European,Alcoholic,Alcohol Use Disorder,Abuse,C: Substance Abuse (alcohol),Mild,9,6,Hepatic,Long term,Cirrhosis,12 - Never in my life,NA,42,84,28,No,No,117
+410,X410,COGA,Right,21,5.9,78,Female,European,Control,Control,Control,NA,NA,11,6.3,Respiratory,Long term,NA,12 - Never in my life,NA,NA,NA,NA,No,No,118
+417,X417,COGA,Right,29,7.7,58,Male,European,Alcoholic,Alcohol Use Disorder,Abuse,C: Substance Abuse (alcohol),Moderate,20,6.64,Cardiac/Hepatic,Intermediate,Cirrhosis,01 - Everyday/7days per week,40,84,204,33,No,No,119
+442,X442,COGA,Right,30,5.9,63,Male,European,Control,Control,Control,NA,NA,24,6.94,Cardiac,Rapid,Steatosis,01 - Everyday/7days per week,22,NA,NA,NA,No,No,120
+459,X459,COGA,Right,22,8.6,64,Male,European,Control,Control,Control,NA,NA,9.5,6.94,Cardiac,Rapid,Steatosis,99 - Not reported,46,NA,NA,NA,No,No,121
+466,X466,COGA,Right,24,8.7,57,Male,European,Alcoholic,Alcohol Use Disorder,Dependence,B: Substance Dependence (alcohol),Severe,43,6.46,Respiratory,Long term,Cirrhosis,99 - Not reported,NA,210,300,32,Yes,No,122
+474,X474,COGA,Right,30,6.7,41,Male,European,Alcoholic,Alcohol Use Disorder,Harmful Use,A: Harmful Use (alcohol),Mild,48,6.96,Cardiac,Rapid,Steatosis,01 - Everyday/7days per week,23,35,70,16,No,No,123
+476,X476,COGA,Right,25,6.2,60,Male,European,Alcoholic,Alcohol Use Disorder,Abuse,C: Substance Abuse (alcohol),Mild,16.5,6.48,Hepatic,Rapid,Cirrhosis,01 - Everyday/7days per week,42,147,294,35,No,No,124
+507,X507,COGA,Right,31,8.5,52,Male,European,Alcoholic,Alcohol Use Disorder,Harmful Use,A: Harmful Use (alcohol),Mild,32,6.76,Cardiac,Rapid,Congestion,01 - Everyday/7days per week,68,42,102,27,No,No,125
+510,X510,COGA,Right,28,9,60,Male,European,Control,Control,Control,NA,NA,21.5,6.66,Cardiac,Rapid,Steatosis,99 - Not reported,NA,NA,NA,NA,No,No,126
+513,X513,COGA,Left,32,8.5,55,Male,European,Control,Control,Control,NA,NA,39,6.89,Cardiac,Rapid,Congestion,12 - Never in my life,NA,2,4,30,No,No,127
+59,X59,COGA,Left,24,6.2,52,Female,European,Control,Control,Control,NA,NA,31,6.59,Cancer,Long term,Congestion,99 - Not reported,NA,NA,NA,NA,NA,NA,128
+591,X591,COGA,Left,29,6.2,45,Male,European,Alcoholic,Alcohol Use Disorder,Dependence,B: Substance Dependence (alcohol),Severe,18.5,6.57,Respiratory,Intermediate,Cirrhosis,01 - Everyday/7days per week,29,70,170,29,Yes,Yes,129
+642,X642,COGA,Left,19,5.9,48,Female,European,Alcoholic,Alcohol Use Disorder,Dependence,B: Substance Dependence,Severe,49,6.57,Blood loss,Intermediate,Cirrhosis,12 - Never in my life,NA,21,42,30,Yes,No,130
+649,X649,COGA,Left,26,7.3,53,Male,European,Control,Control,Control,NA,NA,16,6.5,Cardiac,Rapid,Congestion,01 - Everyday/7days per week,60,1,2,8,No,No,131
+650,X650,COGA,Left,25,6.2,37,Male,European,Control,Control,Control,NA,NA,14.5,6.46,Cardiac,Rapid,Normal,12 - Never in my life,NA,0,0,NA,No,No,132
+693,X693,COGA,Right,33,7.7,51,Male,European,Control,Control,Control,NA,NA,35,7,Cardiac,Rapid,Congestion,01 - Everyday/7days per week,33,7,14,33,No,No,133
+88.225,X88.225,COGA,NA,NA,6.6,42,Female,European,Alcoholic,Alcohol Use Disorder,Unlisted,NA,NA,22,6.4,Pneumonia,NA,NA,NA,NA,NA,NA,NA,NA,NA,134
+88.274,X88.274,COGA,NA,NA,5.9,67,Male,European,Alcoholic,Alcohol Use Disorder,Unlisted,NA,NA,45,6.3,Carcinomapancreas,NA,NA,NA,NA,NA,NA,NA,NA,NA,135
+88.304,X88.304,COGA,NA,NA,6.1,43,Female,European,Control,Control,Control,NA,NA,24,6.5,Cardiac/Respiratory,NA,NA,NA,NA,NA,NA,NA,NA,NA,136
+89.221,X89.221,COGA,NA,NA,6.8,38,Male,European,Alcoholic,Alcohol Use Disorder,Unlisted,NA,NA,22,6.2,IschaemicHeartDisease,NA,NA,NA,NA,NA,NA,NA,NA,NA,137
+89.577,X89.577,COGA,NA,NA,5.4,65,Male,European,Alcoholic,Alcohol Use Disorder,Unlisted,NA,NA,22,6.3,Ischaemicheartdisease,NA,NA,NA,NA,NA,NA,NA,NA,NA,138
+89.61,X89.61,COGA,NA,NA,5.8,51,Female,European,Alcoholic,Alcohol Use Disorder,Unlisted,NA,NA,16,6.3,Cardiac,NA,NA,NA,NA,NA,NA,NA,NA,NA,139
+90.92,X90.92,COGA,NA,NA,7.1,46,Female,European,Control,Control,Control,NA,NA,29.75,6.55,Cardiac,NA,NA,NA,NA,NA,NA,NA,NA,NA,140
+94,X94,COGA,Left,NA,7.7,55,Male,Middle Eastern,Control,Control,Control,NA,NA,20,6.5,Cardiac/Respiratory,Intermediate,Steatosis,11 - Never  in the past year,NA,NA,NA,NA,NA,NA,141
+97,X97,COGA,Left,29,8,38,Male,European,Control,Control,Control,NA,NA,13.5,6.26,Cardiac,Rapid,Congestion,01 - Everyday/7days per week,20,NA,NA,NA,NA,NA,142
+98,X98,COGA,Left,45,4.5,52,Female,European,Control,Control,Control,NA,NA,9.5,5.75,Cardiac,Rapid,Steatosis,99 - Not reported,NA,NA,NA,NA,NA,NA,143

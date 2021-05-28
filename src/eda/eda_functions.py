@@ -15,26 +15,8 @@ from statsmodels.stats.multitest import multipletests
 from scipy.stats import pearsonr
 from .process_phenotype import *
 from preproc.result import Result
-from sklearn.metrics.pairwise import euclidean_distances as ed
 
-def scale_free_validate(network_df, network_name):
-    network_degree = network_df.sum()
-    log_network_degree = np.log(network_degree)
-    sorted_network_freq = round(log_network_degree, 2).value_counts().reset_index()
-    sorted_network_freq[0] = np.log(sorted_network_freq[0])
-    plt.figure(figsize = (4,4))
-    plt.rcParams.update({'font.size': 15})
-    plt.scatter(sorted_network_freq.index, sorted_network_freq[0])
-    plt.xlabel('log(k)')
-    plt.ylabel('log(pk)')
-    plt.title(f'Scale-free check for \n {network_name}')
-    plot_name = f'scale_free_validate_{network_name.replace(" ", "_")}.png'
-    plt.tight_layout()
-    plt.savefig(os.path.join(Result.getPath(), plot_name))
-    plt.show() # This function needs plt.show() and plt.close() because other methods loop through the figures as subplots so they don't overlap. Each figure here is a whole plot
-    plt.close()
-    
-def plot_gene_cnt_each_cluster(cluster_dfs, cluster_column, network_names):
+def plot_gene_cnt_each_cluster(cluster_dfs, network_names):
     '''
     bar graphs to show # genes in each cluster
     cluster_dfs: a list of cluster dfs with id and cluster assignment
@@ -46,10 +28,10 @@ def plot_gene_cnt_each_cluster(cluster_dfs, cluster_column, network_names):
     plt.figure(figsize = (16,h*4))
     for i, cluster_df in enumerate(cluster_dfs):       
         plt.subplot(h, 3, i+1)
-        count = cluster_df[cluster_column].value_counts().sort_index()
+        count = cluster_df['cluster_id'].value_counts().sort_index()
         plt.bar(count.index, count.values)
-        if type(count.index[0]) == np.int64:
-            plt.xticks(list(np.arange(0,len(count.index),1)))        
+#         if type(count.index[0]) == np.int64:
+#             plt.xticks(list(np.arange(0,len(count.index),1)))        
         plt.ylabel('# genes')
         plt.xlabel('Cluster id')
         plt.title(network_names[i])
@@ -59,7 +41,7 @@ def plot_gene_cnt_each_cluster(cluster_dfs, cluster_column, network_names):
     plt.show()
     plt.close()
 
-def plot_gene_cnt_each_cluster_v2(cluster_df, cluster_column, network_name, name_spec = ''):
+def plot_gene_cnt_each_cluster_v2(cluster_df, network_name):
     '''
     bar graphs to show # genes in each cluster
     cluster_dfs: a list of cluster dfs with id and cluster assignment
@@ -67,7 +49,7 @@ def plot_gene_cnt_each_cluster_v2(cluster_df, cluster_column, network_name, name
     network_names: names to show in the subplot titles
     '''
     plt.rcParams.update({'font.size': 18})
-    count = cluster_df[cluster_column].value_counts().sort_index()
+    count = cluster_df['cluster_id'].value_counts().sort_index()
 #     plt.figure(figsize = (len(count.index)/2.5,4))
     plt.figure(figsize = (8,6))
     plt.bar(count.index, count.values)
@@ -77,21 +59,21 @@ def plot_gene_cnt_each_cluster_v2(cluster_df, cluster_column, network_name, name
     plt.xlabel('Cluster id')
     plt.title(network_name)
     plt.tight_layout()
-    plt.savefig(os.path.join(Result.getPath(), f"plot_gene_cnt_each_cluster{name_spec}.png"))
+    plt.savefig(os.path.join(Result.getPath(), f"plot_gene_cnt_each_cluster_{network_name}.png"))
     plt.show()
     plt.close()
 
 def run_kmeans(embedding_df, n_clusters):
     '''Run k means on embedding df'''
     kmeans = KMeans(n_clusters=n_clusters, random_state=0).fit_predict(embedding_df)
-    k_mean_df = pd.DataFrame({'id':embedding_df.index, 'kmean_label':kmeans})
+    k_mean_df = pd.DataFrame({'id':embedding_df.index, 'cluster_id':kmeans})
     return k_mean_df
 
 def run_louvain(adjacency_df, resolution = 1, n_aggregations = -1):
     # louvain communities
     louvain = Louvain(modularity = 'Newman', resolution = resolution, n_aggregations  = n_aggregations)
     labels = louvain.fit_transform(adjacency_df.values) # using networkx community requires converting the df to G first and the original network takes very long but this method can work on df 
-    louvain_df = pd.DataFrame({'id':adjacency_df.index, 'louvain_label':labels})
+    louvain_df = pd.DataFrame({'id':adjacency_df.index, 'cluster_id':labels})
     return louvain_df
 
 def run_louvain2(adjacency_np, ajacency_idx, resolution = 1, n_aggregations = -1):
@@ -99,7 +81,7 @@ def run_louvain2(adjacency_np, ajacency_idx, resolution = 1, n_aggregations = -1
     louvain = Louvain(modularity = 'Newman', resolution = resolution, n_aggregations  = n_aggregations)
     labels = louvain.fit_transform(adjacency_np) # using networkx community requires converting the df to G first and the original network takes very long but this method can work on df 
     del louvain
-    louvain_df = pd.DataFrame({'id':ajacency_idx, 'louvain_label':labels})
+    louvain_df = pd.DataFrame({'id':ajacency_idx, 'cluster_id':labels})
     return louvain_df
 
 def jaccard_similarity(list1, list2):
@@ -114,67 +96,7 @@ def add_cutout_node_cluster(cluster_df1, cluster_df2, cluster_column):
     cluster_df2 = pd.concat([cutout_node_cluster, cluster_df2])
     return cluster_df2
 
-def cluster_jaccard(cluster_df1, cluster_df2, cluster_column, comparison_names, 
-                    cutout_nodes = False, top=None, y_max = 1):
-    '''
-    plot jaccard pairwise comparison on the communities in 2 networks or the kmeans clusters in 2 network embeddings
-    title: main title for the two subplots
-    cluster_column: the column name of the cluster labels
-    comparison_names: names of the groups in comparison
-    cutout_nodes: if True, the nodes cut out in the smaller network/embedding is not included. If False, the cutout nodes will be in its own cluster for comparison
-    top: top n comparison to show in the boxplot since it could be misleadingly small if we include all jaccard scores
-    y_max to adjust y label
-    # we're only interested in the modules that have majority of the matching nodes between 2 networks
-    '''
-    c1_list = []
-    c2_list = []
-    j_list = []
-    if cutout_nodes == False:
-        cluster_df2 = add_cutout_node_cluster(cluster_df1, cluster_df2, cluster_column)
-        
-    for c1 in cluster_df1[cluster_column].unique():
-        for c2 in cluster_df2[cluster_column].unique():
-            sub1 = cluster_df1[cluster_df1[cluster_column] == c1].index
-            sub2 = cluster_df2[cluster_df2[cluster_column] == c2].index
-            c1_list.append(c1)
-            c2_list.append(c2)
-            j_list.append(jaccard_similarity(sub1, sub2))
-
-    jac_df = pd.DataFrame({'cluster1': c1_list, 'cluster2': c2_list, 'jaccard': j_list})
-    jac_df = jac_df.pivot(index='cluster1', columns='cluster2', values='jaccard')
-    sns.set(font_scale=1.25)
-    sns.set_style('white')
-
-    w = len(cluster_df2[cluster_column].unique())/1.3
-    h = len(cluster_df1[cluster_column].unique())/2
-    fig = plt.figure(figsize=(w, h))
-    gs = gridspec.GridSpec(1, 2, width_ratios=[3, 1])  # set the subplot width ratio
-    ax0 = plt.subplot(gs[0])
-    # plot heatmap for pairwise jaccard comparison
-    sns.heatmap(jac_df, cmap='Reds', xticklabels=True, yticklabels=True)
-    plt.xlabel(comparison_names[1])
-    plt.ylabel(comparison_names[0])
-    plt.title('Jaccard pairwise')
-    plt.xticks(rotation=0)
-    ax1 = plt.subplot(gs[1])
-    # boxplot of jaccard distribution
-    all_jac_values = jac_df.values.flatten()
-    if top != None:
-        sorted_jac_values = sorted(all_jac_values, reverse=True)
-        g = sns.boxplot(x=None, y=sorted_jac_values[:top])
-        g.set(ylim=(0, y_max))
-
-    else:
-        sns.boxplot(x=None, y=all_jac_values)
-    plt.ylim(0, y_max)
-    plt.title('Jaccard distribution')
-#     plt.suptitle(f'{comparison_names[0]} vs {comparison_names[1]}')
-    plt.subplots_adjust(top = 0.8, wspace = 1)
-    plt.savefig(os.path.join(Result.getPath(), f'cluster_jaccard_{comparison_names[0]} vs {comparison_names[1]}_{cutout_nodes}.png'), bbox_inches = 'tight')
-    plt.show()
-    plt.close()
-
-def cluster_jaccard_v2(cluster_df1, cluster_df2, cluster1_column, cluster2_column, comparison_names, 
+def cluster_jaccard_v2(cluster_df1, cluster_df2, comparison_names, 
                        top=None, y_max = 1):
     '''
     plot jaccard pairwise comparison on the communities in 2 networks or the kmeans clusters in 2 network embeddings
@@ -190,10 +112,10 @@ def cluster_jaccard_v2(cluster_df1, cluster_df2, cluster1_column, cluster2_colum
     c2_list = []
     j_list = []
 
-    for c1 in cluster_df1[cluster1_column].unique():
-        for c2 in cluster_df2[cluster2_column].unique():
-            sub1 = cluster_df1[cluster_df1[cluster1_column] == c1].index
-            sub2 = cluster_df2[cluster_df2[cluster2_column] == c2].index
+    for c1 in cluster_df1['cluster_id'].unique():
+        for c2 in cluster_df2['cluster_id'].unique():
+            sub1 = cluster_df1[cluster_df1['cluster_id'] == c1].index
+            sub2 = cluster_df2[cluster_df2['cluster_id'] == c2].index
             c1_list.append(c1)
             c2_list.append(c2)
             j_list.append(jaccard_similarity(sub1, sub2))
@@ -247,7 +169,7 @@ def get_module_sig_gene_perc(expression_meta_df, cluster_df, cluster_column, clu
             anova_sig_genes.append(gene)
     return round(100 * len(anova_sig_genes) / len(module_genes), 2)  # return the % of genes found significant by ANOVA
 
-def plot_sig_perc(cluster_df, cluster_column, network_name, expression_meta_df, output_sig_df = False):
+def plot_sig_perc(cluster_df, network_name, expression_meta_df, output_sig_df = False):
     '''
     A function to iterate through the clusters to get % significant genes in each clusters for each trait and show the results in a heatmap and barplot
     '''
@@ -262,9 +184,9 @@ def plot_sig_perc(cluster_df, cluster_column, network_name, expression_meta_df, 
 #                                 drinking_yr_subset, smoke_freq_subset]):
     for i, subset in enumerate([audit_subset, liver_class_subset, alc_perday_subset, drinking_yr_subset]):
         sig_gene_perc = []
-        clusters = cluster_df[cluster_column].unique()
+        clusters = cluster_df['cluster_id'].unique()
         for cluster in clusters:
-            sig_gene_perc.append(get_module_sig_gene_perc(subset, cluster_df, cluster_column, cluster, traits[i]))
+            sig_gene_perc.append(get_module_sig_gene_perc(subset, cluster_df, 'cluster_id', cluster, traits[i]))
         if i == 0:
             cluster_sig_perc = pd.DataFrame({traits[i]: sig_gene_perc})
         else:
@@ -278,10 +200,10 @@ def plot_sig_perc(cluster_df, cluster_column, network_name, expression_meta_df, 
 #     # first subplot to show the correlation heatmap
 #     ax0 = plt.subplot(gs[0])
     sns.heatmap(cluster_sig_perc, cmap='Reds',
-                vmin=0, vmax=100) 
+                vmin=0, vmax=15) 
     plt.xticks(rotation = 45, ha = 'right')
     plt.ylabel('cluster id')
-    plt.title('% significant genes by cluster')
+#     plt.title('% significant genes by cluster')
 #     # second subplot to show count of significant traits in each cluster. "Significant" here means adj p value < 0.2
 #     ax1 = plt.subplot(gs[1])
 #     sig_count = cluster_sig_perc[cluster_sig_perc > 5].count(axis = 1).values # count num of traits with significant gene % > 5 in each cluster
@@ -301,19 +223,17 @@ def plot_sig_perc(cluster_df, cluster_column, network_name, expression_meta_df, 
     if output_sig_df == True:
         return cluster_sig_perc
 
-def cluster_phenotype_corr(cluster_df, cluster_column, network_name, expression_meta_df, output_corr_df = False):
+def cluster_phenotype_corr(cluster_df, network_name, expression_meta_df, output_corr_df = False):
     '''
     Plot correlation heatmap between modules/clusters and alcohol phenotypes
     '''
-    clusters = cluster_df[cluster_column].unique()
+    clusters = cluster_df['cluster_id'].unique()
     i = 1
     for cluster in clusters:
-        cluster_genes = cluster_df[cluster_df[cluster_column] == cluster]['id'].tolist()
+        cluster_genes = cluster_df[cluster_df['cluster_id'] == cluster]['id'].tolist()
         cluster_expression = expression_meta_df[cluster_genes].apply(pd.to_numeric)
         pca = PCA(n_components=1)
         pca_cluster_expression = pca.fit_transform(cluster_expression)
-        # originally I used pd.corr() to get pairwise correlation matrix but since I need a separate calculation for correlation p value
-        # I just used pearsonr and collected the results in lists. Making a df here isn't necessary anymore. 
         eigen_n_features = pd.DataFrame({'eigen': pca_cluster_expression.reshape(len(pca_cluster_expression), ),
 #                                          'BMI': expression_meta_df['BMI'], 
 #                                          'RIN': expression_meta_df['RIN'],
@@ -377,78 +297,15 @@ def cluster_phenotype_corr(cluster_df, cluster_column, network_name, expression_
     plt.close()
     if output_corr_df == True:
         return clusters_corr
-    
-def cluster_nmi(cluster_df1, cluster_df2, cluster_column):
+
+def cluster_nmi_v3(cluster_df1, cluster_df2):
     '''NMI to compare communities from the whole netowrk and the subnetwork or clusters from different network embeddings'''
-    assert len(cluster_df1) >= len(cluster_df2), 'cluster_df1 must be greater than cluster_df2'
-    num_cut_nodes = len(set(cluster_df1.id) - set(cluster_df2.id)) # number of nodes cut out in the subset
-    sub1_plus_sub2 = pd.merge(cluster_df1, cluster_df2, left_on = 'id', right_on = 'id', how = 'left')
-    num_cluster = cluster_df2[cluster_column].max() # determine how many clusters are present in the smaller network
-    sub1_plus_sub2[f'{cluster_column}_y'] = sub1_plus_sub2[f'{cluster_column}_y'].fillna(num_cluster+1) # for the nodes that were cut out, give them a new community number
-    return nmi(sub1_plus_sub2[f'{cluster_column}_x'], sub1_plus_sub2[f'{cluster_column}_y'])
-
-def plot_cluster_nmi_comparison(cluster1_name, cluster1, cluster_list, cluster_column, comparison_names):
-    plt.figure(figsize = (5,4))
-    plt.rcParams.update({'font.size': 18})
-    nmi_scores = []
-    for cluster in cluster_list:
-        nmi_scores.append(cluster_nmi(cluster1, cluster, cluster_column))
-    plt.bar(comparison_names, nmi_scores)
-    plt.ylabel('NMI')
-    cluster_type = ['community' if cluster_column == 'louvain_label' else 'cluster']
-    plt.title(f'NMI for {cluster_type[0]} comparison')
-    plt.xticks(rotation = 45, ha = 'right')
-    plt.savefig(os.path.join(Result.getPath(), f'plot_cluster_nmi_comparison_{cluster1_name}.png'), bbox_inches = 'tight')
-    plt.show()
-    plt.close()
+    sub1_plus_sub2 = pd.merge(cluster_df1, cluster_df2, left_on = 'id', right_on = 'id', how = 'outer', suffixes = ('_1','_2'))
+    max_cluster_num = max(sub1_plus_sub2[['cluster_id_1', 'cluster_id_2']].max())
+    sub1_plus_sub2['cluster_id_2'].fillna(max_cluster_num+1, inplace = True) # for the nodes that were cut out, give them a new community number
+    return round(nmi(sub1_plus_sub2['cluster_id_1'], sub1_plus_sub2['cluster_id_2']),3)
     
-def cluster_nmi_v2(cluster_df1, cluster_df2, cluster_column):
-    '''NMI to compare communities from the whole netowrk and the subnetwork or clusters from different network embeddings'''
-    sub1_plus_sub2 = pd.merge(cluster_df1, cluster_df2, left_on = 'id', right_on = 'id', how = 'outer')
-    max_cluster_num = max(sub1_plus_sub2[[f'{cluster_column}_x', f'{cluster_column}_y']].max())
-    sub1_plus_sub2.fillna(max_cluster_num+1, inplace = True) # for the nodes that were cut out, give them a new community number
-    return nmi(sub1_plus_sub2[f'{cluster_column}_x'], sub1_plus_sub2[f'{cluster_column}_y'])
-
-def plot_cluster_nmi_comparison_v2(cluster1_list, cluster2_list, cluster1_names, cluster2_names, cluster_column):
-    width = len(cluster1_list)*2
-    plt.figure(figsize = (width,4))
-    nmi_scores = []
-    comparison_names = []
-    for i in range(len(cluster1_list)):
-        nmi_scores.append(cluster_nmi_v2(cluster1_list[i], cluster2_list[i], cluster_column))
-        comparison_names.append(f'{cluster1_names[i]} vs {cluster2_names[i]}')
-    plt.bar(comparison_names, nmi_scores)
-    plt.ylabel('NMI')
-    cluster_type = ['community' if cluster_column == 'louvain_label' else 'cluster']
-    plt.title(f'NMI for {cluster_type[0]} comparison')
-    plt.xticks(rotation = 45, ha = 'right')
-    plt.savefig(os.path.join(Result.getPath(), f'plot_{cluster_type}_nmi_comparison.png'), bbox_inches = 'tight')
-    plt.show()
-    plt.close()    
-
-def cluster_nmi_v3(cluster_df1, cluster1_column, cluster_df2, cluster2_column):
-    '''NMI to compare communities from the whole netowrk and the subnetwork or clusters from different network embeddings'''
-    sub1_plus_sub2 = pd.merge(cluster_df1, cluster_df2, left_on = 'id', right_on = 'id', how = 'outer')
-    max_cluster_num = max(sub1_plus_sub2[[cluster1_column, cluster2_column]].max())
-    sub1_plus_sub2[cluster2_column].fillna(max_cluster_num+1, inplace = True) # for the nodes that were cut out, give them a new community number
-    return nmi(sub1_plus_sub2[cluster1_column], sub1_plus_sub2[cluster2_column])
-
-def plot_cluster_nmi_comparison_v3(cluster1_name, cluster1, cluster1_column, cluster2_list, cluster2_column, comparison_names):
-    '''plot cluster_nmi_v3() results'''
-    plt.figure(figsize = (5,4))
-    plt.rcParams.update({'font.size': 18})
-    nmi_scores = []
-    for cluster2 in cluster2_list:
-        nmi_scores.append(cluster_nmi_v3(cluster1, cluster1_column, cluster2, cluster2_column))
-    plt.bar(comparison_names, nmi_scores)
-    plt.ylabel('NMI')
-    plt.title(f'NMI for cluster comparison')
-    plt.xticks(rotation = 45, ha = 'right')
-    plt.savefig(os.path.join(Result.getPath(), f'plot_cluster_nmi_comparison.png'), bbox_inches = 'tight')
-    plt.show()
-    plt.close()
-    
-def cluster_DE_perc(cluster_df, cluster_column, network_name, deseq):
+def cluster_DE_perc(cluster_df, network_name, deseq):
     '''
     A function to plot 2 heatmaps to show % of differential genes in each cluster
     '''
@@ -461,8 +318,8 @@ def cluster_DE_perc(cluster_df, cluster_column, network_name, deseq):
     clusters = []
     up_impact_perc = []
     down_impact_perc = []
-    for cluster in cluster_df[cluster_column].unique():
-        cluster_genes = cluster_df[cluster_df[cluster_column] == cluster].id
+    for cluster in cluster_df['cluster_id'].unique():
+        cluster_genes = cluster_df[cluster_df['cluster_id'] == cluster].id
         num_up_in_module = (deseq[deseq.id.isin(cluster_genes)]['log2FoldChange'] > cutoff).sum()
         num_down_in_module = (deseq[deseq.id.isin(cluster_genes)]['log2FoldChange'] < -cutoff).sum()
 
@@ -631,175 +488,37 @@ def gene_phenotype_corr(critical_genes, expression_meta_df, title):
     phenotypes = ['AUDIT', 'Alcohol_intake_gmsperday', 'Total_drinking_yrs']
     for pheno in phenotypes:
         corr_list = []
+#         p_list = []
         labels = []
         for gene in critical_genes:
             if gene in expression_meta_df.columns:
                 sub = expression_meta_df[[gene, pheno]]
                 sub = sub.dropna()
                 corr_list.append(pearsonr(sub[gene], sub[pheno])[0])
+#                 p_list.append(pearsonr(sub[gene], sub[pheno])[1])
         if i == 1:
             genes_corr = pd.DataFrame({pheno: corr_list})
+#             corr_p = pd.DataFrame({pheno: p_list})
             i += 1
         else:
             genes_corr[pheno] = corr_list
+#             corr_p[pheno] = p_list
     genes_corr.index = critical_genes
+#     corr_p.index = critical_genes
     sort_corr = genes_corr.reindex(genes_corr.mean(axis = 1).sort_values().index) 
+#     sort_p = corr_p.reindex(genes_corr.mean(axis = 1).sort_values().index)
     plt.rcParams.update({'font.size':14})
     plt.figure(figsize = (6, 11))
-    plt.title(title)
+    plt.title(title, fontsize = 26)
     sns.heatmap(sort_corr, cmap='RdBu_r', vmin = -0.5, vmax=0.5, xticklabels = phenotypes, yticklabels = True)
-    plt.xticks(rotation = 45, ha = 'right')
-    plt.ylabel('Gene')
+    plt.xticks(rotation = 45, ha = 'right', fontsize = 26)
+    plt.ylabel('Gene symbol', fontsize = 26)
     plt.savefig(os.path.join(Result.getPath(), f'gene_phenotype_corr_for_{title}.png'), bbox_inches='tight')
     plt.show()
     plt.close()
     return genes_corr
-    
-def gene_set_phenotype_corr(gene_sets, network_names, expression_meta_df, file_name):
-    '''
-    Plot correlation heatmap between critical gene sets and alcohol phenotypes
-    (similar to cluster_phenotype_corr, cluster is replaced with a set of critical genes)
-    '''
-    i = 1
-    length = len(gene_sets)
-    empty_list = sum(1 for gene_set in gene_sets if len(gene_set) == 0)
-    if length == empty_list:
-        print('There is no overlapping critical genes between the critical gene sets')
-        print(f'A suggested action is to change get_critical_gene_sets() parameters ratio and max_dist_ratio')
-        return None
-    
-    empty_set_index = []
-    non_empty_set_index = []
-    for j, gene_set in enumerate(gene_sets):
-        if len(gene_set) == 0:
-            empty_set_index.append(j)
-            
-        else:
-            non_empty_set_index.append(j)
-            geneset_expression = expression_meta_df[gene_set].apply(pd.to_numeric)
-            pca = PCA(n_components=1)
-            pca_geneset_expression = pca.fit_transform(geneset_expression)
-            # originally I used pd.corr() to get pairwise correlation matrix but since I need a separate calculation for correlation p value
-            # I just used pearsonr and collected the results in lists. Making a df here isn't necessary anymore. 
-            eigen_n_features = pd.DataFrame({'eigen': pca_geneset_expression.reshape(len(pca_geneset_expression), ),
-    #                                          'BMI': expression_meta_df['BMI'], 
-    #                                          'RIN': expression_meta_df['RIN'],
-    #                                          'Age': expression_meta_df['Age'], 'PM!': expression_meta_df['PM!'],
-    #                                          'Brain_pH': expression_meta_df['Brain_pH'],
-    #                                          'Pack_yrs_1_pktperday_1_yr': expression_meta_df['Pack_yrs_1_pktperday_1_yr'],
-                                             'AUDIT': expression_meta_df['AUDIT'],
-                                             'Alcohol_intake_gmsperday': expression_meta_df['Alcohol_intake_gmsperday'],
-                                             'Total_drinking_yrs': expression_meta_df['Total_drinking_yrs']})
 
-            corr_list = []
-#             p_list = []
-#             corrected_p_list = []
-            labels = []
-            for col in eigen_n_features.columns[1:]:
-                sub = eigen_n_features[['eigen', col]]
-                sub = sub.dropna()
-                corr_list.append(pearsonr(sub['eigen'], sub[col])[0])
-#                 p_list.append(pearsonr(sub['eigen'], sub[col])[1])
-#             corrected_p_list = multipletests(p_list, method ='fdr_bh')[1] # correct for multiple tests
-            if i == 1:
-                clusters_corr = pd.DataFrame({i: corr_list})
-#                 clusters_pvalue = pd.DataFrame({i: corrected_p_list})
-                i += 1
-
-            else:
-                clusters_corr[i] = corr_list
-#                 clusters_pvalue[i] = corrected_p_list
-                i += 1
-    clusters_corr = clusters_corr.T.sort_index(ascending = False)
-    clusters_corr = np.round(clusters_corr, 2)
-#     clusters_pvalue = clusters_pvalue.T.sort_index(ascending = False)
-    plt.figure(figsize=(10, 5))
-    plt.rcParams.update({'font.size': 18})
-#     gs = gridspec.GridSpec(1, 2, width_ratios=[3, 1])  # set the subplot width ratio
-#     # first subplot to show the correlation heatmap
-#     ax0 = plt.subplot(gs[0])
-#     sns.heatmap(clusters_corr, cmap='RdBu_r', annot = True,
-#                 annot_kws = {'fontsize':12}, vmin=-1, vmax=1, xticklabels = eigen_n_features.columns[1:]) 
-#     plt.xticks(rotation = 45, ha = 'right')
-#     yticklabels = [network_names[index] for index in non_empty_set_index]
-#     plt.yticks(np.arange(len(yticklabels))+0.5, labels=yticklabels, 
-#                rotation = 0)
-#     plt.ylabel('gene set id')
-#     plt.title('Trait-critical gene set correlation')
-#     # second subplot to show count of significant traits in each cluster. "Significant" here means adj p value < 0.2
-#     ax1 = plt.subplot(gs[1])
-#     sig_count = (clusters_pvalue < 0.2).sum(axis = 1) # count num of traits with p-adj < 0.2 in each cluster
-#     plt.barh(sig_count.index, sig_count.values) # horizontal bar plot
-#     plt.xlim(0,9) # there are 9 traits here so set the scale to between 0 and 9. change it if the # traits change
-#     plt.ylabel('gene set id')
-#     plt.xlabel('Trait count')
-#     plt.yticks(np.arange(len(yticklabels)) +1, labels=yticklabels, 
-#                rotation = 0)
-#     plt.title('# significant traits')
-#     plt.subplots_adjust(top = 1, bottom = 0.1)
-
-    sns.heatmap(clusters_corr, cmap='RdBu_r', annot = True,
-                annot_kws = {'fontsize':12}, vmin=-1, vmax=1, xticklabels = eigen_n_features.columns[1:]) 
-    plt.xticks(rotation = 45, ha = 'right')
-    yticklabels = [network_names[index] for index in non_empty_set_index]
-    plt.yticks(np.arange(len(yticklabels))+0.5, labels=yticklabels, 
-               rotation = 0)
-    plt.ylabel('gene set id')
-    plt.tight_layout(rect=[0, 0.03, 1, 0.9])
-    for index in empty_set_index:
-        print(network_names[index], 'does not have critical genes in common between all 3 models')
-    plt.savefig(os.path.join(Result.getPath(), f'gene_set_phenotype_corr_{file_name}.png'))
-    plt.show()
-    plt.close()
-    
-def get_closest_genes_jaccard(network, emb, gene_list, top_n, title):
-    '''A function to compare how much closest genes are in common between a network and its embedding
-    network: tom df
-    emb: embedding df
-    gene_list: a list of genes to query
-    top_n: top n closest genes to the genes in gene_list
-    title: title for the figure
-    '''
-    ed_data = ed(emb, emb)
-    ed_df = pd.DataFrame(ed_data, index = emb.index, columns = emb.index)
-    closest_genes1 = [] # find closest genes in the subnetwork
-    closest_genes2 = [] # find closest genes in the embedding
-    for gene in gene_list:
-        closest_genes1.append(network[gene].sort_values(ascending = False)[:top_n].index)
-        top_n_genes = ed_df[gene].sort_values()[1:top_n+1].index
-        closest_genes2.append(top_n_genes)
-    jac_list = []
-    for i in range(len(closest_genes1)):
-        jac_list.append(jaccard_similarity(closest_genes1[i], closest_genes2[i]))
-#     xticks = le.inverse_transform(subnet1_edge.source.unique())
-    plt.rcParams.update({'font.size':18})
-    plt.bar(gene_list, jac_list)
-    plt.ylim(0, 1)
-    plt.ylabel('Jaccard similarity')
-    plt.xlabel('gene')
-    plt.xticks(rotation = 45, ha = 'right')
-    plt.title(title)
-    plt.show()
-    plt.close()
-    
-    
-def plot_dist(summary_df, sample_name, trait, summary_type):
-    '''Plot distribution of some kind of summary table'''
-    plt.rcParams.update({'font.size':18})
-    sns.kdeplot(summary_df, label = sample_name)
-    plt.title(trait)
-    if summary_type == 'correlation':
-        xlabel = 'Correlation coefficient'
-    elif summary_type == 'significance':
-        xlabel = '% significant genes'
-    else:
-        print('Summary type not recognized')
-        xlabel = ''
-    plt.xlabel(xlabel)
-    plt.ylabel('Events')
-    plt.legend()
-    
-def plot_corr_kde(corr_df_list, corr_names):
+def plot_corr_kde(corr_df_list, corr_names, plotname):
     new_corr_df_list = []
     for corr_df, name in zip(corr_df_list, corr_names):
         corr_copy = np.abs(corr_df.copy())
@@ -823,6 +542,7 @@ def plot_corr_kde(corr_df_list, corr_names):
     g.map(sns.kdeplot, 'value')  
     g.set_axis_labels(x_var = 'Absolute correlation coefficient')
     g.add_legend()
+    g._legend.set_title('')
     plt.setp(g._legend.get_title(), fontsize=20)
     axes = g.axes.flatten()
     for ax, p in zip(axes, p_values):
@@ -830,6 +550,6 @@ def plot_corr_kde(corr_df_list, corr_names):
         new_title = title.replace('variable = ', '')
         new_title = f'{new_title} (p={p})' if p > 0 else f'{new_title} (p < 0.001)'
         ax.set_title(new_title)
-    plt.savefig(os.path.join(Result.getPath(), 'alcohol trait correlation.png'))
+    plt.savefig(os.path.join(Result.getPath(), f'alcohol trait correlation {plotname}.png'))
     plt.show()
     plt.close()

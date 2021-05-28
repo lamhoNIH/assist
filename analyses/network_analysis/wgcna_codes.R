@@ -12,32 +12,29 @@ expression_t = t(expression)
 tom_output = json_data[["outputs"]][['provided_networks']]
 tom_data = sub('\\..*$', '', tom_output)
 
-is_mouse = length(json_data[['parameters']][['skip_tom']]) == 0 || tolower(json_data[['parameters']][['skip_tom']]) == "false"
-if (is_mouse == TRUE) {saveTOMs = T} else {saveTOMs = F}
 net = blockwiseModules(expression_t, power = 14, maxBlockSize = 30000,
                        TOMType = "unsigned", minModuleSize = 100,
                        reassignThreshold = 0, detectCutHeight = 0.99,
                        numericLabels = TRUE, pamRespectsDendro = FALSE,
-                       saveTOMs = saveTOMs,
+                       saveTOMs = T,
                        saveTOMFileBase = tom_data,
                        verbose = 3, deepSplit = T)
 
 # load tom data
-if (is_mouse) {
-    tom_path = paste(tom_data, '-block.1.Rdata', sep = '')
-    load(tom_path)
-    tom_df = as.matrix(TOM)
-    # add the gene IDs to the tom file
-    colnames(tom_df) = colnames(expression_t)
-    rownames(tom_df) = colnames(expression_t)
-    # write tom file
-    write.csv(tom_df, file = tom_output)
-}
+tom_path = paste(tom_data, '-block.1.Rdata', sep = '')
+load(tom_path)
+tom_df = as.matrix(TOM)
+# add the gene IDs to the tom file
+colnames(tom_df) = colnames(expression_t)
+rownames(tom_df) = colnames(expression_t)
+# write tom file
+write.csv(tom_df, file = tom_output)
+
 # summary of the network modules (colors represent module assignment)
 net_df = data.frame(net$colors) # convert to a df
 net_df = cbind(id = rownames(net_df), net_df) # change the index (node names) to a column
 rownames(net_df) = 1:nrow(net_df)
-colnames(net_df)[2] = 'louvain_label' # change column name
+colnames(net_df)[2] = 'cluster_id' # change column name
 
 # change the file name below to wgcna_modules.csv during test
 # write network modules 

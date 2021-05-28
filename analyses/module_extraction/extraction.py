@@ -1,12 +1,7 @@
 import argparse
 import json
-import os
 import pandas as pd
 import logging
-
-#import sys
-#sys.path.append('../../src')
-
 from eda.eda_functions import *
 
 def extract_modules(config_file):

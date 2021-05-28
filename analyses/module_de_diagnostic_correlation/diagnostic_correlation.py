@@ -2,9 +2,7 @@ import argparse
 import json
 import os
 import pandas as pd
-
 from preproc.result import Result
-
 from eda.eda_functions import *
 
 def correlate_diagnostics(config_file):
@@ -14,7 +12,13 @@ def correlate_diagnostics(config_file):
         config_json = json.load(json_data)
 
     Result(config_json["parameters"]["plot_path"])
-    
+
+    if 'diagnostics' in config_json["inputs"]:
+        meta = pd.read_csv(config_json["inputs"]["diagnostics"])
+        expression = pd.read_csv(config_json["inputs"]["normalized_counts"], sep = '\t', index_col = 0)
+        expression_meta_df = pd.merge(expression.T, meta, left_index = True, right_on = 'IID')
+        expression_meta_df.to_csv(os.path.join(config_json["outputs"]["expression_with_metadata"]), index = 0)
+
     gene_to_module_mapping_df = pd.read_csv(config_json["inputs"]["gene_to_module_mapping"])
     comm_df1 = pd.read_csv(config_json["inputs"]["network_louvain_default"])
     comm_df2 = pd.read_csv(config_json["inputs"]["network_louvain_agg1"])
@@ -30,17 +34,11 @@ def correlate_diagnostics(config_file):
         print(f'Unknown extension {split_tup[1]} detected for {split_tup[0]}')
         # Added to work with ADE
         deseq = pd.read_csv(config_json["inputs"]["differentially_expressed_genes"])
-    if ("skip_diagnostics" not in config_json["parameters"]) or (json.loads(config_json["parameters"]["skip_diagnostics"].lower()) is False):
-        expression_meta = True
-    else:
-        expression_meta = False
-    if expression_meta:
-        expression_meta_df = pd.read_csv(config_json["inputs"]["expression_with_metadata"], low_memory = False)
-    for i, cluster_df in enumerate(comm_dfs):
-        cluster_DE_perc(cluster_df, 'louvain_label', comm_names[i], deseq)
-        if expression_meta:
-            plot_sig_perc(cluster_df, 'louvain_label', comm_names[i], expression_meta_df)
-            cluster_phenotype_corr(cluster_df, 'louvain_label', comm_names[i], expression_meta_df)
+    for module_df, name in zip(comm_dfs, comm_names):
+        cluster_DE_perc(module_df, name, deseq)
+        if 'diagnostics' in config_json["inputs"]:
+            plot_sig_perc(module_df, name, expression_meta_df)
+            cluster_phenotype_corr(module_df, name, expression_meta_df)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
