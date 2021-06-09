@@ -1,6 +1,6 @@
 # backup functions removed from eda_functions.py not in the current modules
 import sys
-sys.path.append('../../src')
+sys.path.append('..')
 import os
 import netcomp
 import pandas as pd
