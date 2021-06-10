@@ -7,6 +7,8 @@ PREF_SHELL ?= "bash"
 
 GITREF=$(shell git rev-parse --short HEAD)
 
+export DATA_DIR := /Users/gzheng/projects/niaaa/assist/data
+
 export NETWORK_ANALYSIS_DIR := analyses/network_analysis
 export NETWORK_ANALYSIS_TAG := assist/network_analysis:0.1.0
 export MODULE_EXTRACTION_DIR := analyses/module_extraction
@@ -24,7 +26,8 @@ export MODULE_SUBSELECTION_EMBEDDING_TAG := assist/module_subselection_embedding
 export ML_AND_CRITICAL_GENE_IDENTIFIER_DIR := analyses/ml_and_critical_gene_identifier
 export ML_AND_CRITICAL_GENE_IDENTIFIER_TAG := assist/ml_and_critical_gene_identifier:0.1.0
 
-all: network-analysis-image module-extraction-image
+all: network-analysis-image module-extraction-image membership-analysis-image \
+diagnostic-correlation-image network-embedding-image ml-and-critical-gene-identifier-image
 
 network-analysis-image:
 	python record_version_info.py > version.txt; \
@@ -34,7 +37,7 @@ network-analysis-image:
 	cp -r src/preproc $(NETWORK_ANALYSIS_DIR)/src; \
 	cd $(NETWORK_ANALYSIS_DIR); \
 	find . -name '*.pyc' -delete; \
-	docker build -t ${NETWORK_ANALYSIS_TAG} .; \
+	docker build --no-cache -t ${NETWORK_ANALYSIS_TAG} .; \
 	rm version.txt; \
 	rm -r src
 	
@@ -46,7 +49,7 @@ module-extraction-image:
 	cp -r src/preproc $(MODULE_EXTRACTION_DIR)/src; \
 	cd $(MODULE_EXTRACTION_DIR); \
 	find . -name '*.pyc' -delete; \
-	docker build -t ${MODULE_EXTRACTION_TAG} .; \
+	docker build --no-cache -t ${MODULE_EXTRACTION_TAG} .; \
 	rm version.txt; \
 	rm -r src
 	
@@ -58,7 +61,7 @@ membership-analysis-image:
 	cp -r src/preproc $(MEMBERSHIP_ANALYSIS_DIR)/src; \
 	cd $(MEMBERSHIP_ANALYSIS_DIR); \
 	find . -name '*.pyc' -delete; \
-	docker build -t ${MEMBERSHIP_ANALYSIS_TAG} .; \
+	docker build --no-cache -t ${MEMBERSHIP_ANALYSIS_TAG} .; \
 	rm version.txt; \
 	rm -r src
 	
@@ -70,7 +73,7 @@ diagnostic-correlation-image:
 	cp -r src/preproc $(DIAGNOSTIC_CORRELATION_DIR)/src; \
 	cd $(DIAGNOSTIC_CORRELATION_DIR); \
 	find . -name '*.pyc' -delete; \
-	docker build -t ${DIAGNOSTIC_CORRELATION_TAG} .; \
+	docker build --no-cache -t ${DIAGNOSTIC_CORRELATION_TAG} .; \
 	rm version.txt; \
 	rm -r src
 
@@ -96,24 +99,6 @@ ml-and-critical-gene-identifier-image:
 	cp -r src/preproc $(ML_AND_CRITICAL_GENE_IDENTIFIER_DIR)/src; \
 	cd $(ML_AND_CRITICAL_GENE_IDENTIFIER_DIR); \
 	find . -name '*.pyc' -delete; \
-	docker build -t ${ML_AND_CRITICAL_GENE_IDENTIFIER_TAG} .; \
+	docker build --no-cache -t ${ML_AND_CRITICAL_GENE_IDENTIFIER_TAG} .; \
 	rm version.txt; \
 	rm -r src
-
-tests-pytest:
-#	bash $(SCRIPT_DIR)/run_container_process.sh $(PYTHON) -m "pytest" $(PYTEST_DIR) $(PYTEST_OPTS)
-	echo "not implemented"
-
-tests-deployed:
-	echo "not implemented"
-
-clean: clean-reactor-image clean-tests clean-app-image
-
-clean-reactor-image:
-	docker rmi -f $(CONTAINER_IMAGE)
-
-clean-wasserstein-image:
-	bash scripts/remove_images.sh $(PDT_WASSERSTEIN_INIFILE)
-
-clean-tests:
-	rm -rf .hypothesis .pytest_cache __pycache__ */__pycache__ tmp.* *junit.xml
