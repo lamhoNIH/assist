@@ -23,9 +23,16 @@ Module ```Critical Gene Validation``` requires a 3rd party license and is thus n
 Below we describe how to set up and run the ASSIST analysis modules in three different modes.
 
 ### 1. How to set up the environment for Jupyter notebooks
-Jupyter notebooks for ASSIST analysis modules are included to allow researchers to test out the analysis code using the Jupyter notebook interface.
+Jupyter notebooks for ASSIST analysis modules are included to allow researchers to test out the analysis code using the Jupyter notebook interface. The notebooks folder contains requirements file capturing software dependencies for the three notebooks included. Corresponding requirement file is loaded into each notebook at the beginning.
 
 ### 2. How to launch containers for each analysis module
+Before analysis modules can be launched through standalone containers, the corresponding images need to be loaded. You can either use the included Makefile to generate the corresponding images or use the following command to load the provided images in the images/standalone folder using:
+```
+docker load --input <path to the image tar file>
+```
+The analysis modules are meant to be launched in sequence in the order listed in the above table and there are configuration files in the config folder specifying all input files needed to launch the module and where the module will be generating its output files and plots. Before choosing an analysis module to execute, make sure all the input data specified in the corresponding config file are available.
+
+There is a script called launch.py under the scripts folder that can be used to launch these analysis modules, e.g., to launch module extraction on the human dataset, use: `python launch.py module_extraction human <path to the data folder>`. Note `<path to the data folder>` is the absolute path to the `data` folder under the project root.
 
 ### 3. How to run ASSIST modules in a workflow using ADE
 
