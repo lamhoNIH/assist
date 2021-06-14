@@ -102,3 +102,18 @@ ml-and-critical-gene-identifier-image:
 	docker build --no-cache -t ${ML_AND_CRITICAL_GENE_IDENTIFIER_TAG} .; \
 	rm version.txt; \
 	rm -r src
+
+save-standalone-images:
+	for module in network_analysis module_extraction module_membership_analysis \
+		module_de_diagnostic_correlation network_embedding ml_and_critical_gene_identifier; do \
+		mkdir images/standalone/$$module; \
+		echo assist/$$module; \
+		docker save -o images/standalone/$$module/0.1.0.tar assist/$$module; \
+	done
+
+load-standalone-images:
+	for module in network_analysis module_extraction module_membership_analysis \
+		module_de_diagnostic_correlation network_embedding ml_and_critical_gene_identifier; do \
+		echo assist/$$module; \
+		docker load --input images/standalone/$$module/0.1.0.tar; \
+	done
