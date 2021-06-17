@@ -7,14 +7,14 @@ from subprocess import Popen, PIPE
 import analysis_preproc
 from os import path, mkdir
 
-# Value for prop_docker_mem = 10GB
+# Value for prop_docker_mem = 24GB
 def ade_entrypoint_v1(
     in_diagnostics, in_normalized_counts,
     out_provided_networks, out_expression_with_metadata, out_gene_to_module_mapping,
     prop_skip_tom='true', prop_skip_preproc='false',
-    prop_docker_mem='10737418240',
+    prop_docker_mem='25769803776',
     prop_docker_cpu='4', 
-    prop_docker_volume_1='/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST:/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST'
+    prop_docker_volume_1='../..:/assist/data'
 ):
     work_path = tempfile.mkdtemp()
     print(f'work_path: {work_path}')
