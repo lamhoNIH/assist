@@ -12,7 +12,7 @@ def ade_entrypoint_v1(
     out_network_louvain_default, out_network_louvain_agg1,
     prop_docker_mem='30064771072',
     prop_docker_cpu='4', 
-    prop_docker_volume_1='/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST:/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST'
+    prop_docker_volume_1='../..:/assist/data'
 ):
     work_path = tempfile.mkdtemp()
 

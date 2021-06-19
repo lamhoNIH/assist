@@ -8,12 +8,12 @@ from os import path, mkdir
 
 # Value for prop_docker_mem = 10GB
 def ade_entrypoint_v1(
-    in_expression_with_metadata, in_gene_to_module_mapping, in_network_louvain_default, in_network_louvain_agg1, in_differentially_expressed_genes,
+    in_diagnostics, in_normalized_counts, in_gene_to_module_mapping, in_network_louvain_default, in_network_louvain_agg1, in_differentially_expressed_genes,
     prop_plot_path,
     prop_skip_diagnostics,
     prop_docker_mem='10737418240',
     prop_docker_cpu='4', 
-    prop_docker_volume_1='/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST:/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST'
+    prop_docker_volume_1='../..:/assist/data'
 ):
     work_path = tempfile.mkdtemp()
 
@@ -24,7 +24,8 @@ def ade_entrypoint_v1(
     config = {
         'inputs': {
             'differentially_expressed_genes': in_differentially_expressed_genes,
-            'expression_with_metadata': in_expression_with_metadata,
+            'diagnostics': in_diagnostics,
+            'normalized_counts': in_normalized_counts,
             'gene_to_module_mapping': in_gene_to_module_mapping,
             'network_louvain_default': in_network_louvain_default,
             'network_louvain_agg1': in_network_louvain_agg1
@@ -46,11 +47,12 @@ if __name__ == '__main__':
     
     if is_human:
         ade_entrypoint_v1(
-            path.join(data_folder, 'deseq.alc.vs.control.age.rin.batch.gender.PMI.corrected.w.prot.coding.gene.name.xlsx'),
-            path.join(data_folder, 'pipeline/human/network_analysis/expression_meta.csv'),
-            path.join(data_folder, 'pipeline/human/network_analysis/wgcna_modules.csv'),
+            path.join(data_folder, 'Kapoor2019_coga.inia.detailed.pheno.04.12.17.csv'),
+            path.join(data_folder, 'kapoor_expression_Apr5.txt'),
+            path.join(data_folder, 'kapoor_wgcna_modules.csv'),
             path.join(data_folder, 'pipeline/human/module_extraction/network_louvain_default.csv'),
             path.join(data_folder, 'pipeline/human/module_extraction/network_louvain_agg1.csv'),
+            path.join(data_folder, 'deseq.alc.vs.control.age.rin.batch.gender.PMI.corrected.w.prot.coding.gene.name.xlsx'),
             path.join(data_folder, 'pipeline/mouse/module_de_diagnostic_correlation/artifacts'),
             'false'
         )

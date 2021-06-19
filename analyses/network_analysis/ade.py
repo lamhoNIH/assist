@@ -4,14 +4,12 @@ import sys
 import tempfile
 from subprocess import Popen, PIPE
 
-import analysis_preproc
 from os import path, mkdir
 
 # Value for prop_docker_mem = 24GB
 def ade_entrypoint_v1(
-    in_diagnostics, in_normalized_counts,
-    out_provided_networks, out_expression_with_metadata, out_gene_to_module_mapping,
-    prop_skip_tom='true', prop_skip_preproc='false',
+    in_normalized_counts,
+    out_provided_networks, out_gene_to_module_mapping,
     prop_docker_mem='25769803776',
     prop_docker_cpu='4', 
     prop_docker_volume_1='../..:/assist/data'
@@ -32,17 +30,11 @@ def ade_entrypoint_v1(
     # CONFIG.JSON EXAMPLE: G:\Shared drives\NIAAA_ASSIST\Data\pipeline\human\network_analysis\config.json
     config = {
         'inputs': {
-            'diagnostics': in_diagnostics,
             'normalized_counts': new_in_normalized_counts
         },
         'outputs': {
-            'expression_with_metadata': out_expression_with_metadata,
             'provided_networks': out_provided_networks,
             'gene_to_module_mapping': out_gene_to_module_mapping
-        },
-        'parameters': {
-            'skip_tom': prop_skip_tom,
-            'skip_preproc': prop_skip_preproc
         }
     }
 
@@ -51,7 +43,6 @@ def ade_entrypoint_v1(
 
     print(' '.join(['Rscript', 'wgcna_codes.R', config_path]))
 
-    analysis_preproc.preproc(config_path)
     process = Popen(['Rscript', 'wgcna_codes.R', config_path], stdout=PIPE, stderr=PIPE)
     stdout, stderr = process.communicate()
     exit_code = process.wait()
@@ -75,20 +66,8 @@ if __name__ == '__main__':
         writer = csv.writer(f2, delimiter=',')
         writer.writerows(reader)
 
-    if is_human:
-        ade_entrypoint_v1(
-            path.join(data_folder, 'kapoor2019_coga.inia.detailed.pheno.04.12.17.csv'),
-            normalized_counts_but_with_comma_delim,
-            'NA',
-            path.join(data_folder, 'pipeline/human/network_analysis/ade_expression_meta.csv'),
-            path.join(data_folder, 'pipeline/human/network_analysis/ade_wgcna_modules.csv')
-        )
-    else:
-         ade_entrypoint_v1(
-            'NA',
-            normalized_counts_but_with_comma_delim,
-            path.join(data_folder, 'pipeline/mouse/network_analysis/tom.csv'),
-            'NA',
-            path.join(data_folder, 'pipeline/mouse/network_analysis/ade_wgcna_modules.csv'),
-            prop_skip_tom='false', prop_skip_preproc='true'
-        )
+    ade_entrypoint_v1(
+        normalized_counts_but_with_comma_delim,
+        path.join(data_folder, 'pipeline/mouse/network_analysis/tom.csv'),
+        path.join(data_folder, 'pipeline/mouse/network_analysis/ade_wgcna_modules.csv')
+    )

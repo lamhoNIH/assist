@@ -1,4 +1,0 @@
-pandas==1.1.2
-dynamicTreeCut
-fastcluster
-../../src

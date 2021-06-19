@@ -6,7 +6,7 @@ import tempfile
 import ml_and_cgi
 from os import path, mkdir
 
-# Value for prop_docker_mem = 20GB
+# Value for prop_docker_mem = 18GB
 def ade_entrypoint_v1(
     in_expression_with_metadata, in_differentially_expressed_genes, in_embedding_file, 
     out_critical_genes,
@@ -14,9 +14,9 @@ def ade_entrypoint_v1(
     prop_skip_diagnostics,
     prop_top_n_coef,
     prop_ratio,
-    prop_docker_mem='21474836480',
+    prop_docker_mem='19327352832',
     prop_docker_cpu='4', 
-    prop_docker_volume_1='/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST:/Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST'
+    prop_docker_volume_1='../..:/assist/data'
 ):
     work_path = tempfile.mkdtemp()
 
