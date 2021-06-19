@@ -19,14 +19,18 @@ The analysis workflow follows the order of the modules and the modules are inter
 
 Module ```Critical Gene Validation``` requires a 3rd party license and is thus not included in this repo.
 
+### Where to get data:
+Download data from https://www.dropbox.com/sh/uajkuclelr409e3/AAC0hwI47Ssz8I_FeOH8Pplca/data?dl=0&subfolder_nav_tracking=1. The user guide below assumes that you have downloaded all data files and placed them under the `data` subfolder of this project.
+
 ## User Guide
+
 Below we describe how to set up and run the ASSIST analysis modules in three different modes.
 
 ### 1. How to set up the environment for Jupyter notebooks
 Jupyter notebooks for ASSIST analysis modules are included to allow researchers to test out the analysis code using the Jupyter notebook interface. The `notebooks` folder contains requirements files capturing software dependencies for the three notebooks included. Corresponding requirement file is loaded into each notebook at the beginning.
 
 ### 2. How to launch containers for each analysis module
-Before analysis modules can be launched through standalone containers, the corresponding images need to be loaded. You can either use the included Makefile to generate the corresponding images or use the following command to load the provided images in the `images/standalone` folder using:
+Before analysis modules can be launched through standalone containers, the corresponding images need to be loaded. You can either use the included Makefile to generate the corresponding images or download the compressed image tarball from the `images/standalone` folder, unpack it to the `images/standalone` subfolder under this project and load them using:
 ```
 docker load --input <path to the image tar file>
 ```
@@ -35,6 +39,8 @@ The analysis modules are meant to be launched in sequence in the order listed in
 There is a script called launch.py under the scripts folder that can be used to launch these analysis modules, e.g., to launch module extraction on the human dataset, use: `python launch.py module_extraction human <path to the data folder>`. Note `<path to the data folder>` is the absolute path to the `data` folder under the project root.
 
 ### 3. How to run ASSIST modules in a workflow using ADE
+
+Follow [ADE documentation] (./ade/doc/README.md)
 
 #### Prepare ADE runtime environment
 
