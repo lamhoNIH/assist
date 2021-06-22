@@ -9,8 +9,8 @@ from os import path, mkdir
 # Value for prop_docker_mem = 10GB
 def ade_entrypoint_v1(
     in_diagnostics, in_normalized_counts, in_gene_to_module_mapping, in_network_louvain_default, in_network_louvain_agg1, in_differentially_expressed_genes,
+    out_expression_with_metadata,
     prop_plot_path,
-    prop_skip_diagnostics,
     prop_docker_mem='10737418240',
     prop_docker_cpu='4', 
     prop_docker_volume_1='../..:/assist/data'
@@ -30,9 +30,11 @@ def ade_entrypoint_v1(
             'network_louvain_default': in_network_louvain_default,
             'network_louvain_agg1': in_network_louvain_agg1
         },
+        'outputs': {
+            'expression_with_metadata': out_expression_with_metadata
+        },
         'parameters': {
-            'plot_path': prop_plot_path,
-            'skip_diagnostics': prop_skip_diagnostics
+            'plot_path': prop_plot_path
         }
     }
 
