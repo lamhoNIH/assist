@@ -43,8 +43,7 @@ def ml_models(config_file):
     cg_output = config_json['outputs']['critical_genes']
     aimed_cg_num = config_json['parameters']['aimed_cg_num']
     aim_within_n = config_json['parameters']['aim_within_n']
-    _models_to_find_cg = config_json['parameters']['models_to_find_cg']
-    models_to_find_cg = json.loads(_models_to_find_cg) if type(_models_to_find_cg) == 'str' else _models_to_find_cg
+    models_to_find_cg = config_json['parameters']['models_to_find_cg']
     critical_gene_df = get_critical_gene_df(processed_emb_df, top_dim, deseq=deseq, output_path=cg_output,
                                             aimed_number=aimed_cg_num, within_n=aim_within_n, models=models_to_find_cg)
     intersect_genes = jaccard_critical_genes(critical_gene_df, f'Critical gene overlap between models')

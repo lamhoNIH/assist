@@ -45,7 +45,7 @@ def ade_entrypoint_v1(
             'plot_path': prop_plot_path,
             'skip_diagnostics': prop_skip_diagnostics,
             'top_n_coef': prop_top_n_coef,
-            'models_to_find_cg': prop_models_to_find_cg,
+            'models_to_find_cg': json.loads(prop_models_to_find_cg),
             'aimed_cg_num': prop_aimed_cg_num,
             'aim_within_n': prop_aim_within_n,
             'top_n_critical_genes': prop_top_n_critical_genes,
