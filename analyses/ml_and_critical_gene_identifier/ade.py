@@ -44,12 +44,12 @@ def ade_entrypoint_v1(
         'parameters': {
             'plot_path': prop_plot_path,
             'skip_diagnostics': prop_skip_diagnostics,
-            'top_n_coef': prop_top_n_coef,
+            'top_n_coef': float(prop_top_n_coef),
             'models_to_find_cg': json.loads(prop_models_to_find_cg),
-            'aimed_cg_num': prop_aimed_cg_num,
-            'aim_within_n': prop_aim_within_n,
-            'top_n_critical_genes': prop_top_n_critical_genes,
-            'top_n_genes_for_comparison': prop_top_n_genes_for_comparison,
+            'aimed_cg_num': int(prop_aimed_cg_num),
+            'aim_within_n': int(prop_aim_within_n),
+            'top_n_critical_genes': int(prop_top_n_critical_genes),
+            'top_n_genes_for_comparison': int(prop_top_n_genes_for_comparison),
             'get_neighbor_genes': prop_get_neighbor_genes
         }
     }

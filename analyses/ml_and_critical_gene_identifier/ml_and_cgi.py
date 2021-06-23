@@ -35,7 +35,7 @@ def ml_models(config_file):
     # process embedding to be ready for ML
     processed_emb_df = process_emb_for_ML(emb_df, deseq)
     model_weights = run_ml(processed_emb_df, emb_name=emb_name, print_accuracy=True)
-    top_dim = plot_feature_importances(model_weights, top_n_coef=float(config_json["parameters"]["top_n_coef"]), print_num_dim=False, plot_heatmap=False,
+    top_dim = plot_feature_importances(model_weights, top_n_coef=config_json["parameters"]["top_n_coef"], print_num_dim=False, plot_heatmap=False,
                                        return_top_dim=True)
     plot_ml_w_top_dim(processed_emb_df, top_dim)
     jaccard_average(top_dim, f'Important dim overlap within model repeats')
