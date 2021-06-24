@@ -30,6 +30,20 @@ def ade_entrypoint_v1(
 
     # Generate and write out JSON
     # CONFIG.JSON EXAMPLE: G:\Shared drives\NIAAA_ASSIST\Data\pipeline\human\network_analysis\config.json
+    parameters = {
+            'plot_path': prop_plot_path,
+            'skip_diagnostics': prop_skip_diagnostics,
+            'top_n_coef': float(prop_top_n_coef),
+            'models_to_find_cg': json.loads(prop_models_to_find_cg),
+            'aimed_cg_num': int(prop_aimed_cg_num),
+            'aim_within_n': int(prop_aim_within_n),
+            'top_n_critical_genes': int(prop_top_n_critical_genes)
+        }
+    if len(prop_top_n_genes_for_comparison) > 0:
+        parameters['top_n_genes_for_comparison'] = int(prop_top_n_genes_for_comparison)
+    if len(prop_get_neighbor_genes) > 0:
+        parameters['get_neighbor_genes'] = prop_get_neighbor_genes
+
     config = {
         'inputs': {
             'expression_with_metadata': in_expression_with_metadata,
@@ -41,17 +55,7 @@ def ade_entrypoint_v1(
             'critical_genes': out_critical_genes,
             'neighbor_genes': out_neighbor_genes
         },
-        'parameters': {
-            'plot_path': prop_plot_path,
-            'skip_diagnostics': prop_skip_diagnostics,
-            'top_n_coef': float(prop_top_n_coef),
-            'models_to_find_cg': json.loads(prop_models_to_find_cg),
-            'aimed_cg_num': int(prop_aimed_cg_num),
-            'aim_within_n': int(prop_aim_within_n),
-            'top_n_critical_genes': int(prop_top_n_critical_genes),
-            'top_n_genes_for_comparison': int(prop_top_n_genes_for_comparison),
-            'get_neighbor_genes': prop_get_neighbor_genes
-        }
+        'parameters': parameters
     }
 
     with open(config_path, 'w') as f:
