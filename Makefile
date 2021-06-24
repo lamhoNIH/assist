@@ -117,3 +117,12 @@ load-standalone-images:
 		echo assist/$$module; \
 		docker load --input images/standalone/$$module/0.1.0.tar; \
 	done
+	
+ade-images:
+	cd ade; \
+	python create_node_docker_image.py /Users/gzheng/projects/niaaa/assist/analyses/network_analysis network_analysis --tag 0.1.0 --rver 4.0.3> build.log 2>&1; \
+	python create_node_docker_image.py /Users/gzheng/projects/niaaa/assist/analyses/module_extraction module_extraction --tag 0.1.0; \
+	python create_node_docker_image.py /Users/gzheng/projects/niaaa/assist/analyses/module_membership_analysis module_membership_analysis --tag 0.1.0; \
+	python create_node_docker_image.py /Users/gzheng/projects/niaaa/assist/analyses/module_de_diagnostic_correlation module_de_diagnostic_correlation --tag 0.1.0; \
+	python create_node_docker_image.py /Users/gzheng/projects/niaaa/assist/analyses/network_embedding network_embedding --tag 0.1.0; \
+	python create_node_docker_image.py /Users/gzheng/projects/niaaa/assist/analyses/ml_and_critical_gene_identifier ml_and_critical_gene_identifier --tag 0.1.0; \
