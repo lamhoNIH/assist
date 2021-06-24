@@ -16,8 +16,8 @@ def run_embedding(config_file):
     print('before embedding', memory_profiler.memory_usage()[0])
 
     embed_params = config_json["parameters"]
-    max_epoch = int(embed_params['max_epoch'])
-    learning_rate = float(embed_params['learning_rate'])
+    max_epoch = embed_params['max_epoch']
+    learning_rate = embed_params['learning_rate']
     # Read tom file directly and then embed. Skip the saving edgelist step
     emb_df = network_embedding_fast(config_json["inputs"]["provided_networks"],
                                     max_epoch=max_epoch, learning_rate=learning_rate,
