@@ -9,7 +9,7 @@
 	"parameters": {
 		"plot_path": "data/pipeline/mouse/ml_and_critical_gene_identifier/artifacts",
 		"skip_diagnostics": "true",
-		"top_n_coef": "0.5",
+		"top_n_coef": 0.5,
 		"models_to_find_cg": ["LR", "RF", "XGB"],
 		"aimed_cg_num": 500,
 		"aim_within_n": 15,
