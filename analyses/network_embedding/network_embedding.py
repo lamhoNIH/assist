@@ -51,6 +51,7 @@ def run_embedding(config_file):
         network_cluster_corr = cluster_phenotype_corr(comm_df, 'network', expression_meta_df, output_corr_df=True)
         embedding_cluster_corr = cluster_phenotype_corr(kmeans, 'embedding', expression_meta_df, output_corr_df=True)
         plot_corr_kde([network_cluster_corr, embedding_cluster_corr], ['network', 'embedding'], 'network vs embedding')
+
     # run NMI
     print('NMI between network modules and embedding clusters is', cluster_nmi_v3(comm_df, kmeans))
 if __name__ == '__main__':
