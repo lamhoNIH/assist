@@ -1,0 +1,582 @@
+load_differentially_expressed_genes:
+  type: parse
+  inputs: {}
+  properties:
+    locationSource: LOCAL
+    localLocationConfiguration:
+      path: ../../data/HDID_data
+      normalizeGDrive: true
+    recurse: true
+    filter: .*de_data.csv
+    missingPlaceholder: MISSING_VALUE
+    metadataConfiguration:
+      decodeLocationUrl: false
+      includeLocation: false
+      includeSheetName: false
+      includeSheetIndex: false
+      includeSheetRow: false
+      includeSheetColumn: false
+      includeSegmentIndex: false
+    separatedValueConfigurations:
+    - locationPattern: .*
+      svConfiguration:
+        delimiter: ','
+        characterSet: UTF-8
+    excelConfigurations:
+    - locationPattern: .*
+      excelConfiguration:
+        mergeBehaviour: HIDDEN
+    fcsConfigurations:
+    - locationPattern: .*
+      fcsConfiguration:
+        log10: false
+    pdfConfigurations:
+    - locationPattern: .*
+      pdfConfiguration:
+        flavor: LATTICE
+        pages: 1-end
+        splitText: false
+        rowTolerance: 2
+        columnTolerance: 0
+        processBackground: false
+        lineScale: 15
+        lineTolerance: 2
+        jointTolerance: 2
+        thresholdBlocksize: 15
+        thresholdConstant: -2
+        iterations: 0
+        resolution: 300
+    columnSetDetectorConfiguration:
+      minRows: 2
+      minCols: 2
+      stripPreprocessor: STRIP_BOTH
+    columnSetConfigurations:
+    - columnConfigurations:
+      - name: id
+        pattern: \Qid\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: gene
+        pattern: \Qgene\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: log2FoldChange
+        pattern: \Qlog2FoldChange\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: padj
+        pattern: \Qpadj\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      remappable: true
+  metadata:
+    x_position: 731
+    y_position: 387
+load_normalized_counts:
+  type: parse
+  inputs: {}
+  properties:
+    locationSource: LOCAL
+    localLocationConfiguration:
+      path: ../../data/HDID_data
+      normalizeGDrive: true
+    recurse: true
+    filter: .*PFC_HDID_norm_exp.txt
+    missingPlaceholder: MISSING_VALUE
+    metadataConfiguration:
+      decodeLocationUrl: false
+      includeLocation: false
+      includeSheetName: false
+      includeSheetIndex: false
+      includeSheetRow: false
+      includeSheetColumn: false
+      includeSegmentIndex: false
+    separatedValueConfigurations:
+    - locationPattern: .*
+      svConfiguration:
+        delimiter: "\t"
+        characterSet: UTF-8
+    excelConfigurations:
+    - locationPattern: .*
+      excelConfiguration:
+        mergeBehaviour: HIDDEN
+    fcsConfigurations:
+    - locationPattern: .*
+      fcsConfiguration:
+        log10: false
+    pdfConfigurations:
+    - locationPattern: .*
+      pdfConfiguration:
+        flavor: LATTICE
+        pages: 1-end
+        splitText: false
+        rowTolerance: 2
+        columnTolerance: 0
+        processBackground: false
+        lineScale: 15
+        lineTolerance: 2
+        jointTolerance: 2
+        thresholdBlocksize: 15
+        thresholdConstant: -2
+        iterations: 0
+        resolution: 300
+    columnSetDetectorConfiguration:
+      minRows: 2
+      minCols: 2
+      stripPreprocessor: STRIP_BOTH
+    columnSetConfigurations:
+    - columnConfigurations:
+      - name: id
+        pattern: \Qid\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: C1A1
+        pattern: \QC1A1\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: C2A1
+        pattern: \QC2A1\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: C3A1
+        pattern: \QC3A1\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: C6A1
+        pattern: \QC6A1\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: C5A1
+        pattern: \QC5A1\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: C4A1
+        pattern: \QC4A1\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: C7A1
+        pattern: \QC7A1\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: C8A1
+        pattern: \QC8A1\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: C9A1
+        pattern: \QC9A1\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: C12A1
+        pattern: \QC12A1\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: C11A1
+        pattern: \QC11A1\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: C10A1
+        pattern: \QC10A1\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: H1A1
+        pattern: \QH1A1\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: H2A1
+        pattern: \QH2A1\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: H3A1
+        pattern: \QH3A1\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: H6A1
+        pattern: \QH6A1\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: H5A1
+        pattern: \QH5A1\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: H4A1
+        pattern: \QH4A1\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: H7A1
+        pattern: \QH7A1\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: H8A1
+        pattern: \QH8A1\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: H9A1
+        pattern: \QH9A1\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: H12A1
+        pattern: \QH12A1\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: H11A1
+        pattern: \QH11A1\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: H10A1
+        pattern: \QH10A1\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      remappable: true
+  metadata:
+    x_position: 603
+    y_position: 45
+perform_network_analysis:
+  type: netrias/network_analysis:0.1.0
+  inputs:
+    normalized_counts: load_normalized_counts/o0
+  properties:
+    docker_mem: 25769803776
+    docker_cpu: 4
+    docker_volume_1: ../..:/assist/data
+  metadata:
+    x_position: 603
+    y_position: 131
+extract_modules:
+  type: netrias/module_extraction:0.1.0
+  inputs:
+    provided_networks: perform_network_analysis/provided_networks
+  properties:
+    docker_mem: 30064771072
+    docker_cpu: 4
+    docker_volume_1: ../..:/assist/data
+  metadata:
+    x_position: 743
+    y_position: 197
+perform_network_embedding:
+  type: netrias/network_embedding:0.1.0
+  inputs:
+    chosen_module_assignment: perform_network_analysis/gene_to_module_mapping
+    differentially_expressed_genes: load_differentially_expressed_genes/o0
+    provided_networks: perform_network_analysis/provided_networks
+  properties:
+    plot_path: /artifacts/plot
+    max_epoch: 100
+    learning_rate: 0.1
+    docker_mem: 30064771072
+    docker_cpu: 4
+    docker_volume_1: ../..:/assist/data
+  metadata:
+    x_position: 613
+    y_position: 547
+correlate_module_de_diagnostics:
+  type: netrias/module_de_diagnostic_correlation:0.1.0
+  inputs:
+    gene_to_module_mapping: perform_network_analysis/gene_to_module_mapping
+    network_louvain_default: extract_modules/network_louvain_default
+    network_louvain_agg1: extract_modules/network_louvain_agg1
+    differentially_expressed_genes: load_differentially_expressed_genes/o0
+  properties:
+    plot_path: /artifacts/plots
+    skip_diagnostics: true
+    docker_mem: 10737418240
+    docker_cpu: 4
+    docker_volume_1: ../..:/assist/data
+  metadata:
+    x_position: 455
+    y_position: 473
+analyze_module_membership:
+  type: netrias/module_membership_analysis:0.1.0
+  inputs:
+    gene_to_module_mapping: perform_network_analysis/gene_to_module_mapping
+    network_louvain_default: extract_modules/network_louvain_default
+    network_louvain_agg1: extract_modules/network_louvain_agg1
+  properties:
+    plot_path: /artifacts/plots
+    docker_mem: 17179869184
+    docker_cpu: 4
+    docker_volume_1: ../..:/assist/data
+  metadata:
+    x_position: 733
+    y_position: 325
+identify_critical_genes:
+  type: netrias/ml_and_critical_gene_identifier:0.1.0
+  inputs:
+    embedding_file: perform_network_embedding/network_embedding
+    differentially_expressed_genes: load_differentially_expressed_genes/o0
+  properties:
+    plot_path: /artifacts/plots
+    skip_diagnostics: true
+    top_n_coef: 0.5
+    models_to_find_cg: '["LR", "RF", "XGB"]'
+    aimed_cg_num: 500
+    aim_within_n: 15
+    top_n_critical_genes: 10
+    top_n_genes_for_comparison:
+    get_neighbor_genes:
+    docker_mem: 19327352832
+    docker_cpu: 4
+    docker_volume_1: ../..:/assist/data
+  metadata:
+    x_position: 672
+    y_position: 636

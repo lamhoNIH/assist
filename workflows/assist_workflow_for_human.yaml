@@ -1,0 +1,2613 @@
+load_differentially_expressed_genes:
+  type: parse
+  inputs: {}
+  properties:
+    locationSource: LOCAL
+    localLocationConfiguration:
+      path: /Volumes/GoogleDrive/Shared drives/ADE_Netrias/ASSIST_Data
+      normalizeGDrive: true
+    recurse: true
+    filter: .*deseq.alc.vs.control.age.rin.batch.gender.PMI.corrected.w.prot.coding.gene.name.xlsx.*
+    missingPlaceholder: MISSING_VALUE
+    metadataConfiguration:
+      decodeLocationUrl: true
+      includeLocation: true
+      includeSheetName: true
+      includeSheetIndex: true
+      includeSheetRow: true
+      includeSheetColumn: true
+      includeSegmentIndex: true
+    separatedValueConfigurations:
+    - locationPattern: .*
+      svConfiguration:
+        delimiter: ','
+        characterSet: UTF-8
+    excelConfigurations:
+    - locationPattern: .*
+      excelConfiguration:
+        mergeBehaviour: HIDDEN
+    fcsConfigurations:
+    - locationPattern: .*
+      fcsConfiguration:
+        log10: false
+    pdfConfigurations:
+    - locationPattern: .*
+      pdfConfiguration:
+        flavor: LATTICE
+        pages: 1-end
+        splitText: false
+        rowTolerance: 2
+        columnTolerance: 0
+        processBackground: false
+        lineScale: 15
+        lineTolerance: 2
+        jointTolerance: 2
+        thresholdBlocksize: 15
+        thresholdConstant: -2
+        iterations: 0
+        resolution: 300
+    columnSetDetectorConfiguration:
+      minRows: 2
+      minCols: 2
+      stripPreprocessor: STRIP_BOTH
+    columnSetConfigurations:
+    - columnConfigurations:
+      - name: id
+        pattern: \Qid\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: gene
+        pattern: \Qgene\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: baseMean
+        pattern: \QbaseMean\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: log2FoldChange
+        pattern: \Qlog2FoldChange\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: lfcSE
+        pattern: \QlfcSE\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: stat
+        pattern: \Qstat\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: pvalue
+        pattern: \Qpvalue\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: padj
+        pattern: \Qpadj\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      remappable: true
+    - columnConfigurations:
+      - name: HGNC ID (gene)
+        pattern: \QHGNC ID (gene)\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: Approved symbol
+        pattern: \QApproved symbol\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: Approved name
+        pattern: \QApproved name\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: Previous symbols
+        pattern: \QPrevious symbols\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: Synonyms
+        pattern: \QSynonyms\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: Chromosome
+        pattern: \QChromosome\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name:
+        pattern: \Q\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      remappable: true
+  metadata:
+    x_position: 482
+    y_position: 467
+load_diagnostics:
+  type: parse
+  inputs: {}
+  properties:
+    locationSource: LOCAL
+    localLocationConfiguration:
+      path: /Volumes/GoogleDrive/Shared drives/ADE_Netrias/ASSIST_Data
+      normalizeGDrive: true
+    recurse: true
+    filter: .*kapoor2019_coga.inia.detailed.pheno.04.12.17.csv.*
+    missingPlaceholder: MISSING_VALUE
+    metadataConfiguration:
+      decodeLocationUrl: false
+      includeLocation: false
+      includeSheetName: false
+      includeSheetIndex: false
+      includeSheetRow: false
+      includeSheetColumn: false
+      includeSegmentIndex: false
+    separatedValueConfigurations:
+    - locationPattern: .*
+      svConfiguration:
+        delimiter: ','
+        characterSet: UTF-8
+    excelConfigurations: []
+    fcsConfigurations:
+    - locationPattern: .*
+      fcsConfiguration:
+        log10: false
+    pdfConfigurations: []
+    columnSetDetectorConfiguration:
+      minRows: 2
+      minCols: 2
+      stripPreprocessor: STRIP_BOTH
+    columnSetConfigurations:
+    - columnConfigurations:
+      - name: SUNumber
+        pattern: \QSUNumber\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: IID
+        pattern: \QIID\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: RNAsequencedby
+        pattern: \QRNAsequencedby\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: Frozentissue
+        pattern: \QFrozentissue\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: BMI
+        pattern: \QBMI\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: RIN
+        pattern: \QRIN\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: Age
+        pattern: \QAge\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: Gender
+        pattern: \QGender\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: Ethnicity
+        pattern: \QEthnicity\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: Alc_status
+        pattern: \QAlc_status\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: Classification
+        pattern: \QClassification\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: DSMIV_LF_added
+        pattern: \QDSMIV_LF_added\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: DSMIV
+        pattern: \QDSMIV\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: DSMV
+        pattern: \QDSMV\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: PM!
+        pattern: \QPM!\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: Brain_pH
+        pattern: \QBrain_pH\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: COD_category
+        pattern: \QCOD_category\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: Agonal_phase
+        pattern: \QAgonal_phase\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: Liver_class
+        pattern: \QLiver_class\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: Smoking_frequency
+        pattern: \QSmoking_frequency\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: Pack_yrs_1_pktperday_1_yr
+        pattern: \QPack_yrs_1_pktperday_1_yr\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: AUDIT
+        pattern: \QAUDIT\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: Alcohol_intake_gmsperday
+        pattern: \QAlcohol_intake_gmsperday\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: Total_drinking_yrs
+        pattern: \QTotal_drinking_yrs\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: Depression
+        pattern: \QDepression\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name: antibiotic
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: Anxiety
+        pattern: \QAnxiety\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name: antibiotic
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: SR
+        pattern: \QSR\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      remappable: true
+  metadata:
+    x_position: 63
+    y_position: 108
+load_normalized_counts:
+  type: parse
+  inputs: {}
+  properties:
+    locationSource: LOCAL
+    localLocationConfiguration:
+      path: /Volumes/GoogleDrive/Shared drives/ADE_Netrias/ASSIST_Data
+      normalizeGDrive: true
+    recurse: true
+    filter: .*kapoor_expression.txt.*
+    missingPlaceholder: MISSING_VALUE
+    metadataConfiguration:
+      decodeLocationUrl: false
+      includeLocation: false
+      includeSheetName: false
+      includeSheetIndex: false
+      includeSheetRow: false
+      includeSheetColumn: false
+      includeSegmentIndex: false
+    separatedValueConfigurations:
+    - locationPattern: .*
+      svConfiguration:
+        delimiter: "\t"
+        characterSet: UTF-8
+    excelConfigurations: []
+    fcsConfigurations: []
+    pdfConfigurations: []
+    columnSetDetectorConfiguration:
+      minRows: 2
+      minCols: 2
+      stripPreprocessor: STRIP_BOTH
+    columnSetConfigurations:
+    - columnConfigurations:
+      - name: id
+        pattern: \Qid\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: STRING
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X214
+        pattern: \QX214\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X460
+        pattern: \QX460\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X584
+        pattern: \QX584\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X551
+        pattern: \QX551\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X530
+        pattern: \QX530\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X571
+        pattern: \QX571\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X327
+        pattern: \QX327\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X723
+        pattern: \QX723\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X637
+        pattern: \QX637\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X656
+        pattern: \QX656\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X620
+        pattern: \QX620\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X567
+        pattern: \QX567\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X302
+        pattern: \QX302\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X646
+        pattern: \QX646\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X628
+        pattern: \QX628\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X727
+        pattern: \QX727\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X351
+        pattern: \QX351\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X741
+        pattern: \QX741\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X641
+        pattern: \QX641\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X570
+        pattern: \QX570\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X719
+        pattern: \QX719\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X713
+        pattern: \QX713\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X654
+        pattern: \QX654\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X582
+        pattern: \QX582\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X670
+        pattern: \QX670\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X728
+        pattern: \QX728\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X287
+        pattern: \QX287\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X635
+        pattern: \QX635\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X554
+        pattern: \QX554\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X600
+        pattern: \QX600\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X586
+        pattern: \QX586\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X636
+        pattern: \QX636\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X253
+        pattern: \QX253\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X667
+        pattern: \QX667\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X522
+        pattern: \QX522\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X681
+        pattern: \QX681\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X622
+        pattern: \QX622\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X639
+        pattern: \QX639\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X252
+        pattern: \QX252\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X700
+        pattern: \QX700\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X597
+        pattern: \QX597\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X672
+        pattern: \QX672\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X643
+        pattern: \QX643\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X720
+        pattern: \QX720\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X717
+        pattern: \QX717\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X709
+        pattern: \QX709\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X729
+        pattern: \QX729\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X572
+        pattern: \QX572\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X749
+        pattern: \QX749\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X558
+        pattern: \QX558\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X416
+        pattern: \QX416\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X625
+        pattern: \QX625\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X663
+        pattern: \QX663\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X243
+        pattern: \QX243\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X451
+        pattern: \QX451\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X512
+        pattern: \QX512\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X463
+        pattern: \QX463\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X547
+        pattern: \QX547\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X688
+        pattern: \QX688\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X105
+        pattern: \QX105\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X146
+        pattern: \QX146\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X150
+        pattern: \QX150\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X153
+        pattern: \QX153\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X180
+        pattern: \QX180\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X182
+        pattern: \QX182\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X185
+        pattern: \QX185\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X190
+        pattern: \QX190\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X192
+        pattern: \QX192\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X193
+        pattern: \QX193\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X204
+        pattern: \QX204\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X209
+        pattern: \QX209\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X211
+        pattern: \QX211\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X212
+        pattern: \QX212\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X217
+        pattern: \QX217\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X218
+        pattern: \QX218\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X225
+        pattern: \QX225\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X227
+        pattern: \QX227\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X228
+        pattern: \QX228\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X234
+        pattern: \QX234\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X236
+        pattern: \QX236\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X239
+        pattern: \QX239\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X245
+        pattern: \QX245\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X246
+        pattern: \QX246\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X256
+        pattern: \QX256\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X257
+        pattern: \QX257\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X259
+        pattern: \QX259\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X270
+        pattern: \QX270\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X277.1
+        pattern: \QX277.1\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X278
+        pattern: \QX278\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X282
+        pattern: \QX282\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X285
+        pattern: \QX285\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X286
+        pattern: \QX286\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X295
+        pattern: \QX295\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X299
+        pattern: \QX299\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X301
+        pattern: \QX301\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X303
+        pattern: \QX303\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X305
+        pattern: \QX305\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X312
+        pattern: \QX312\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X313
+        pattern: \QX313\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X315
+        pattern: \QX315\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X326
+        pattern: \QX326\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X329
+        pattern: \QX329\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X330
+        pattern: \QX330\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X332
+        pattern: \QX332\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X335
+        pattern: \QX335\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X337
+        pattern: \QX337\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X339
+        pattern: \QX339\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X349
+        pattern: \QX349\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X353
+        pattern: \QX353\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X366
+        pattern: \QX366\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X367
+        pattern: \QX367\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X395
+        pattern: \QX395\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X398
+        pattern: \QX398\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X401
+        pattern: \QX401\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X402
+        pattern: \QX402\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X410
+        pattern: \QX410\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X417
+        pattern: \QX417\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X442
+        pattern: \QX442\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X466
+        pattern: \QX466\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X474
+        pattern: \QX474\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X476
+        pattern: \QX476\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X507
+        pattern: \QX507\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X510
+        pattern: \QX510\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X513
+        pattern: \QX513\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X59
+        pattern: \QX59\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X591
+        pattern: \QX591\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X642
+        pattern: \QX642\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X649
+        pattern: \QX649\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X650
+        pattern: \QX650\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X693
+        pattern: \QX693\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X88.225
+        pattern: \QX88.225\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X88.274
+        pattern: \QX88.274\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X88.304
+        pattern: \QX88.304\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X89.221
+        pattern: \QX89.221\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X89.577
+        pattern: \QX89.577\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X89.61
+        pattern: \QX89.61\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X90.92
+        pattern: \QX90.92\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X94
+        pattern: \QX94\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      - name: X97
+        pattern: \QX97\E
+        stripPreprocessor: STRIP_BOTH
+        casePreprocessor: NO_CHANGE
+        type: DOUBLE
+        dictionary:
+          name:
+          notFoundMarker: NF>
+          noChangeMarker:
+          singleCorrectionMarker:
+          multipleCorrectionsMarker: MC>
+          multipleCorrectionsDelim: '|'
+          multipleCorrectionsTieBreakOnLength: false
+      remappable: true
+  metadata:
+    x_position: 242
+    y_position: 105
+load_coregulated_gene_network:
+  type: netrias/quick_parse:1617816211341
+  inputs: {}
+  properties:
+    path: /Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST/Data/Kapoor_TOM.csv
+    delim: ','
+    docker_mem: 10737418240
+    docker_cpu: 1
+    docker_volume_1: /Volumes/GoogleDrive/Shared drives:/Volumes/GoogleDrive/Shared
+      drives
+  metadata:
+    x_position: 704
+    y_position: 109
+perform_network_analysis:
+  type: netrias/gz_network_analysis_test:0.1.1
+  inputs:
+    diagnostics: load_diagnostics/o0
+    normalized_counts: load_normalized_counts/o0
+  properties:
+    skip_tom: true
+    skip_preproc: false
+    docker_mem: 10737418240
+    docker_cpu: 4
+    docker_volume_1: /Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST:/Volumes/GoogleDrive/Shared
+      drives/NIAAA_ASSIST
+  metadata:
+    x_position: 189
+    y_position: 226
+extract_modules:
+  type: netrias/gz_module_extraction_test:0.1.0
+  inputs:
+    provided_networks: load_coregulated_gene_network/o0
+  properties:
+    docker_mem: 30064771072
+    docker_cpu: 4
+    docker_volume_1: /Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST:/Volumes/GoogleDrive/Shared
+      drives/NIAAA_ASSIST
+  metadata:
+    x_position: 519
+    y_position: 236
+perform_network_embedding:
+  type: netrias/gz_network_embedding_test:0.1.0
+  inputs:
+    differentially_expressed_genes: load_differentially_expressed_genes/o0
+    network_louvain_default: extract_modules/network_louvain_default
+    provided_networks: load_coregulated_gene_network/o0
+  properties:
+    plot_path: /artifacts/plots
+    max_epoch: 10
+    learning_rate: 0.1
+    docker_mem: 30064771072
+    docker_cpu: 4
+    docker_volume_1: /Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST:/Volumes/GoogleDrive/Shared
+      drives/NIAAA_ASSIST
+  metadata:
+    x_position: 667
+    y_position: 603
+correlate_module_de_diagnostics:
+  type: netrias/gz_module_de_diagnostic_correlation_test:0.1.0
+  inputs:
+    expression_with_metadata: perform_network_analysis/expression_with_metadata
+    gene_to_module_mapping: perform_network_analysis/gene_to_module_mapping
+    network_louvain_default: extract_modules/network_louvain_default
+    network_louvain_agg1: extract_modules/network_louvain_agg1
+    differentially_expressed_genes: load_differentially_expressed_genes/o0
+  properties:
+    plot_path: /artifacts/plots
+    skip_diagnostics: false
+    docker_mem: 10737418240
+    docker_cpu: 4
+    docker_volume_1: /Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST:/Volumes/GoogleDrive/Shared
+      drives/NIAAA_ASSIST
+  metadata:
+    x_position: 267
+    y_position: 521
+analyze_module_membership:
+  type: netrias/gz_module_membership_analysis_test:0.1.2
+  inputs:
+    expression_with_metadata: perform_network_analysis/expression_with_metadata
+    gene_to_module_mapping: perform_network_analysis/gene_to_module_mapping
+    network_louvain_default: extract_modules/network_louvain_default
+    network_louvain_agg1: extract_modules/network_louvain_agg1
+  properties:
+    plot_path:
+    skip_network_cluster_stability: false
+    docker_mem: 10737418240
+    docker_cpu: 4
+    docker_volume_1: /Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST:/Volumes/GoogleDrive/Shared
+      drives/NIAAA_ASSIST
+  metadata:
+    x_position: 267
+    y_position: 344
+identify_critical_genes:
+  type: netrias/gz_ml_and_critical_gene_identififier_test:0.1.1
+  inputs:
+    expression_with_metadata: perform_network_analysis/expression_with_metadata
+    differentially_expressed_genes: load_differentially_expressed_genes/o0
+    embedding_file: perform_network_embedding/network_embedding
+  properties:
+    plot_path: /artifacts/plots
+    skip_diagnostics: false
+    top_n_coef: 0.5
+    ratio: 0.7
+    docker_mem: 21474836480
+    docker_cpu: 4
+    docker_volume_1: /Volumes/GoogleDrive/Shared drives/NIAAA_ASSIST:/Volumes/GoogleDrive/Shared
+      drives/NIAAA_ASSIST
+  metadata:
+    x_position: 268
+    y_position: 722
