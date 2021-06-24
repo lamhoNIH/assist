@@ -9,7 +9,7 @@ from os import path, mkdir
 # Value for prop_docker_mem = 24GB
 def ade_entrypoint_v1(
     in_normalized_counts,
-    out_provided_networks, out_gene_to_module_mapping,
+    out_gene_to_module_mapping, out_provided_networks,
     prop_docker_mem='25769803776',
     prop_docker_cpu='4', 
     prop_docker_volume_1='../..:/assist/data'
@@ -68,6 +68,6 @@ if __name__ == '__main__':
 
     ade_entrypoint_v1(
         normalized_counts_but_with_comma_delim,
+        path.join(data_folder, 'pipeline/mouse/network_analysis/ade_wgcna_modules.csv'),
         path.join(data_folder, 'pipeline/mouse/network_analysis/tom.csv'),
-        path.join(data_folder, 'pipeline/mouse/network_analysis/ade_wgcna_modules.csv')
     )
