@@ -1,5 +1,6 @@
 import csv
 import json
+import os
 import sys
 import tempfile
 
@@ -23,41 +24,25 @@ def ade_entrypoint_v1(
 
     # Generate and write out JSON
     # CONFIG.JSON EXAMPLE: G:\Shared drives\NIAAA_ASSIST\Data\pipeline\human\network_analysis\config.json
-    print(f"in_expression_with_metadata: {type(in_expression_with_metadata)}")
-    if in_expression_with_metadata is not None:
-        print(f"in_expression_with_metadata: {in_expression_with_metadata}")
-        config = {
-            'inputs': {
-                'provided_networks': in_provided_networks,
-                'differentially_expressed_genes': in_differentially_expressed_genes,
-                'chosen_module_assignment': in_chosen_module_assignment,
-                'expression_with_metadata': in_expression_with_metadata
-            },
-            'outputs': {
-                'embedding_path': out_network_embedding
-            },
-            'parameters': {
-                'plot_path': prop_plot_path,
-                'max_epoch': int(prop_max_epoch),
-                'learning_rate': float(prop_learning_rate)
-            }
+    inputs = {
+            'provided_networks': in_provided_networks,
+            'differentially_expressed_genes': in_differentially_expressed_genes,
+            'chosen_module_assignment': in_chosen_module_assignment
         }
-    else:
-        config = {
-            'inputs': {
-                'provided_networks': in_provided_networks,
-                'differentially_expressed_genes': in_differentially_expressed_genes,
-                'chosen_module_assignment': in_chosen_module_assignment
-            },
-            'outputs': {
-                'embedding_path': out_network_embedding
-            },
-            'parameters': {
-                'plot_path': prop_plot_path,
-                'max_epoch': int(prop_max_epoch),
-                'learning_rate': float(prop_learning_rate)
-            }
+    if os.path.exists(in_expression_with_metadata):
+        inputs['expression_with_metadata'] = in_expression_with_metadata
+    
+    config = {
+        'inputs': inputs,
+        'outputs': {
+            'embedding_path': out_network_embedding
+        },
+        'parameters': {
+            'plot_path': prop_plot_path,
+            'max_epoch': int(prop_max_epoch),
+            'learning_rate': float(prop_learning_rate)
         }
+    }
 
     with open(config_path, 'w') as f:
         json.dump(config, f, indent=2)
