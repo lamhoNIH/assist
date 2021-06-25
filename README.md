@@ -13,35 +13,35 @@ This repo contains the source code of ASSIST analysis modules developed under th
 |6| ML and Critical Gene Identifier | Machine learning to extract features for critical gene identification |
 
 The analysis workflow follows the order of the modules and the modules are inter-related as depicted in the conceptual workflow below.
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/12038408/117026434-ca74fa80-acc9-11eb-937c-ffaa7547ff34.png" width="700" height="650">
+<p align="center"><img src="https://user-images.githubusercontent.com/12038408/123433360-60762480-d599-11eb-911e-1af52a23df4d.png" width="700" height="650">
 </p>
+
 
 Module ```Critical Gene Validation``` requires a 3rd party license and is thus not included in this repo.
 
 ### Where to get data:
-Download data from https://www.dropbox.com/sh/uajkuclelr409e3/AAC0hwI47Ssz8I_FeOH8Pplca/data?dl=0&subfolder_nav_tracking=1. The user guide below assumes that you have downloaded all data files and placed them under the `data` subfolder of this project.
+Download data from [ASSIST Dropbox](https://www.dropbox.com/sh/uajkuclelr409e3/AAC0hwI47Ssz8I_FeOH8Pplca/data?dl=0&subfolder_nav_tracking=1) in the `data` folder. The user guide below assumes that you have downloaded all data files and placed them under the `data` subfolder of this project.
 
 ## User Guide
 
 Below we describe how to set up and run the ASSIST analysis modules in three different modes.
 
 ### 1. How to set up the environment for Jupyter notebooks
-Jupyter notebooks for ASSIST analysis modules are included to allow researchers to test out the analysis code using the Jupyter notebook interface. The `notebooks` folder contains requirements files capturing software dependencies for the three notebooks included. Corresponding requirement file is loaded into each notebook at the beginning.
+Jupyter notebooks for ASSIST analysis modules are included to allow researchers to test out the analysis code using the Jupyter notebook interface. The `notebooks` folder contains requirements files capturing software dependencies for the three notebooks included. Corresponding requirement file is loaded into each notebook at the beginning of the notebook.
 
 ### 2. How to launch containers for each analysis module
-Before analysis modules can be launched through standalone containers, the corresponding images need to be loaded. You can either use the included Makefile to generate the corresponding images, or download them from https://www.dropbox.com/sh/uajkuclelr409e3/AAC0hwI47Ssz8I_FeOH8Pplca/data?dl=0&subfolder_nav_tracking=1 in the `images/standalone` folder, unpack it to the `images/standalone` subfolder under this project, and load them using:
+Before analysis modules can be launched through standalone containers, the corresponding images need to be loaded. You can either use the included Makefile to generate the corresponding images, or download them from [ASSIST Dropbox](https://www.dropbox.com/sh/uajkuclelr409e3/AAC0hwI47Ssz8I_FeOH8Pplca/data?dl=0&subfolder_nav_tracking=1) in the `images/standalone` folder, place them under the `images/standalone` subfolder of this project, and load them using:
 ```
 make load-standalone-images
 ```
-The analysis modules are meant to be launched in sequence in the order listed in the above table and there are configuration files in the config folder specifying all input files needed to launch the module and where the module will be generating its output files and plots. Before choosing an analysis module to execute, make sure all the input data specified in the corresponding config file are available.
+The analysis modules are meant to be launched in sequence in the order listed in the above table and there are configuration files in the `config` folder specifying all input files needed to launch the module and where the module will be generating its output files and plots. Before choosing an analysis module to execute, make sure all the input data specified in the corresponding config file are available.
 
-There is a script called launch.py under the scripts folder that can be used to launch these analysis modules, e.g., to launch module extraction on the human dataset, use: `python launch.py module_extraction human <path to the data folder>`. Note `<path to the data folder>` is the absolute path to the `data` folder under the project root.
+There is a script called launch.py under the scripts folder that can be used to launch these analysis modules, e.g., to launch `Module Extraction` on the human dataset, use: `python launch.py module_extraction human <path to the data folder>`, where `<path to the data folder>` is the absolute path to the `data` folder under the project root.
 
 ### 3. How to run ASSIST modules in a workflow using ADE
 
 #### Prepare ADE runtime environment
-Download ade_runtime.tgz from https://www.dropbox.com/sh/uajkuclelr409e3/AAC0hwI47Ssz8I_FeOH8Pplca/data?dl=0&subfolder_nav_tracking=1 into the project root folder and unpack using:
+Download `ade_runtime.tgz` from [ASSIST Dropbox](https://www.dropbox.com/sh/uajkuclelr409e3/AAC0hwI47Ssz8I_FeOH8Pplca/data?dl=0&subfolder_nav_tracking=1) into the project root folder and unpack it using:
 ```
 tar zxvf ade_runtime.tgz
 ```
@@ -80,19 +80,19 @@ ade
 
 
 #### Use ADE to run analysis workflow
-Use the launch script (```launch.bat``` or ```launch.sh```) to start up the ADE workflow user interface. There are ready made workflows for both human and mouse under the workflows folder that can be loaded into the user interface.
+Use the launch script (`launch.bat` or `launch.sh`) to start up the ADE workflow user interface. There are ready made workflows for both `human` and `mouse` datasets under the `workflows` folder of this repo that can be loaded into the user interface.
 
-Follow [ADE documentation] (./ade/doc/README.md) that provides detailed description on the ADE user interface.
+Follow [ADE documentation](./ade/doc/README.md) that provides detailed description on using the ADE user interface.
 
 
 #### Detailed description of analysis modules
 
-## For all the input/output data below, ```Human``` means it's for the human example data (Kapoor et al 2019). ```Mouse``` means it's for the mouse example data (Ferguson et al 2019).
-The difference is because the two example datasets (Kapoor and HDID) we used had difference in the availability of the data. For example, ```TOM co-expression network``` and ```gene module assignment by WGCNA hierarchical clustering``` for the human data were provided to us but not available for the mouse data so the ```Network Analysis``` had to be run to construct these two files for the mouse. ```subjects' alcohol metadata``` was only available for the human data so all the analyses that involve diagnostics were skipped for the mouse data. 
+## For all the input/output data below, `Human` means it's for the human example data (Kapoor et al 2019). `Mouse` means it's for the mouse example data (Ferguson et al 2019).
+The difference is because the two example datasets (Kapoor and HDID) we used had difference in the availability of the data. For example, `TOM co-expression network` and `gene module assignment by WGCNA hierarchical clustering` for the human data were provided to us but not available for the mouse data so the `Network Analysis` had to be run to construct these two files for the mouse. `subjects' alcohol metadata` was only available for the human data so all the analyses that involve diagnostics were skipped for the mouse data. 
 
 **1. Network Analysis**
 
-Note that for the Kapoor data used in our analysis (aka the human data), the ```Network Analysis``` module was skipped as the TOM network and the WGCNA module assignment were already published so the example for this module below is for the HDID mouse data. 
+Note that for the Kapoor data used in our analysis (aka the human data), the `Network Analysis` module was skipped as the TOM network and the WGCNA module assignment were already published so the example for this module below is for the HDID mouse data. 
 
 <table border="1">
     <thead>
