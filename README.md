@@ -85,7 +85,7 @@ Use the launch script (`launch.bat` or `launch.sh`) to start up the ADE workflow
 Follow [ADE documentation](./ade/doc/README.md) that provides detailed description on using the ADE user interface.
 
 
-## Detailed description of analysis modules
+## Detailed data description of analysis modules
 
 ### For all the input/output data below, `Human` means it's for the human example data (Kapoor et al 2019). `Mouse` means it's for the mouse example data (Ferguson et al 2019).
 The difference is because the two example datasets (Kapoor and HDID) we used had difference in the availability of the data. For example, `TOM co-expression network` and `gene module assignment by WGCNA hierarchical clustering` for the human data were provided to us but not available for the mouse data so the `Network Analysis` had to be run to construct these two files for the mouse. `subjects' alcohol metadata` was only available for the human data so all the analyses that involve diagnostics were skipped for the mouse data. 
