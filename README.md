@@ -30,9 +30,9 @@ Below we describe how to set up and run the ASSIST analysis modules in three dif
 Jupyter notebooks for ASSIST analysis modules are included to allow researchers to test out the analysis code using the Jupyter notebook interface. The `notebooks` folder contains requirements files capturing software dependencies for the three notebooks included. Corresponding requirement file is loaded into each notebook at the beginning.
 
 ### 2. How to launch containers for each analysis module
-Before analysis modules can be launched through standalone containers, the corresponding images need to be loaded. You can either use the included Makefile to generate the corresponding images or download the compressed image tarball from the `images/standalone` folder, unpack it to the `images/standalone` subfolder under this project and load them using:
+Before analysis modules can be launched through standalone containers, the corresponding images need to be loaded. You can either use the included Makefile to generate the corresponding images, or download them from https://www.dropbox.com/sh/uajkuclelr409e3/AAC0hwI47Ssz8I_FeOH8Pplca/data?dl=0&subfolder_nav_tracking=1 in the `images/standalone` folder, unpack it to the `images/standalone` subfolder under this project, and load them using:
 ```
-docker load --input <path to the image tar file>
+make load-standalone-images
 ```
 The analysis modules are meant to be launched in sequence in the order listed in the above table and there are configuration files in the config folder specifying all input files needed to launch the module and where the module will be generating its output files and plots. Before choosing an analysis module to execute, make sure all the input data specified in the corresponding config file are available.
 
@@ -40,18 +40,52 @@ There is a script called launch.py under the scripts folder that can be used to 
 
 ### 3. How to run ASSIST modules in a workflow using ADE
 
-Follow [ADE documentation] (./ade/doc/README.md)
-
 #### Prepare ADE runtime environment
+Download ade_runtime.tgz from https://www.dropbox.com/sh/uajkuclelr409e3/AAC0hwI47Ssz8I_FeOH8Pplca/data?dl=0&subfolder_nav_tracking=1 into the project root folder and unpack using:
+```
+tar zxvf ade_runtime.tgz
+```
+This command will create the following folder structure under the project:
+```
+ade
+├── bin
+│   ├── launcher.bat
+│   └── launcher.sh
+├── create_node_docker_image.py
+├── doc
+│   ├── README.md
+│   ├── action_props.gif
+│   ├── connect.gif
+│   ├── disconnect.gif
+│   ├── doc_props.gif
+│   ├── docker_props.png
+│   ├── dynamic_props.gif
+│   ├── export_data.gif
+│   ├── launch.gif
+│   ├── new_node.gif
+│   ├── persist.gif
+│   ├── remove_node.gif
+│   ├── scroll_props.gif
+│   ├── view_data.gif
+│   ├── view_props.gif
+│   └── workflow.png
+└── repo
+    ├── FastInfoset-1.2.16.jar
+    ├── ST4-4.0.8.jar
+    ├── ade-backend-1.0.0-SNAPSHOT.jar
+    ├── ade-frontend-1.0.0-SNAPSHOT.jar
+    ├── ade-launcher-1.0.0-SNAPSHOT.jar
+...
+```
 
-#### Create a workflow module in ADE
 
-#### Integrate workflow modules in ADE
+#### Use ADE to run analysis workflow
+Use the launch script (```launch.bat``` or ```launch.sh```) to start up the ADE workflow user interface. There are ready made workflows for both human and mouse under the workflows folder that can be loaded into the user interface.
 
-#### How to navigate in ADE
+Follow [ADE documentation] (./ade/doc/README.md) that provides detailed description on the ADE user interface.
 
 
-For each of the analysis modules below, include detailed description on input data (file name, file content, columns the module cares about), what the analysis does about the input data, and what the output the module generates. This can include snapshots of sample dataframes and plots.
+#### Detailed description of analysis modules
 
 ## For all the input/output data below, ```Human``` means it's for the human example data (Kapoor et al 2019). ```Mouse``` means it's for the mouse example data (Ferguson et al 2019).
 The difference is because the two example datasets (Kapoor and HDID) we used had difference in the availability of the data. For example, ```TOM co-expression network``` and ```gene module assignment by WGCNA hierarchical clustering``` for the human data were provided to us but not available for the mouse data so the ```Network Analysis``` had to be run to construct these two files for the mouse. ```subjects' alcohol metadata``` was only available for the human data so all the analyses that involve diagnostics were skipped for the mouse data. 
