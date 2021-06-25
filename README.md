@@ -80,7 +80,7 @@ ade
 
 
 #### Use ADE to run analysis workflow
-Use the launch script (`launch.bat` or `launch.sh`) to start up the ADE workflow user interface. There are ready made workflows for both `human` and `mouse` datasets under the `workflows` folder of this repo that can be loaded into the user interface.
+Use the launch script (`launch.bat` or `launch.sh`) to start up the ADE workflow user interface. There are ready made workflows for both `human` and `mouse` datasets under the `workflows` folder of this repo that can be loaded into the user interface. For this, you need to first download the ADE images for the analysis modules from [ASSIST Dropbox](https://www.dropbox.com/sh/uajkuclelr409e3/AAC0hwI47Ssz8I_FeOH8Pplca/data?dl=0&subfolder_nav_tracking=1) in the `images/ade` folder and place them under `~/.ade_image_repo/netrias` on your machine. This is where ADE will be loading images into the runtime environment.
 
 Follow [ADE documentation](./ade/doc/README.md) that provides detailed description on using the ADE user interface.
 
