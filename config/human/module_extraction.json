@@ -1,0 +1,9 @@
+{
+	"inputs": {
+		"provided_networks": "data/Kapoor_TOM.csv"
+	},
+	"outputs": {
+		"network_louvain_default": "data/pipeline/human/module_extraction/network_louvain_default.csv",
+		"network_louvain_agg1": "data/pipeline/human/module_extraction/network_louvain_agg1.csv"
+	}
+}

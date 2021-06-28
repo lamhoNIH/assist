@@ -1,0 +1,16 @@
+{
+	"inputs": {
+		"provided_networks": "data/Kapoor_TOM.csv",
+		"differentially_expressed_genes": "data/deseq.alc.vs.control.age.rin.batch.gender.PMI.corrected.w.prot.coding.gene.name.xlsx",
+		"chosen_module_assignment": "data/pipeline/human/module_extraction/network_louvain_default.csv",
+		"expression_with_metadata": "data/pipeline/human/module_de_diagnostic_correlation/expression_meta.csv"
+	},
+	"outputs": {
+		"embedding_path": "data/pipeline/human/network_embedding/embedding.csv"
+	},
+	"parameters": {
+		"plot_path": "data/pipeline/human/network_embedding/artifacts",
+		"max_epoch": 100,
+		"learning_rate": 0.1
+	}
+}

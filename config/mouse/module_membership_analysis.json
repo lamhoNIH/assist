@@ -1,0 +1,10 @@
+{
+	"inputs": {
+		"gene_to_module_mapping": "data/pipeline/mouse/network_analysis/wgcna_modules.csv",
+		"network_louvain_default": "data/pipeline/mouse/module_extraction/network_louvain_default.csv",
+		"network_louvain_agg1": "data/pipeline/mouse/module_extraction/network_louvain_agg1.csv"
+	},
+	"parameters": {
+		"plot_path": "data/pipeline/mouse/module_membership_analysis/artifacts"
+	}
+}
