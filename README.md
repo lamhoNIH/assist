@@ -504,7 +504,7 @@ Note that for the Kapoor data used in our analysis (aka the human data), the `Ne
             <td><sub>:heavy_check_mark:</sub></td>
         </tr>
         <tr>
-            <td><sub>run_ml_.pngg</sub></td>
+            <td><sub>run_ml_.png</sub></td>
             <td><sub>machine learning accuracy</sub></td>
             <td><sub>:heavy_check_mark:</sub></td>
             <td><sub>:heavy_check_mark:</sub></td>
