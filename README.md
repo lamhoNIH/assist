@@ -24,7 +24,7 @@ Download data from [ASSIST Dropbox](https://www.dropbox.com/sh/uajkuclelr409e3/A
 
 ## User Guide
 
-Below we describe how to set up and run the ASSIST analysis modules in three different modes.
+To run ASSIST software on your machine, you need to have Java, Python and Docker installed. We recommend Java SE Runtime 15.0.2, Python 3.7+ (tested on 3.8.5) and Docker 20.10.6. GNU Make 3.81 is also required to build the Docker images. Below we describe how to set up and run the ASSIST analysis modules in three different modes.
 
 ### 1. How to set up the environment for Jupyter notebooks
 Jupyter notebooks for ASSIST analysis modules are included to allow researchers to test out the analysis code using the Jupyter notebook interface. The `notebooks` folder contains requirements files capturing software dependencies for the three notebooks included. Corresponding requirement file is loaded into each notebook at the beginning of the notebook.
@@ -547,3 +547,6 @@ Note that for the Kapoor data used in our analysis (aka the human data), the `Ne
         </tr>
     </tbody>
 </table>
+
+## Questions?
+Please contact Yi-Pei Chen (ychen@netrias.com) or George Zheng (gzheng@netrias.com)
