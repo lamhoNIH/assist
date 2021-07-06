@@ -263,6 +263,7 @@ Graph view hotkeys:
 | `Shift-Z` | Connector  | Quick line plot          |
 | `Shift-X` | Connector  | Quick histogram          |
 | `Shift-C` | Connector  | Quick heatmap            |
+| `A`       | Node       | View artifacts           |
 | `P`       | Graph      | Load or save             |
 | `E`       | Graph      | Show environment vars    |
 | `C`       | Graph      | Clear cache              |
